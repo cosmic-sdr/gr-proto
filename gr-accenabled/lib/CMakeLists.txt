@@ -224,6 +224,28 @@ target_link_libraries(
   ${Boost_LIBRARIES}
   gnuradio-clenabled
 )
+
+########################################################################
+# Build and register test-cllog
+########################################################################
+list(APPEND test_cllog_sources
+    ${CMAKE_CURRENT_SOURCE_DIR}/test-cllog.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/clLog_impl.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/GRCLBase.cpp
+)
+
+add_executable(test-cllog ${test_cllog_sources})
+
+
+target_link_libraries(
+  test-cllog
+  ${OpenCL_LIBRARY}
+  ${GNURADIO_RUNTIME_LIBRARIES}
+  ${Boost_LIBRARIES}
+  gnuradio-clenabled
+)
+
+install(TARGETS test-cllog DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" RUNTIME)
 ########################################################################
 # Print summary
 ########################################################################
