@@ -129,6 +129,14 @@ if(NOT CLFFT_FOUND)
 endif()
 
 ########################################################################
+# Find OpenARC build dependencies
+########################################################################
+find_package(OpenARC)
+if(NOT OpenARC_FOUND)
+	message(FATAL_ERROR "OpenARC is required to compile gr-accenabled")
+endif()
+
+########################################################################
 # Find gnuradio build dependencies
 ########################################################################
 find_package(CppUnit)

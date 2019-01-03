@@ -33,7 +33,7 @@ ENDIF(CMAKE_BUILD_TYPE MATCHES DEBUG)
 ########################################################################
 include(GrPlatform) #define LIB_SUFFIX
 
-include_directories(${Boost_INCLUDE_DIR} ${OpenCL_INCLUDE_DIRS})
+include_directories(${Boost_INCLUDE_DIR} ${OpenCL_INCLUDE_DIRS} ${OpenARC_INCLUDE_DIR})
 link_directories(${Boost_LIBRARY_DIRS})
 link_directories(${FFTW3F_LIBRARY_DIRS})
 
@@ -50,6 +50,7 @@ list(APPEND clenabled_sources
     fast_atan2f.cc
     clFFT_impl.cc
     clLog_impl.cc
+    clLog_kernel.cpp
     clSNR_impl.cc
     clComplexToArg_impl.cc
     clComplexToMagPhase_impl.cc
@@ -68,7 +69,7 @@ if(NOT clenabled_sources)
 endif(NOT clenabled_sources)
 
 add_library(gnuradio-clenabled SHARED ${clenabled_sources})
-target_link_libraries(gnuradio-clenabled ${Boost_LIBRARIES} ${GNURADIO_ALL_LIBRARIES} ${OpenCL_LIBRARY} gnuradio-blocks gnuradio-filter ${VOLK_LIBRARIES} ${Boost_LIBRARIES} ${FFTW3F_LIBRARIES} ${CLFFT_LIBRARIES} )
+target_link_libraries(gnuradio-clenabled ${Boost_LIBRARIES} ${GNURADIO_ALL_LIBRARIES} ${OpenCL_LIBRARY} gnuradio-blocks gnuradio-filter ${VOLK_LIBRARIES} ${Boost_LIBRARIES} ${FFTW3F_LIBRARIES} ${CLFFT_LIBRARIES} ${OpenARC_LIBRARIES})
 set_target_properties(gnuradio-clenabled PROPERTIES DEFINE_SYMBOL "gnuradio_clenabled_EXPORTS")
 
 if(APPLE)
@@ -87,6 +88,13 @@ GR_LIBRARY_FOO(gnuradio-clenabled RUNTIME_COMPONENT "clenabled_runtime" DEVEL_CO
 # Build and register unit test
 ########################################################################
 include(GrTest)
+
+############################################
+# Generate OpenACC output files by OpenARC #
+############################################
+add_custom_command(TARGET clLog_kernel.cpp
+	COMMAND ${OpenARC_BIN_DIR}/openarc -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_clLog.txt ${CMAKE_CURRENT_SOURCE_DIR}/clLog_kernel.c; cp ${CMAKE_CURRENT_SOURCE_DIR}/cetus_output/clLog_kernel.cpp ${CMAKE_CURRENT_SOURCE_DIR}/; cp ${CMAKE_CURRENT_SOURCE_DIR}/cetus_output/openarc_kernel.cl ${CMAKE_CURRENT_SOURCE_DIR}/; rm -rf ${CMAKE_CURRENT_SOURCE_DIR}/cetus_output
+	DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/clLog_kernel.c)
 
 include_directories(${CPPUNIT_INCLUDE_DIRS})
 
@@ -117,6 +125,7 @@ list(APPEND test_clenabled_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/clFFT_impl.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/window.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/clLog_impl.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/clLog_kernel.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/clSNR_impl.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/clComplexToMag_impl.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/clComplexToArg_impl.cc
@@ -126,10 +135,10 @@ list(APPEND test_clenabled_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/clCostasLoop_impl.cc
 )
 
-add_executable(test-clenabled ${test_clenabled_sources})
+add_executable(test-accenabled ${test_clenabled_sources})
 
 target_link_libraries(
-  test-clenabled
+  test-accenabled
   ${GNURADIO_RUNTIME_LIBRARIES}
   ${Boost_LIBRARIES}
   ${CPPUNIT_LIBRARIES}
@@ -142,9 +151,9 @@ target_link_libraries(
   gnuradio-filter
 )
 
-GR_ADD_TEST(test_clenabled test-clenabled)
+GR_ADD_TEST(test_clenabled test-accenabled)
 
-install(TARGETS test-clenabled DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" RUNTIME)
+install(TARGETS test-accenabled DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" RUNTIME)
 
 ########################################################################
 # Build and register clview
@@ -159,7 +168,7 @@ target_link_libraries(
 install(TARGETS clview DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" RUNTIME)
 
 ########################################################################
-# Build and register test-clkernel
+# Build and register test-acckernel
 ########################################################################
 list(APPEND test_clkernel_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/test-clkernel.cc
@@ -168,21 +177,21 @@ list(APPEND test_clkernel_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/clKernel2To1_impl.cc
 )
 
-add_executable(test-clkernel ${test_clkernel_sources})
+add_executable(test-acckernel ${test_clkernel_sources})
 
 
 target_link_libraries(
-  test-clkernel
+  test-acckernel
   ${OpenCL_LIBRARY}
   ${GNURADIO_RUNTIME_LIBRARIES}
   ${Boost_LIBRARIES}
   gnuradio-clenabled
 )
 
-install(TARGETS test-clkernel DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" RUNTIME)
+install(TARGETS test-acckernel DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" RUNTIME)
 
 ########################################################################
-# Build and register test-clfilter
+# Build and register test-accfilter
 ########################################################################
 list(APPEND test_clfilter_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/test-clfilter.cc
@@ -191,10 +200,10 @@ list(APPEND test_clfilter_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/window.cc
 )
 
-add_executable(test-clfilter ${test_clfilter_sources})
+add_executable(test-accfilter ${test_clfilter_sources})
 
 target_link_libraries(
-  test-clfilter
+  test-accfilter
   ${OpenCL_LIBRARY}
   ${GNURADIO_RUNTIME_LIBRARIES}
   gnuradio-filter
@@ -202,10 +211,10 @@ target_link_libraries(
   gnuradio-clenabled
 )
 
-install(TARGETS test-clfilter DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" RUNTIME)
+install(TARGETS test-accfilter DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" RUNTIME)
 
 ########################################################################
-# Build and register test-clenabled-fft
+# Build and register test-accenabled-fft
 ########################################################################
 list(APPEND test_clsingle_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/test-clenabled-fft.cc
@@ -214,11 +223,11 @@ list(APPEND test_clsingle_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/window.cc
 )
 
-add_executable(test-clenabled-fft ${test_clsingle_sources})
+add_executable(test-accenabled-fft ${test_clsingle_sources})
 
 
 target_link_libraries(
-  test-clenabled-fft
+  test-accenabled-fft
   ${OpenCL_LIBRARY}
   ${GNURADIO_RUNTIME_LIBRARIES}
   ${Boost_LIBRARIES}
@@ -226,26 +235,27 @@ target_link_libraries(
 )
 
 ########################################################################
-# Build and register test-cllog
+# Build and register test-acclog
 ########################################################################
 list(APPEND test_cllog_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/test-cllog.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/clLog_impl.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/GRCLBase.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/clLog_kernel.cpp
 )
 
-add_executable(test-cllog ${test_cllog_sources})
+add_executable(test-acclog ${test_cllog_sources})
 
 
 target_link_libraries(
-  test-cllog
+  test-acclog
   ${OpenCL_LIBRARY}
   ${GNURADIO_RUNTIME_LIBRARIES}
   ${Boost_LIBRARIES}
   gnuradio-clenabled
 )
 
-install(TARGETS test-cllog DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" RUNTIME)
+install(TARGETS test-acclog DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" RUNTIME)
+install(TARGETS openarc_kernel.cl DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" RUNTIME)
 ########################################################################
 # Print summary
 ########################################################################

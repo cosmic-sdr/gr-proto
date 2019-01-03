@@ -27,7 +27,7 @@
 namespace gr {
   namespace clenabled {
 
-    class clLog_impl : public clLog, public GRCLBase
+    class clLog_impl : public clLog 
     {
      private:
       // Nothing to declare in this block.
@@ -37,13 +37,9 @@ namespace gr {
         float n_val;
         float k_val;
 
-		cl::Buffer *aBuffer=NULL;
-		cl::Buffer *cBuffer=NULL;
 		int curBufferSize=0;
 
 		gr_vector_int d_ninput_items;  // backward compatibility item moving from block to sync_block.
-
-		void buildKernel(int numItems);
 
      public:
       clLog_impl(int openCLPlatformType,int devSelector,int platformId, int devId,float nValue,float kValue,bool setDebug=false);
