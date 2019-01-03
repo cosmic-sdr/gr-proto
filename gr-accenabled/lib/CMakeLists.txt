@@ -68,12 +68,12 @@ if(NOT clenabled_sources)
 	return()
 endif(NOT clenabled_sources)
 
-add_library(gnuradio-clenabled SHARED ${clenabled_sources})
-target_link_libraries(gnuradio-clenabled ${Boost_LIBRARIES} ${GNURADIO_ALL_LIBRARIES} ${OpenCL_LIBRARY} gnuradio-blocks gnuradio-filter ${VOLK_LIBRARIES} ${Boost_LIBRARIES} ${FFTW3F_LIBRARIES} ${CLFFT_LIBRARIES} ${OpenARC_LIBRARIES})
-set_target_properties(gnuradio-clenabled PROPERTIES DEFINE_SYMBOL "gnuradio_clenabled_EXPORTS")
+add_library(gnuradio-accenabled SHARED ${clenabled_sources})
+target_link_libraries(gnuradio-accenabled ${Boost_LIBRARIES} ${GNURADIO_ALL_LIBRARIES} ${OpenCL_LIBRARY} gnuradio-blocks gnuradio-filter ${VOLK_LIBRARIES} ${Boost_LIBRARIES} ${FFTW3F_LIBRARIES} ${CLFFT_LIBRARIES} ${OpenARC_LIBRARIES})
+set_target_properties(gnuradio-accenabled PROPERTIES DEFINE_SYMBOL "gnuradio_clenabled_EXPORTS")
 
 if(APPLE)
-    set_target_properties(gnuradio-clenabled PROPERTIES
+    set_target_properties(gnuradio-accenabled PROPERTIES
         INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib"
     )
 endif(APPLE)
@@ -82,7 +82,7 @@ endif(APPLE)
 # Install built library files
 ########################################################################
 include(GrMiscUtils)
-GR_LIBRARY_FOO(gnuradio-clenabled RUNTIME_COMPONENT "clenabled_runtime" DEVEL_COMPONENT "clenabled_devel")
+GR_LIBRARY_FOO(gnuradio-accenabled RUNTIME_COMPONENT "clenabled_runtime" DEVEL_COMPONENT "clenabled_devel")
 
 ########################################################################
 # Build and register unit test
@@ -92,7 +92,7 @@ include(GrTest)
 ############################################
 # Generate OpenACC output files by OpenARC #
 ############################################
-add_custom_command(TARGET clLog_kernel.cpp
+add_custom_command(OUTPUT clLog_kernel.cpp openarc_kernel.cl
 	COMMAND ${OpenARC_BIN_DIR}/openarc -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_clLog.txt ${CMAKE_CURRENT_SOURCE_DIR}/clLog_kernel.c; cp ${CMAKE_CURRENT_SOURCE_DIR}/cetus_output/clLog_kernel.cpp ${CMAKE_CURRENT_SOURCE_DIR}/; cp ${CMAKE_CURRENT_SOURCE_DIR}/cetus_output/openarc_kernel.cl ${CMAKE_CURRENT_SOURCE_DIR}/; rm -rf ${CMAKE_CURRENT_SOURCE_DIR}/cetus_output
 	DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/clLog_kernel.c)
 
@@ -145,7 +145,7 @@ target_link_libraries(
   ${VOLK_LIBRARIES}
   ${FFTW3F_LIBRARIES}
   ${OpenCL_LIBRARY}
-  gnuradio-clenabled
+  gnuradio-accenabled
   ${CLFFT_LIBRARIES}
   gnuradio-blocks
   gnuradio-filter
@@ -185,7 +185,7 @@ target_link_libraries(
   ${OpenCL_LIBRARY}
   ${GNURADIO_RUNTIME_LIBRARIES}
   ${Boost_LIBRARIES}
-  gnuradio-clenabled
+  gnuradio-accenabled
 )
 
 install(TARGETS test-acckernel DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" RUNTIME)
@@ -208,7 +208,7 @@ target_link_libraries(
   ${GNURADIO_RUNTIME_LIBRARIES}
   gnuradio-filter
   ${Boost_LIBRARIES}
-  gnuradio-clenabled
+  gnuradio-accenabled
 )
 
 install(TARGETS test-accfilter DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" RUNTIME)
@@ -231,7 +231,7 @@ target_link_libraries(
   ${OpenCL_LIBRARY}
   ${GNURADIO_RUNTIME_LIBRARIES}
   ${Boost_LIBRARIES}
-  gnuradio-clenabled
+  gnuradio-accenabled
 )
 
 ########################################################################
@@ -251,11 +251,11 @@ target_link_libraries(
   ${OpenCL_LIBRARY}
   ${GNURADIO_RUNTIME_LIBRARIES}
   ${Boost_LIBRARIES}
-  gnuradio-clenabled
+  gnuradio-accenabled
 )
 
 install(TARGETS test-acclog DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" RUNTIME)
-install(TARGETS openarc_kernel.cl DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" RUNTIME)
+install(FILES openarc_kernel.cl DESTINATION "${CMAKE_INSTALL_PREFIX}/bin") 
 ########################################################################
 # Print summary
 ########################################################################
