@@ -37,6 +37,13 @@ include_directories(${Boost_INCLUDE_DIR} ${OpenCL_INCLUDE_DIRS} ${OpenARC_INCLUD
 link_directories(${Boost_LIBRARY_DIRS})
 link_directories(${FFTW3F_LIBRARY_DIRS})
 
+############################################
+# Generate OpenACC output files by OpenARC #
+############################################
+add_custom_command(OUTPUT clLog_kernel.cpp openarc_kernel.cl
+	COMMAND ${OpenARC_BIN_DIR}/openarc -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_clLog.txt ${CMAKE_CURRENT_SOURCE_DIR}/clLog_kernel.c; cp ${CMAKE_CURRENT_SOURCE_DIR}/cetus_output/clLog_kernel.cpp ${CMAKE_CURRENT_SOURCE_DIR}/; cp ${CMAKE_CURRENT_SOURCE_DIR}/cetus_output/openarc_kernel.cl ${CMAKE_CURRENT_SOURCE_DIR}/; rm -rf ${CMAKE_CURRENT_SOURCE_DIR}/cetus_output
+	DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/clLog_kernel.c)
+
 list(APPEND clenabled_sources
     clMathConst_impl.cc
     GRCLBase.cpp
@@ -88,13 +95,6 @@ GR_LIBRARY_FOO(gnuradio-accenabled RUNTIME_COMPONENT "clenabled_runtime" DEVEL_C
 # Build and register unit test
 ########################################################################
 include(GrTest)
-
-############################################
-# Generate OpenACC output files by OpenARC #
-############################################
-add_custom_command(OUTPUT clLog_kernel.cpp openarc_kernel.cl
-	COMMAND ${OpenARC_BIN_DIR}/openarc -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_clLog.txt ${CMAKE_CURRENT_SOURCE_DIR}/clLog_kernel.c; cp ${CMAKE_CURRENT_SOURCE_DIR}/cetus_output/clLog_kernel.cpp ${CMAKE_CURRENT_SOURCE_DIR}/; cp ${CMAKE_CURRENT_SOURCE_DIR}/cetus_output/openarc_kernel.cl ${CMAKE_CURRENT_SOURCE_DIR}/; rm -rf ${CMAKE_CURRENT_SOURCE_DIR}/cetus_output
-	DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/clLog_kernel.c)
 
 include_directories(${CPPUNIT_INCLUDE_DIRS})
 
