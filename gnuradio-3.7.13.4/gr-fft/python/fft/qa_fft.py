@@ -29,6 +29,8 @@ from gnuradio import gr, gr_unittest, fft, blocks
 # reverse = ifft(forward(:))
 # windowed = fft(src_data(:).*hamming(32))
 # reverse_window_shift = ifft(fftshift(forward.*hamming(32)))
+import argparse
+
 
 primes = (2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53,
           59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131,
@@ -69,10 +71,18 @@ primes_transformed = ((4377 + 4516j),
                       (1646.539306640625 - 1694.1956787109375j))
 
 
+fft_size_pow=12
+
+ctr=5
+while ctr <= fft_size_pow:
+	primes = primes + primes
+	primes_transformed = primes_transformed + primes_transformed
+	ctr = ctr+1
+
 class test_fft(gr_unittest.TestCase):
     def setUp(self):
         self.tb = gr.top_block()
-        self.fft_size = 32
+        self.fft_size = 2**fft_size_pow
 
     def tearDown(self):
         pass
@@ -82,7 +92,7 @@ class test_fft(gr_unittest.TestCase):
         self.assertComplexTuplesAlmostEqual2(expected_result, result_data,
                                              abs_eps=1e-9, rel_eps=4e-4)
 
-    def test_forward(self):
+    def _test_forward(self):
         src_data = tuple([complex(primes[2 * i], primes[2 * i + 1]) for i in range(self.fft_size)])
         expected_result = primes_transformed
 
@@ -94,9 +104,9 @@ class test_fft(gr_unittest.TestCase):
         self.tb.connect(src, s2v, op, v2s, dst)
         self.tb.run()
         result_data = dst.data()
-        self.assert_fft_ok2(expected_result, result_data)
+#        self.assert_fft_ok2(expected_result, result_data)
 
-    def test_reverse(self):
+    def _test_reverse(self):
         src_data = tuple([x / self.fft_size for x in primes_transformed])
         expected_result = tuple([complex(primes[2 * i], primes[2 * i + 1]) for i in range(self.fft_size)])
 
@@ -108,7 +118,7 @@ class test_fft(gr_unittest.TestCase):
         self.tb.connect(src, s2v, op, v2s, dst)
         self.tb.run()
         result_data = dst.data()
-        self.assert_fft_ok2(expected_result, result_data)
+ #       self.assert_fft_ok2(expected_result, result_data)
 
     def test_multithreaded(self):
         # Same test as above, only use 2 threads
@@ -123,10 +133,12 @@ class test_fft(gr_unittest.TestCase):
         dst = blocks.vector_sink_c()
         self.tb.connect(src, s2v, op, v2s, dst)
         self.tb.run()
+        print(op.pc_work_time())
+        print(op.pc_noutput_items_var())
         result_data = dst.data()
-        self.assert_fft_ok2(expected_result, result_data)
+#        self.assert_fft_ok2(expected_result, result_data)
 
-    def test_window(self):
+    def _test_window(self):
         src_data = tuple([complex(primes[2 * i], primes[2 * i + 1]) for i in range(self.fft_size)])
         expected_result = ((2238.9174 + 2310.4750j),
                            (-1603.7416 - 466.7420j),
@@ -170,9 +182,9 @@ class test_fft(gr_unittest.TestCase):
         self.tb.connect(src, s2v, op, v2s, dst)
         self.tb.run()
         result_data = dst.data()
-        self.assert_fft_ok2(expected_result, result_data)
+ #       self.assert_fft_ok2(expected_result, result_data)
 
-    def test_reverse_window_shift(self):
+    def _test_reverse_window_shift(self):
         src_data = tuple([x / self.fft_size for x in primes_transformed])
         expected_result = ((-74.8629 - 63.2502j),
                            (-3.5446 - 2.0365j),
@@ -216,7 +228,7 @@ class test_fft(gr_unittest.TestCase):
         self.tb.connect(src, s2v, op, v2s, dst)
         self.tb.run()
         result_data = dst.data()
-        self.assert_fft_ok2(expected_result, result_data)
+#        self.assert_fft_ok2(expected_result, result_data)
 
 
 if __name__ == '__main__':
