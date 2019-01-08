@@ -22,7 +22,7 @@
 #define INCLUDED_CLENABLED_CLLOG_IMPL_H
 
 #include <clenabled/clLog.h>
-#include "GRCLBase.h"
+#include "GRACCBase.h"
 
 namespace gr {
   namespace clenabled {

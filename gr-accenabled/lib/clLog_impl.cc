@@ -24,6 +24,7 @@
 
 #include <gnuradio/io_signature.h>
 #include "clLog_impl.h"
+#include "clLog_kernel.h"
 
 namespace gr {
   namespace clenabled {

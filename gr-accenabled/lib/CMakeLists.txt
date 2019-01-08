@@ -41,7 +41,7 @@ link_directories(${FFTW3F_LIBRARY_DIRS})
 # Generate OpenACC output files by OpenARC #
 ############################################
 add_custom_command(OUTPUT clLog_kernel.cpp openarc_kernel.cl
-	COMMAND ${OpenARC_BIN_DIR}/openarc -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_clLog.txt ${CMAKE_CURRENT_SOURCE_DIR}/clLog_kernel.c; cp ${CMAKE_CURRENT_SOURCE_DIR}/cetus_output/clLog_kernel.cpp ${CMAKE_CURRENT_SOURCE_DIR}/; cp ${CMAKE_CURRENT_SOURCE_DIR}/cetus_output/openarc_kernel.cl ${CMAKE_CURRENT_SOURCE_DIR}/; rm -rf ${CMAKE_CURRENT_SOURCE_DIR}/cetus_output
+	COMMAND ${OpenARC_BIN_DIR}/openarc -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_clLog.txt ${CMAKE_CURRENT_SOURCE_DIR}/clLog_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output/clLog_kernel.cpp ${CMAKE_CURRENT_BINARY_DIR}/ && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output/openarc_kernel.cl ${CMAKE_CURRENT_BINARY_DIR}/ && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output
 	DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/clLog_kernel.c)
 
 list(APPEND clenabled_sources
@@ -125,7 +125,7 @@ list(APPEND test_clenabled_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/clFFT_impl.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/window.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/clLog_impl.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/clLog_kernel.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/clLog_kernel.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/clSNR_impl.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/clComplexToMag_impl.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/clComplexToArg_impl.cc
@@ -240,7 +240,7 @@ target_link_libraries(
 list(APPEND test_cllog_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/test-cllog.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/clLog_impl.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/clLog_kernel.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/clLog_kernel.cpp
 )
 
 add_executable(test-acclog ${test_cllog_sources})
