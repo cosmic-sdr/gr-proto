@@ -24,7 +24,6 @@
 
 #include <gnuradio/io_signature.h>
 #include "clLog_impl.h"
-#include "clLog_kernel.h"
 
 namespace gr {
   namespace clenabled {
@@ -49,7 +48,8 @@ namespace gr {
     clLog_impl::clLog_impl(int openCLPlatformType,int devSelector,int platformId, int devId,float nValue,float kValue,bool setDebug)
       : gr::sync_block("clLog",
               gr::io_signature::make(1, 1, sizeof(float)),
-              gr::io_signature::make(1, 1, sizeof(float)))
+              gr::io_signature::make(1, 1, sizeof(float))),
+			  GRACCBase(openCLPlatformType,devSelector,platformId,devId,setDebug)
 
     {
     	n_val = nValue;
@@ -60,7 +60,6 @@ namespace gr {
     		imaxItems=8192;
 
         setBufferLength(imaxItems);
-		acc_initializer(openCLPlatformType, devSelector, platformId, devId);
 
         // And finally optimize the data we get based on the preferred workgroup size.
         // Note: We can't do this until the kernel is compiled and since it's in the block class

@@ -1,14 +1,14 @@
 /*
- * GRCLBase.h
+ * GRACCBase.h
  *
  *  Created on: Feb 9, 2017
  *      Author: root
  */
 
-#ifndef LIB_GRCLBASE_H_
-#define LIB_GRCLBASE_H_
-
 #ifndef LIB_GRACCBASE_H_
+#define LIB_GRACCBASE_H_
+
+#ifndef LIB_GRCLBASE_H_
 
 // Use CPP exception handling.
 // Note: If you include cl.hpp, the compiler just won't find cl::Error class.
@@ -30,6 +30,8 @@
 
 #include <boost/thread/mutex.hpp>
 
+#include "acc_helper.h"
+
 #define DTYPE_COMPLEX 1
 #define DTYPE_FLOAT 2
 #define DTYPE_INT 3
@@ -47,9 +49,9 @@
 namespace gr {
 namespace clenabled {
 
-extern bool CLPRINT_NITEMS;  // Enable this in GRCLBase.cpp to print the number of items passed to the work functions if debug is enabled for the module
+extern bool CLPRINT_NITEMS;  // Enable this in GRACCBase.cpp to print the number of items passed to the work functions if debug is enabled for the module
 
-class CLENABLED_API GRCLBase {
+class CLENABLED_API GRACCBase {
 protected:
      int dataType;
 	 size_t dataSize;
@@ -74,24 +76,9 @@ protected:
 
     virtual void cleanup();
 
-    // opencl variables
-    cl::Program *program=NULL;
-    cl::Context *context=NULL;
-    std::vector<cl::Device> devices;
-    cl::Program::Sources *sources=NULL;
-    cl::CommandQueue *queue=NULL;
-    cl::Kernel *kernel=NULL;
-
     cl_device_type contextType;
 
-    std::string platformName="";
-    std::string platformVendor="";
-    std::vector<std::string> deviceNames;
-    std::vector<std::string> deviceTypes;
-
-    bool CompileKernel(const char* kernelCode, const char* kernelFunctionName, bool exitOnFail=true);
-
-	virtual void InitOpenCL(int idataType, size_t dsize,int openCLPlatformType, int devSelector,int platformId, int devId, bool setDebug=false,bool outOfOrderQueue=false);
+	virtual void InitOpenACC(int openCLPlatformType, int devSelector,int platformId, int devId, bool setDebug=false);
 
 public:
     bool hasSVMAvailable() { return hasSharedVirtualMemory; };
@@ -104,12 +91,9 @@ public:
 
     int ActiveContextType() {return contextType;};
 
-    std::string getPlatformName() { return platformName; };
-    std::string getVendorName() { return platformVendor; };
-
-	GRCLBase(int idataType, size_t dsize,int openCLPlatformType, bool setDebug=false,bool outOfOrderQueue=false); // selects First of specified type
-	GRCLBase(int idataType, size_t dsize,int openCLPlatformType, int devSelector,int platformId, int devId, bool setDebug=false,bool outOfOrderQueue=false);
-	virtual ~GRCLBase();
+	GRACCBase(int openCLPlatformType, bool setDebug=false); // selects First of specified type
+	GRACCBase(int openCLPlatformType, int devSelector,int platformId, int devId, bool setDebug=false);
+	virtual ~GRACCBase();
     virtual bool stop();
 
     cl_device_type GetContextType();
@@ -119,4 +103,4 @@ public:
 } /* namespace clenabled */
 } /* namespace gr */
 
-#endif /* LIB_GRCLBASE_H_ */
+#endif /* LIB_GRACCBASE_H_ */

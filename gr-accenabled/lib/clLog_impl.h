@@ -23,11 +23,12 @@
 
 #include <clenabled/clLog.h>
 #include "GRACCBase.h"
+#include "clLog_kernel.h"
 
 namespace gr {
   namespace clenabled {
 
-    class clLog_impl : public clLog 
+    class clLog_impl : public clLog, public GRACCBase
     {
      private:
       // Nothing to declare in this block.

@@ -40,13 +40,14 @@ link_directories(${FFTW3F_LIBRARY_DIRS})
 ############################################
 # Generate OpenACC output files by OpenARC #
 ############################################
-add_custom_command(OUTPUT clLog_kernel.cpp openarc_kernel.cl
-	COMMAND ${OpenARC_BIN_DIR}/openarc -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_clLog.txt ${CMAKE_CURRENT_SOURCE_DIR}/clLog_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output/clLog_kernel.cpp ${CMAKE_CURRENT_BINARY_DIR}/ && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output/openarc_kernel.cl ${CMAKE_CURRENT_BINARY_DIR}/ && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output
-	DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/clLog_kernel.c)
+add_custom_command(OUTPUT acc_helper.cpp clLog_kernel.cpp openarc_kernel.cl
+	COMMAND ${OpenARC_BIN_DIR}/openarc -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_clLog.txt ${CMAKE_CURRENT_SOURCE_DIR}/clLog_kernel.c ${CMAKE_CURRENT_SOURCE_DIR}/acc_helper.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output/acc_helper.cpp ${CMAKE_CURRENT_BINARY_DIR}/ && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output/clLog_kernel.cpp ${CMAKE_CURRENT_BINARY_DIR}/ && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output/openarc_kernel.cl ${CMAKE_CURRENT_BINARY_DIR}/ && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output
+	DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/acc_helper.c ${CMAKE_CURRENT_SOURCE_DIR}/clLog_kernel.c)
 
 list(APPEND clenabled_sources
     clMathConst_impl.cc
     GRCLBase.cpp
+    GRACCBase.cpp
     clMathOp_impl.cc
     firdes.cc
     window.cc
@@ -57,6 +58,7 @@ list(APPEND clenabled_sources
     fast_atan2f.cc
     clFFT_impl.cc
     clLog_impl.cc
+    acc_helper.cpp
     clLog_kernel.cpp
     clSNR_impl.cc
     clComplexToArg_impl.cc
@@ -119,12 +121,14 @@ list(APPEND test_clenabled_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/clMathOp_impl.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/clMathConst_impl.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/GRCLBase.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/GRACCBase.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/clFilter_impl.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/clQuadratureDemod_impl.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/fast_atan2f.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/clFFT_impl.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/window.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/clLog_impl.cc
+    ${CMAKE_CURRENT_BINARY_DIR}/acc_helper.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/clLog_kernel.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/clSNR_impl.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/clComplexToMag_impl.cc
@@ -240,10 +244,17 @@ target_link_libraries(
 list(APPEND test_cllog_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/test-cllog.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/clLog_impl.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/GRACCBase.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/acc_helper.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/clLog_kernel.cpp
 )
 
 add_executable(test-acclog ${test_cllog_sources})
+
+target_compile_definitions(
+	test-acclog
+	PRIVATE -DGRACC_ONLY
+)
 
 
 target_link_libraries(
@@ -255,7 +266,7 @@ target_link_libraries(
 )
 
 install(TARGETS test-acclog DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" RUNTIME)
-install(FILES openarc_kernel.cl DESTINATION "${CMAKE_INSTALL_PREFIX}/bin") 
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/openarc_kernel.cl DESTINATION "${CMAKE_INSTALL_PREFIX}/bin") 
 ########################################################################
 # Print summary
 ########################################################################
