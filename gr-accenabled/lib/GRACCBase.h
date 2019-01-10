@@ -30,7 +30,6 @@
 
 #include <boost/thread/mutex.hpp>
 
-#include "acc_helper.h"
 
 #define DTYPE_COMPLEX 1
 #define DTYPE_FLOAT 2
@@ -45,6 +44,8 @@
 #define OCLDEVICESELECTOR_SPECIFIC 2
 
 #endif
+
+#include "acc_helper.h"
 
 namespace gr {
 namespace clenabled {
@@ -77,6 +78,8 @@ protected:
     virtual void cleanup();
 
     cl_device_type contextType;
+
+	acc_device_t deviceType;
 
 	virtual void InitOpenACC(int openCLPlatformType, int devSelector,int platformId, int devId, bool setDebug=false);
 

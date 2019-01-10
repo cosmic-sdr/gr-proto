@@ -22,17 +22,21 @@ void GRACCBase::InitOpenACC(int openCLPlatformType, int devSelector,int platform
 	switch(openCLPlatformType) {
 	case OCLTYPE_CPU:
 		contextType = CL_DEVICE_TYPE_CPU;
+		deviceType = acc_device_host;
 		break;
 	case OCLTYPE_ACCELERATOR:
 		contextType = CL_DEVICE_TYPE_ACCELERATOR;
+		deviceType = acc_device_not_host;
 		break;
 	case OCLTYPE_ANY:
 		contextType = CL_DEVICE_TYPE_ALL;
+		deviceType = acc_device_default;
 		break;
 	default:
 		contextType = CL_DEVICE_TYPE_ACCELERATOR;
+		deviceType = acc_device_gpu;
 	}
-	acc_initializer(openCLPlatformType, devSelector, platformId, devId); 
+	acc_initializer(deviceType, devSelector, devId); 
 }
 
 GRACCBase::GRACCBase(int openCLPlatformType, int devSelector,int platformId, int devId, bool setDebug) {
@@ -48,12 +52,7 @@ cl_device_type GRACCBase::GetContextType() {
 }
 
 void GRACCBase::cleanup() {
-	// Cleanup order:
-	// Memory
-	// Command queue
-	// kernel
-	// program
-	// context
+	acc_shutdown(deviceType);
 }
 
 GRACCBase::~GRACCBase() {
