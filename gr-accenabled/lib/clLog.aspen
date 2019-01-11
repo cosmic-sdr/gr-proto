@@ -1,0 +1,23 @@
+model clLog {
+param aspen_param_default = 1
+param aspen_param_sizeof_float = 4
+param noutput_items = 8192
+kernel main {
+execute [noutput_items] "block_clLog_kernel6" {
+flops [1] as integer
+}
+execute  "block_clLog_kernel6__intracommIN" {
+intracomm [(aspen_param_sizeof_float*noutput_items)] as copyin
+}
+map [noutput_items] "mapblock_clLog_kernel6" {
+execute  "block_clLog_kernel7" {
+loads [(1*aspen_param_sizeof_float)] as stride(1)
+stores [(1*aspen_param_sizeof_float)] as stride(1)
+flops [3] as dp, simd
+}
+}
+execute  "block_clLog_kernel6__intracommOUT" {
+intracomm [(aspen_param_sizeof_float*noutput_items)] as copyout
+}
+}
+}

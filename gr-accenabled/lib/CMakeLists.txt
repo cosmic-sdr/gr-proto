@@ -267,6 +267,15 @@ target_link_libraries(
 
 install(TARGETS test-acclog DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" RUNTIME)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/openarc_kernel.cl DESTINATION "${CMAKE_INSTALL_PREFIX}/bin") 
+
+########################################################
+# Generate ASPNE model for acclog module using OpenARC #
+########################################################
+add_custom_target(clLogAspenGen ALL
+	COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/clLog_aspengen.bash -f=${CMAKE_CURRENT_SOURCE_DIR}/clLog_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output/clLog.aspen ${CMAKE_CURRENT_SOURCE_DIR} && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output
+	DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/clLog_aspengen.bash ${CMAKE_CURRENT_SOURCE_DIR}/clLog_kernel.c)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/clLog.aspen DESTINATION "${CMAKE_INSTALL_PREFIX}/bin") 
+
 ########################################################################
 # Print summary
 ########################################################################
