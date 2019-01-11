@@ -146,7 +146,7 @@ namespace gr {
 		}
 
 		// Do the work
-        log_kernel(noutput_items, n_val, k_val, localWGSize, (const float *)input_items[0], (float *)output_items[0]);
+        clLog_kernel(noutput_items, n_val, k_val, localWGSize, (const float *)input_items[0], (float *)output_items[0]);
 
       // Tell runtime system how many output items we produced.
       return noutput_items;
