@@ -40,8 +40,8 @@ link_directories(${FFTW3F_LIBRARY_DIRS})
 ############################################
 # Generate OpenACC output files by OpenARC #
 ############################################
-add_custom_command(OUTPUT acc_helper.cpp clLog_kernel.cpp openarc_kernel.cl
-	COMMAND ${OpenARC_BIN_DIR}/openarc -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_clLog.txt ${CMAKE_CURRENT_SOURCE_DIR}/clLog_kernel.c ${CMAKE_CURRENT_SOURCE_DIR}/acc_helper.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output/acc_helper.cpp ${CMAKE_CURRENT_BINARY_DIR}/ && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output/clLog_kernel.cpp ${CMAKE_CURRENT_BINARY_DIR}/ && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output/openarc_kernel.cl ${CMAKE_CURRENT_BINARY_DIR}/ && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output
+add_custom_command(OUTPUT acc_helper.cpp clLog_kernel.cpp openarc_kernel_clLog.cl
+	COMMAND ${OpenARC_BIN_DIR}/openarc -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_clLog.txt ${CMAKE_CURRENT_SOURCE_DIR}/clLog_kernel.c ${CMAKE_CURRENT_SOURCE_DIR}/acc_helper.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output/acc_helper.cpp ${CMAKE_CURRENT_BINARY_DIR}/ && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output/clLog_kernel.cpp ${CMAKE_CURRENT_BINARY_DIR}/ && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output/openarc_kernel_clLog.cl ${CMAKE_CURRENT_BINARY_DIR}/ && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output
 	DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/acc_helper.c ${CMAKE_CURRENT_SOURCE_DIR}/clLog_kernel.c)
 
 list(APPEND clenabled_sources
@@ -266,7 +266,7 @@ target_link_libraries(
 )
 
 install(TARGETS test-acclog DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" RUNTIME)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/openarc_kernel.cl DESTINATION "${CMAKE_INSTALL_PREFIX}/bin") 
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/openarc_kernel_clLog.cl DESTINATION "${CMAKE_INSTALL_PREFIX}/bin") 
 
 ########################################################
 # Generate ASPNE model for acclog module using OpenARC #
