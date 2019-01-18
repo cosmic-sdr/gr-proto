@@ -44,6 +44,10 @@ add_custom_command(OUTPUT acc_helper.cpp clLog_kernel.cpp openarc_kernel_clLog.c
 	COMMAND ${OpenARC_BIN_DIR}/openarc -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_clLog.txt ${CMAKE_CURRENT_SOURCE_DIR}/clLog_kernel.c ${CMAKE_CURRENT_SOURCE_DIR}/acc_helper.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output/acc_helper.cpp ${CMAKE_CURRENT_BINARY_DIR}/ && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output/clLog_kernel.cpp ${CMAKE_CURRENT_BINARY_DIR}/ && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output/openarc_kernel_clLog.cl ${CMAKE_CURRENT_BINARY_DIR}/ && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output
 	DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/acc_helper.c ${CMAKE_CURRENT_SOURCE_DIR}/clLog_kernel.c)
 
+add_custom_command(OUTPUT acc_helper.cpp clComplexToArg_kernel.cpp openarc_kernel_clComplexToArg.cl
+	COMMAND ${OpenARC_BIN_DIR}/openarc -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_clComplexToArg.txt ${CMAKE_CURRENT_SOURCE_DIR}/clComplexToArg_kernel.c ${CMAKE_CURRENT_SOURCE_DIR}/acc_helper.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output/acc_helper.cpp ${CMAKE_CURRENT_BINARY_DIR}/ && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output/clComplexToArg_kernel.cpp ${CMAKE_CURRENT_BINARY_DIR}/ && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output/openarc_kernel_clComplexToArg.cl ${CMAKE_CURRENT_BINARY_DIR}/ && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output
+	DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/acc_helper.c ${CMAKE_CURRENT_SOURCE_DIR}/clComplexToArg_kernel.c)
+
 list(APPEND clenabled_sources
     clMathConst_impl.cc
     GRCLBase.cpp
@@ -62,6 +66,7 @@ list(APPEND clenabled_sources
     clLog_kernel.cpp
     clSNR_impl.cc
     clComplexToArg_impl.cc
+    clComplexToArg_kernel.cc
     clComplexToMagPhase_impl.cc
     clMagPhaseToComplex_impl.cc
     clComplexToMag_impl.cc
@@ -133,6 +138,7 @@ list(APPEND test_clenabled_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/clSNR_impl.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/clComplexToMag_impl.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/clComplexToArg_impl.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/clComplexToArg_kernel.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/clComplexToMagPhase_impl.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/clMagPhaseToComplex_impl.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/clSignalSource_impl.cc
@@ -275,6 +281,44 @@ add_custom_target(clLogAspenGen ALL
 	COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/clLog_aspengen.bash -f=${CMAKE_CURRENT_SOURCE_DIR}/clLog_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output/clLog.aspen ${CMAKE_CURRENT_SOURCE_DIR} && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output
 	DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/clLog_aspengen.bash ${CMAKE_CURRENT_SOURCE_DIR}/clLog_kernel.c)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/clLog.aspen DESTINATION "${CMAKE_INSTALL_PREFIX}/bin") 
+
+########################################################################
+# Build and register test-accComplexToArg
+########################################################################
+list(APPEND test_clcomplextoarg_sources
+    ${CMAKE_CURRENT_SOURCE_DIR}/test-clcomplextoarg.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/clComplexToArg_impl.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/GRACCBase.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/acc_helper.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/clComplexToArg_kernel.cpp
+)
+
+add_executable(test-acccomplextoarg ${test_clcomplextoarg_sources})
+
+target_compile_definitions(
+	test-acccomplextoarg
+	PRIVATE -DGRACC_ONLY
+)
+
+
+target_link_libraries(
+  test-acccomplextoarg
+  ${OpenCL_LIBRARY}
+  ${GNURADIO_RUNTIME_LIBRARIES}
+  ${Boost_LIBRARIES}
+  gnuradio-accenabled
+)
+
+install(TARGETS test-acccomplextoarg DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" RUNTIME)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/openarc_kernel_clComplexToArg.cl DESTINATION "${CMAKE_INSTALL_PREFIX}/bin") 
+
+#################################################################
+# Generate ASPNE model for acccomplextoarg module using OpenARC #
+#################################################################
+add_custom_target(clComplexToArgAspenGen ALL
+	COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/clComplexToArg_aspengen.bash -f=${CMAKE_CURRENT_SOURCE_DIR}/clComplexToArg_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output/clComplexToArg.aspen ${CMAKE_CURRENT_SOURCE_DIR} && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output
+	DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/clComplexToArg_aspengen.bash ${CMAKE_CURRENT_SOURCE_DIR}/clComplexToArg_kernel.c)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/clComplexToArg.aspen DESTINATION "${CMAKE_INSTALL_PREFIX}/bin") 
 
 ########################################################################
 # Print summary

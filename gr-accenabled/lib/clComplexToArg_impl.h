@@ -22,20 +22,17 @@
 #define INCLUDED_CLENABLED_CLCOMPLEXTOARG_IMPL_H
 
 #include <clenabled/clComplexToArg.h>
-#include "GRCLBase.h"
+#include "GRACCBase.h"
+#include "clComplexToArg_kernel.h"
 
 namespace gr {
   namespace clenabled {
 
-    class clComplexToArg_impl : public clComplexToArg, public GRCLBase
+    class clComplexToArg_impl : public clComplexToArg, public GRACCBase
     {
      private:
       // Nothing to declare in this block.
-		cl::Buffer *aBuffer=NULL;
-		cl::Buffer *cBuffer=NULL;
 		int curBufferSize=0;
-
-		void buildKernel(int numItems);
 
 		gr_vector_int d_ninput_items;  // backward compatibility item moving from block to sync_block.
 
