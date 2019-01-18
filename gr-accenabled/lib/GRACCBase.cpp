@@ -23,18 +23,22 @@ void GRACCBase::InitOpenACC(int openCLPlatformType, int devSelector,int platform
 	case OCLTYPE_CPU:
 		contextType = CL_DEVICE_TYPE_CPU;
 		deviceType = acc_device_host;
+		platformName = "CPU";
 		break;
 	case OCLTYPE_ACCELERATOR:
 		contextType = CL_DEVICE_TYPE_ACCELERATOR;
 		deviceType = acc_device_not_host;
+		platformName = "ACCELERATOR";
 		break;
 	case OCLTYPE_ANY:
 		contextType = CL_DEVICE_TYPE_ALL;
 		deviceType = acc_device_default;
+		platformName = "DEFAULT DEVICE";
 		break;
 	default:
 		contextType = CL_DEVICE_TYPE_ACCELERATOR;
 		deviceType = acc_device_gpu;
+		platformName = "GPU";
 	}
 	acc_initializer(deviceType, devSelector, devId); 
 }

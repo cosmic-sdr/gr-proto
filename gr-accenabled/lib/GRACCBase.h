@@ -79,6 +79,8 @@ protected:
 
     cl_device_type contextType;
 
+	std::string platformName="";
+
 	acc_device_t deviceType;
 
 	virtual void InitOpenACC(int openCLPlatformType, int devSelector,int platformId, int devId, bool setDebug=false);
@@ -93,6 +95,8 @@ public:
     void SetDebugMode(bool newMode) { debugMode = newMode; };
 
     int ActiveContextType() {return contextType;};
+
+	std::string getPlatformName() { return platformName; };
 
 	GRACCBase(int openCLPlatformType, bool setDebug=false); // selects First of specified type
 	GRACCBase(int openCLPlatformType, int devSelector,int platformId, int devId, bool setDebug=false);
