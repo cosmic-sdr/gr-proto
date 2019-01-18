@@ -1,0 +1,23 @@
+model clComplexToArg {
+param aspen_param_default = 1
+param aspen_param_sizeof_FComplex
+param aspen_param_sizeof_float = 4
+param noutput_items = 8192
+kernel main {
+execute [noutput_items] "block_clComplexToArg_kernel3" {
+flops [1] as integer
+}
+execute  "block_clComplexToArg_kernel3__intracommIN" {
+intracomm [(aspen_param_sizeof_FComplex*noutput_items)] as copyin
+}
+map [noutput_items] "mapblock_clComplexToArg_kernel3" {
+execute  "block_clComplexToArg_kernel4" {
+loads [(2*aspen_param_sizeof_FComplex)] as stride(1)
+stores [(1*aspen_param_sizeof_float)] as stride(1)
+}
+}
+execute  "block_clComplexToArg_kernel3__intracommOUT" {
+intracomm [(aspen_param_sizeof_float*noutput_items)] as copyout
+}
+}
+}

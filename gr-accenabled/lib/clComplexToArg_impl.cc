@@ -93,7 +93,7 @@ namespace gr {
     bool clComplexToArg_impl::stop() {
     	curBufferSize = 0;
 
-    	return GRCLBase::stop();
+    	return GRACCBase::stop();
     }
 
     void clComplexToArg_impl::setBufferLength(int numItems) {
@@ -149,7 +149,7 @@ namespace gr {
 		}
 
 		// Do the work
-		clComplexToArg_kernel(noutput_items, (SComplex *)input_items[0], (float *)output_items[0]);	
+		clComplexToArg_kernel(noutput_items, (const FComplex *)input_items[0], (float *)output_items[0]);	
 
       // Tell runtime system how many output items we produced.
       return noutput_items;

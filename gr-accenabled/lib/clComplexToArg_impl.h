@@ -24,6 +24,7 @@
 #include <clenabled/clComplexToArg.h>
 #include "GRACCBase.h"
 #include "clComplexToArg_kernel.h"
+#include "fast_atan2f.h"
 
 namespace gr {
   namespace clenabled {

@@ -1,6 +1,8 @@
 #include "clComplexToArg_kernel.h"
 
-void clComplexToArg_kernel(int noutput_items, const SComplex *in, float *out) {
+float fast_atan2f(float y, float x);
+
+void clComplexToArg_kernel(int noutput_items, const FComplex *in, float *out) {
 	int i;
 #ifdef GEN_ASPEN
 #pragma aspen  declare param(noutput_items:__INPUTSIZE1__)

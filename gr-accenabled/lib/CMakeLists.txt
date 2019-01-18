@@ -44,7 +44,7 @@ add_custom_command(OUTPUT acc_helper.cpp clLog_kernel.cpp openarc_kernel_clLog.c
 	COMMAND ${OpenARC_BIN_DIR}/openarc -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_clLog.txt ${CMAKE_CURRENT_SOURCE_DIR}/clLog_kernel.c ${CMAKE_CURRENT_SOURCE_DIR}/acc_helper.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output/acc_helper.cpp ${CMAKE_CURRENT_BINARY_DIR}/ && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output/clLog_kernel.cpp ${CMAKE_CURRENT_BINARY_DIR}/ && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output/openarc_kernel_clLog.cl ${CMAKE_CURRENT_BINARY_DIR}/ && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output
 	DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/acc_helper.c ${CMAKE_CURRENT_SOURCE_DIR}/clLog_kernel.c)
 
-add_custom_command(OUTPUT acc_helper.cpp clComplexToArg_kernel.cpp openarc_kernel_clComplexToArg.cl
+add_custom_command(OUTPUT clComplexToArg_kernel.cpp openarc_kernel_clComplexToArg.cl
 	COMMAND ${OpenARC_BIN_DIR}/openarc -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_clComplexToArg.txt ${CMAKE_CURRENT_SOURCE_DIR}/clComplexToArg_kernel.c ${CMAKE_CURRENT_SOURCE_DIR}/acc_helper.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output/acc_helper.cpp ${CMAKE_CURRENT_BINARY_DIR}/ && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output/clComplexToArg_kernel.cpp ${CMAKE_CURRENT_BINARY_DIR}/ && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output/openarc_kernel_clComplexToArg.cl ${CMAKE_CURRENT_BINARY_DIR}/ && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output
 	DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/acc_helper.c ${CMAKE_CURRENT_SOURCE_DIR}/clComplexToArg_kernel.c)
 
@@ -66,7 +66,7 @@ list(APPEND clenabled_sources
     clLog_kernel.cpp
     clSNR_impl.cc
     clComplexToArg_impl.cc
-    clComplexToArg_kernel.cc
+    clComplexToArg_kernel.cpp
     clComplexToMagPhase_impl.cc
     clMagPhaseToComplex_impl.cc
     clComplexToMag_impl.cc
@@ -138,7 +138,7 @@ list(APPEND test_clenabled_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/clSNR_impl.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/clComplexToMag_impl.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/clComplexToArg_impl.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/clComplexToArg_kernel.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/clComplexToArg_kernel.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/clComplexToMagPhase_impl.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/clMagPhaseToComplex_impl.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/clSignalSource_impl.cc
