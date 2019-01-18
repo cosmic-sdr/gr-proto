@@ -4,8 +4,6 @@ inputSize1=8192
 benchname="clLog"
 inputSource="${benchname}_kernel.c"
 entryFunction="${benchname}_kernel"
-runMode=3
-postprocessing=0
 
 function usage()
 {
@@ -54,5 +52,4 @@ if [ ! -f "${openarc}/bin/openarc" ]; then
     exit
 fi
 
-${openarc}/bin/openarc -addIncludePath=${openarc}/openarcrt -SetAccEntryFunction=${entryFunction} -macro=__INPUTSIZE1__=${inputSize1} acc_helper.c  ${inputSource}
-#${openarc}/bin/openarc -addIncludePath=${openarc}/openarcrt -macro=__INPUTSIZE1__=${inputSize1} acc_helper.c ${inputSource}
+${openarc}/bin/openarc -addIncludePath=${openarc}/openarcrt -macro=__INPUTSIZE1__=${inputSize1} -gpuConfFile=openarcConf_${benchname}.txt acc_helper.c  ${inputSource}

@@ -32,7 +32,7 @@
   #define TAN_MAP_SIZE 255
 
   /* arctangents from 0 to pi/4 radians */
-  const float
+  static const float
   fast_atan_table[257] = {
     0.000000e+00, 3.921549e-03, 7.842976e-03, 1.176416e-02,
     1.568499e-02, 1.960533e-02, 2.352507e-02, 2.744409e-02,
@@ -119,7 +119,7 @@
    with an average error of +/- 3.56e-5 degrees (6.21e-7 radians).
   *****************************************************************************/
 
-  float
+  static float
   fast_atan2f(float y, float x)
   {
     float x_abs, y_abs, z;

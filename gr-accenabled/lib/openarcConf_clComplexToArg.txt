@@ -817,7 +817,7 @@ targetArch=1
 #SkipGPUTranslation=N
 #showInternalAnnotations=1
 #skipKernelLoopBoundChecking
-#SetAccEntryFunction=filename
+SetAccEntryFunction=clComplexToArg_kernel
 SetOutputKernelFileNameBase=openarc_kernel_clComplexToArg
 #addIncludePath=__openarcrt__
 #macro=_N_=__inputSize__

@@ -817,7 +817,7 @@ targetArch=1
 #SkipGPUTranslation=N
 #showInternalAnnotations=1
 #skipKernelLoopBoundChecking
-#SetAccEntryFunction=filename
+SetAccEntryFunction=clLog_kernel
 SetOutputKernelFileNameBase=openarc_kernel_clLog
 #addIncludePath=__openarcrt__
 #macro=_N_=__inputSize__
