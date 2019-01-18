@@ -1,8 +1,101 @@
 model clComplexToArg {
 param aspen_param_default = 1
-param aspen_param_sizeof_FComplex
+data fast_atan_table as Array(257, aspen_param_sizeof_float)
 param aspen_param_sizeof_float = 4
+param aspen_param_sizeof_FComplex
+param x_abs
+param y_abs
+param z
+param y
+param x
 param noutput_items = 8192
+kernel fast_atan2f {
+execute  "block_fast_atan2f19" {
+flops [1] as sp
+flops [1] as sp
+flops [2] as sp
+flops [1] as sp
+}
+if (y_abs<x_abs) {
+execute  "block_fast_atan2f26" {
+flops [1] as sp
+}
+} else {
+execute  "block_fast_atan2f27" {
+flops [1] as sp
+}
+}
+execute  "block_fast_atan2f31" {
+flops [1] as dp
+}
+if (( ! z<0.003921569)) {
+execute  "block_fast_atan2f34" {
+flops [1] as sp
+flops [1] as sp
+loads [(1*aspen_param_sizeof_float)] from fast_atan_table as stride(0)
+loads [(2*aspen_param_sizeof_float)] from fast_atan_table as stride(0)
+flops [3] as sp, simd
+flops [1] as integer
+}
+}
+execute  "block_fast_atan2f41" {
+flops [1] as sp
+}
+if (x_abs>y_abs) {
+execute  "block_fast_atan2f43" {
+flops [1] as dp
+}
+if (x>=0.0) {
+execute  "block_fast_atan2f46" {
+flops [1] as dp
+}
+} else {
+execute  "block_fast_atan2f53" {
+flops [1] as dp
+}
+if (y>=0.0) {
+execute  "block_fast_atan2f54" {
+flops [1] as sp
+}
+} else {
+execute  "block_fast_atan2f55" {
+flops [1] as sp
+}
+}
+}
+} else {
+execute  "block_fast_atan2f58" {
+flops [1] as dp
+}
+if (y>=0.0) {
+execute  "block_fast_atan2f62" {
+flops [1] as dp
+}
+if (x>=0.0) {
+execute  "block_fast_atan2f63" {
+flops [1] as sp
+}
+} else {
+execute  "block_fast_atan2f64" {
+flops [1] as sp
+}
+}
+} else {
+execute  "block_fast_atan2f69" {
+flops [1] as dp
+}
+if (x>=0.0) {
+execute  "block_fast_atan2f70" {
+flops [1] as sp
+}
+} else {
+execute  "block_fast_atan2f71" {
+flops [1] as sp
+}
+}
+}
+}
+}
 kernel main {
 execute [noutput_items] "block_clComplexToArg_kernel3" {
 flops [1] as integer
@@ -15,6 +108,7 @@ execute  "block_clComplexToArg_kernel4" {
 loads [(2*aspen_param_sizeof_FComplex)] as stride(1)
 stores [(1*aspen_param_sizeof_float)] as stride(1)
 }
+call fast_atan2f()
 }
 execute  "block_clComplexToArg_kernel3__intracommOUT" {
 intracomm [(aspen_param_sizeof_float*noutput_items)] as copyout

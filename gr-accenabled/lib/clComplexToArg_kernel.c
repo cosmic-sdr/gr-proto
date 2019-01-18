@@ -1,6 +1,9 @@
 #include "clComplexToArg_kernel.h"
 
-float fast_atan2f(float y, float x);
+#ifdef _OPENARC_
+#include "math.h"
+#include "fast_atan2f.c"
+#endif
 
 void clComplexToArg_kernel(int noutput_items, const FComplex *in, float *out) {
 	int i;

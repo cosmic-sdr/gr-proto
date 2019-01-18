@@ -45,7 +45,7 @@ add_custom_command(OUTPUT acc_helper.cpp clLog_kernel.cpp openarc_kernel_clLog.c
 	DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/acc_helper.c ${CMAKE_CURRENT_SOURCE_DIR}/clLog_kernel.c)
 
 add_custom_command(OUTPUT clComplexToArg_kernel.cpp openarc_kernel_clComplexToArg.cl
-	COMMAND ${OpenARC_BIN_DIR}/openarc -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_clComplexToArg.txt ${CMAKE_CURRENT_SOURCE_DIR}/clComplexToArg_kernel.c ${CMAKE_CURRENT_SOURCE_DIR}/fast_atan2f.c ${CMAKE_CURRENT_SOURCE_DIR}/acc_helper.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output/acc_helper.cpp ${CMAKE_CURRENT_BINARY_DIR}/ && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output/clComplexToArg_kernel.cpp ${CMAKE_CURRENT_BINARY_DIR}/ && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output/openarc_kernel_clComplexToArg.cl ${CMAKE_CURRENT_BINARY_DIR}/ && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output
+	COMMAND ${OpenARC_BIN_DIR}/openarc -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_clComplexToArg.txt ${CMAKE_CURRENT_SOURCE_DIR}/clComplexToArg_kernel.c ${CMAKE_CURRENT_SOURCE_DIR}/acc_helper.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output/acc_helper.cpp ${CMAKE_CURRENT_BINARY_DIR}/ && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output/clComplexToArg_kernel.cpp ${CMAKE_CURRENT_BINARY_DIR}/ && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output/openarc_kernel_clComplexToArg.cl ${CMAKE_CURRENT_BINARY_DIR}/ && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output
 	DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/acc_helper.c ${CMAKE_CURRENT_SOURCE_DIR}/clComplexToArg_kernel.c)
 
 list(APPEND clenabled_sources
