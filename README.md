@@ -1,6 +1,6 @@
 You need to have these packages on top of vanilla Centos 7 installation. They are already installed on Oswald01.
 ```
-sudo yum install cmake boost cppunit python-mako clang swig numpy python-cheetah cppunit fftw fftw-devel qwt qwt-dvel pyqt4 doxygen zeromq
+sudo yum install cmake boost cppunit python-mako clang swig numpy python-cheetah cppunit fftw fftw-devel qwt qwt-dvel pyqt4 doxygen zeromq scipy python-sphinx thrift uhd uhd-devel SDL libusb gsl gsl-devel wxPython zeromq3-devel python-txzmq SDL-devel pyusb
 ```
 
 Local installation of clFFT, gnuradio and gr-cleanbled into ~/usr/local

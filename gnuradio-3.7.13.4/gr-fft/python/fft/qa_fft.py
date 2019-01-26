@@ -30,7 +30,7 @@ from gnuradio import gr, gr_unittest, fft, blocks
 # windowed = fft(src_data(:).*hamming(32))
 # reverse_window_shift = ifft(fftshift(forward.*hamming(32)))
 import argparse
-
+import time
 
 primes = (2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53,
           59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131,
@@ -71,18 +71,24 @@ primes_transformed = ((4377 + 4516j),
                       (1646.539306640625 - 1694.1956787109375j))
 
 
-fft_size_pow=12
+fft_size_pow_min=5
+fft_size_pow_max=24
 
-ctr=5
-while ctr <= fft_size_pow:
+nthreads_min=1
+nthreads_max=16
+
+ctr=fft_size_pow_min
+while ctr <= fft_size_pow_max:
 	primes = primes + primes
 	primes_transformed = primes_transformed + primes_transformed
 	ctr = ctr+1
 
+
 class test_fft(gr_unittest.TestCase):
     def setUp(self):
         self.tb = gr.top_block()
-        self.fft_size = 2**fft_size_pow
+        #self.fft_size = 2**fft_size_pow
+
 
     def tearDown(self):
         pass
@@ -121,22 +127,33 @@ class test_fft(gr_unittest.TestCase):
  #       self.assert_fft_ok2(expected_result, result_data)
 
     def test_multithreaded(self):
-        # Same test as above, only use 2 threads
-        src_data = tuple([x / self.fft_size for x in primes_transformed])
-        expected_result = tuple([complex(primes[2 * i], primes[2 * i + 1]) for i in range(self.fft_size)])
-        nthreads = 2
+        nthreads = nthreads_min 
+        while nthreads < nthreads_max:
+            fft_size_pow = fft_size_pow_min
+            while fft_size_pow < fft_size_pow_max :
+                self.fft_size=2**fft_size_pow
+                print "fft_size:\t%d" % self.fft_size
+                print "nthreads:\t%d" % nthreads
+                src_data = tuple([x / self.fft_size for x in primes_transformed])
+                #expected_result = tuple([complex(primes[2 * i], primes[2 * i + 1]) for i in range(self.fft_size)])
 
-        src = blocks.vector_source_c(src_data)
-        s2v = blocks.stream_to_vector(gr.sizeof_gr_complex, self.fft_size)
-        op = fft.fft_vcc(self.fft_size, False, [], False, nthreads)
-        v2s = blocks.vector_to_stream(gr.sizeof_gr_complex, self.fft_size)
-        dst = blocks.vector_sink_c()
-        self.tb.connect(src, s2v, op, v2s, dst)
-        self.tb.run()
-        print(op.pc_work_time())
-        print(op.pc_noutput_items_var())
-        result_data = dst.data()
-#        self.assert_fft_ok2(expected_result, result_data)
+                src = blocks.vector_source_c(src_data)
+                s2v = blocks.stream_to_vector(gr.sizeof_gr_complex, self.fft_size)
+                op = fft.fft_vcc(self.fft_size, True, [], False, nthreads)
+                v2s = blocks.vector_to_stream(gr.sizeof_gr_complex, self.fft_size)
+                dst = blocks.vector_sink_c()
+                self.tb.connect(src, s2v, op, v2s, dst)
+                start=time.time()
+                self.tb.run()
+                end=time.time()
+                totaltime = end-start
+                print "execTime: %6.6f" % totaltime
+                #print(op.pc_work_time())
+                # print(op.pc_noutput_items_var())
+                result_data = dst.data()
+                #self.assert_fft_ok2(expected_result, result_data)
+                fft_size_pow = fft_size_pow + 1
+            nthreads = nthreads+1
 
     def _test_window(self):
         src_data = tuple([complex(primes[2 * i], primes[2 * i + 1]) for i in range(self.fft_size)])

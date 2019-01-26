@@ -1,0 +1,491 @@
+Block Name	Key	Sink	Source	Type(s)	Category		Param(s)
+OFDM Symbol Acquisition	dtv_dvbt_ofdm_sym_acquisition	complex	$type<$fft_length>	complex,float,int,short,byte,			fft_length:int (2048)	occupied_tones:int (1705)	cp_length:int (64)	snr:real (10)
+OFDM Cyclic Prefixer	digital_ofdm_cyclic_prefixer	complex<$input_size>	complex				input_size:int (fft_len)	cp_len:int (fft_len/4)	rolloff:int (0)	tagname:string ("frame_len")
+POLAR Encoder Definition	variable_polar_encoder_def						is_packed:False,True, (False)	ndim:0,1,2, (0)	dim1:int (1)	dim2:int (4)	block_size:int	num_info_bits:int	frozen_bit_positions:int_vector	frozen_bit_values:int_vector
+Convolutional Deinterleaver	dtv_dvbt_convolutional_deinterleaver	byte<1>	byte<$blocks*$I>				blocks:int (136)	I:int (12)	M:int (17)
+FLEX Synchronizer	pager_flex_sync	byte	byte		[Core]/Pager	
+File Source	blocks_file_source		$type<$vlen>	complex,float,int,short,byte,			file:file_open	repeat:True,False, (True)	vlen:int (1)	begin_tag:raw (pmt.PMT_NIL)
+CFO Model	channels_cfo_model	complex	complex				srate:real (samp_rate)	stdev:real (0.01)	maxdev:real (1e3)	seed:int (0)
+Multiply Const	blocks_multiply_const_vxx	$type<$vlen>	$type<$vlen>	complex,float,int,short,			const:$type.const_type (0)	vlen:int (1)
+HDLC Deframer	digital_hdlc_deframer_bp	byte	message				min:int (32)	max:int (500)
+Constant Source	analog_const_source_x		$type	complex,float,int,short,			const:$type.const_type (0)
+OFDM Mod	digital_ofdm_mod	$type	complex	complex,float,int,short,byte,	[Core]/Deprecated		modulation:bpsk,qpsk,8psk,qam8,qam16,qam64,qam256,	fft_length:int (512)	occupied_tones:int (200)	cp_length:int (128)	pad_for_usrp:True,False,	payload_length:int (0)
+Delay	blocks_delay	$type<$vlen>[$num_ports]	$type<$vlen>[$num_ports]	complex,float,int,short,byte,			delay:int (0)	num_ports:int (1)	vlen:int (1)
+HW Impairments	channels_impairments	complex	complex				phase_noise_mag:float (0)	magbal:float (0)	phasebal:float (0)	q_ofs:float (0)	i_ofs:float (0)	freq_offset:float (0)	gamma:float (0)	beta:float (0)
+Subtract	blocks_sub_xx	$type<$vlen>[$num_inputs]	$type<$vlen>	complex,float,int,short,			vlen:int (1)	num_inputs:int (2)
+ZMQ REQ Source	zeromq_req_source		$type<$vlen>	complex,float,int,short,byte,	[Core]/ZeroMQ Interfaces		vlen:int (1)	address:string	timeout:float (100)	pass_tags:True,False, (False)	hwm:int (-1)
+Frame Sync Encoder	dtv_catv_frame_sync_enc_bb	byte	byte				constellation:CATV_MOD_64QAM,CATV_MOD_256QAM,	ctrlword:int (6)
+Correlate Access Code - Tag Stream	digital_correlate_access_code_xx_ts	$type	$type	float,byte,			access_code:string (101010)	threshold:int	tagname:string
+Randomizer	dtv_catv_randomizer_bb	byte	byte				constellation:CATV_MOD_64QAM,CATV_MOD_256QAM,
+MSK Timing Recovery	digital_msk_timing_recovery_cc	complex	float				gain:float	sps:float	limit:float	osps:int
+LDPC Bit Flip Decoder Definition	variable_ldpc_bit_flip_decoder_def						value:raw ("ok")	ndim:0,1,2,	dim1:int (1)	dim2:int (1)	max_iterations:int (100)	matrix_object:raw
+Low-pass Filter Taps	variable_low_pass_filter_taps						gain:float (1.0)	samp_rate:float (samp_rate)	cutoff_freq:float	width:float	win:int (firdes.WIN_HAMMING)	beta:float (6.76)
+Band-reject Filter Taps	variable_band_reject_filter_taps						gain:float (1.0)	samp_rate:float (samp_rate)	low_cutoff_freq:float	high_cutoff_freq:float	width:float	win:int (firdes.WIN_HAMMING)	beta:float (6.76)
+WBFM Receive PLL	analog_wfm_rcv_pll	complex	float				quad_rate:real	audio_decimation:int
+WX GUI Terminal Sink	wxgui_termsink	msg			[Core]/Instrumentation/WX		win_size:int_vector	grid_pos:grid_pos	notebook:notebook
+FEC Decoder	fec_generic_decoder	$itype	$otype				decoder:raw (decoder_variable)	itype:complex,float,int,short,byte,	otype:complex,float,int,short,byte,
+FEC Async Decoder	fec_async_decoder	message	message				decoder:raw	mtu:int (1500)	packed:False,True, (False)	rev_pack:True,False, (True)
+Log10	blocks_nlog10_ff	float<$vlen>	float<$vlen>				n:real (1)	k:real (0)	vlen:int (1)
+Packet Header Parser	digital_packet_headerparser_b	byte	message				header_formatter:raw
+Int To Float	blocks_int_to_float	int<$vlen>	float<$vlen>				vlen:int (1)	scale:real (1)
+Phase Mod	analog_phase_modulator_fc	float	complex				sensitivity:real
+Tagged Stream to PDU	blocks_tagged_stream_to_pdu	$type	message	byte,complex,float,			tag:string (packet_len)
+Encode CCSDS 27	fec_encode_ccsds_27_bb	byte	byte			
+HRPT Decoder	noaa_hrpt_decoder	short			[Core]/NOAA		verbose:bool	output:bool
+Map	digital_map_bb	byte	byte				map:int_vector
+ATSC RS Encoder	dtv_atsc_rs_encoder	byte<256>	byte<256>			
+Correlate and Sync	digital_correlate_and_sync_cc	complex	complex		[Core]/Deprecated		symbols:complex_vector ([1,1,-1,-1,1,1,-1,-1,1,1,-1,-1,1,-1,1,-1])	filter:complex_vector	sps:int (4)
+SRO Model	channels_sro_model	complex	complex				srate:real (samp_rate)	stdev:real (0.01)	maxdev:real (1e3)	seed:int (0)
+FM Demod	analog_fm_demod_cf	complex	float				chan_rate:real	audio_decim:int	deviation:real (75000)	audio_pass:real (15000)	audio_stop:real (16000)	gain:real (1.0)	tau:real (75e-6)
+Packed to Unpacked	blocks_packed_to_unpacked_xx	$type[$num_ports]	$type[$num_ports]	int,short,byte,			bits_per_chunk:int (2)	endianness:int	num_ports:int (1)
+DVB-T Map	dtv_dvbt_map	byte<$transmission_mode.payload_length>	complex<$transmission_mode.payload_length>				constellation:qpsk,16qam,64qam,	hierarchy:nh,alpha1,alpha2,alpha4,	transmission_mode:T2k,T8k,	gain:complex (1)
+TPC Decoder Definition	variable_tpc_decoder_def						value:raw ("ok")	ndim:0,1,2, (0)	dim1:int (4)	dim2:int (4)	row_poly:int_vector ([3])	col_poly:int_vector ([43])	krow:int (26)	kcol:int (6)	bval:int (9)	qval:int (3)	max_iter:int (6)	decoder_type:0,1,2,3,4,
+ATSC Deinterleaver	dtv_atsc_deinterleaver	byte<256>	byte<256>			
+Copy	blocks_copy	message	$type<$vlen>	complex,float,int,short,byte,			enabled:bool (True)	vlen:int (1)	showports:False,True, (True)
+Exponentiate Const Int	blocks_exponentiate_const_cci	complex<$vlen>[$num_ports]	complex<$vlen>[$num_ports]				num_ports:int (1)	vlen:int (1)	exponent:int (1)
+OFDM Demod	digital_ofdm_demod	complex	$type	complex,float,int,short,byte,	[Core]/Deprecated		modulation:bpsk,qpsk,8psk,qam8,qam16,qam64,qam256,	fft_length:int (512)	occupied_tones:int (200)	cp_length:int (128)	snr:real (10)
+Complex Conjugate	blocks_conjugate_cc	complex	complex			
+Moving Average	blocks_moving_average_xx	$type<$vlen>	$type<$vlen>	complex,float,int,short,			length:int (1000)	scale:$type.scale (1)	max_iter:int (4000)	vlen:int (1)
+Differential Encoder	digital_diff_encoder_bb	byte	byte				modulus:int
+ATSC Receiver SYNC	dtv_atsc_sync	float	byte<4096>				rate:float
+P1 Symbol Insertion	dtv_dvbt2_p1insertion_cc	complex	complex				carriermode:CARRIERS_NORMAL,CARRIERS_EXTENDED,	fftsize1:FFTSIZE_1K,FFTSIZE_2K,FFTSIZE_4K,FFTSIZE_8K,FFTSIZE_8K_T2GI,FFTSIZE_16K,FFTSIZE_32K,FFTSIZE_32K_T2GI,	fftsize2:FFTSIZE_2K,FFTSIZE_4K,FFTSIZE_8K,FFTSIZE_8K_T2GI,FFTSIZE_16K,FFTSIZE_16K_T2GI,	guardinterval:GI_1_32,GI_1_16,GI_1_8,GI_1_4,GI_1_128,GI_19_128,GI_19_256,	numdatasyms:int (100)	version:VERSION_111,VERSION_131,	preamble1:PREAMBLE_T2_SISO,PREAMBLE_T2_MISO,	preamble2:PREAMBLE_T2_SISO,PREAMBLE_T2_MISO,PREAMBLE_T2_LITE_SISO,PREAMBLE_T2_LITE_MISO,	showlevels:SHOWLEVELS_OFF,SHOWLEVELS_ON,	vclip:float (3.3)
+Ctrlport Probe PSD	fft_ctrlport_probe_psd	complex					name:string (psd)	desc:string (PSD Plot)	len:int (1024)
+Patterned Interleaver	blocks_patterned_interleaver	$type<$vlen>[1+max($pattern)]	$type<$vlen>	complex,float,int,short,byte,			pattern:int_vector ([0,0,1,2])	vlen:int (1)
+PLL Ref Out	analog_pll_refout_cc	complex	complex				w:real	max_freq:real	min_freq:real
+Polyphase Clock Sync	digital_pfb_clock_sync_xxx	$type.input	float	ccf,fff,			sps:real	loop_bw:real	taps:real_vector	filter_size:int (32)	init_phase:real (16)	max_dev:real (1.5)	osps:int (1)
+Filter Delay	filter_delay_fc	float	complex				taps:real_vector
+Complex To IShort	blocks_complex_to_interleaved_short	complex	short<$vector_output.vlen>				vector_output:False,True, (False)
+Viterbi Combo	trellis_viterbi_combined_xx	$type.io	$out_type.io	c,f,i,s,	[Core]/Trellis Coding		out_type:i,s,b,	fsm_args:raw	block_size:int	init_state:int (0)	final_state:int (-1)	dim:int	table:$type.table	metric_type:digital.TRELLIS_EUCLIDEAN,digital.TRELLIS_HARD_SYMBOL,digital.TRELLIS_HARD_BIT,
+Null Source	blocks_null_source		$type<$vlen>[$num_outputs]	complex,float,int,short,byte,			vlen:int (1)	num_outputs:int (1)	bus_conns:raw ([[0,],])
+UChar To Float	blocks_uchar_to_float	byte	float			
+SISO	trellis_siso_f	float	float		[Core]/Trellis Coding		fsm_args:raw	block_size:int	init_state:int (0)	final_state:int (-1)	a_post_in:True,False,	a_post_out:True,False,	siso_type:trellis.TRELLIS_MIN_SUM,trellis.TRELLIS_SUM_PRODUCT,
+WX GUI FFT Sink	wxgui_fftsink2	$type		complex,float,	[Core]/Instrumentation/WX		title:string (FFT Plot)	samp_rate:real (samp_rate)	baseband_freq:real (0)	y_per_div:1,2,5,10,20, (10)	y_divs:int (10)	ref_level:real (0)	ref_scale:real (2.0)	fft_size:int (1024)	fft_rate:int (15)	peak_hold:True,False, (False)	average:True,False, (False)	avg_alpha:real (0)	win:raw (None)	win_size:int_vector	grid_pos:grid_pos	notebook:notebook	freqvar:raw (None)
+Magnitude and Phase To Complex	blocks_magphase_to_complex	float<$vlen>	complex<$vlen>				vlen:int (1)
+Message Source	blocks_message_source	msg	$type<$vlen>	complex,float,int,short,byte,	[Core]/Deprecated		vlen:int (1)
+Pack K Bits	blocks_pack_k_bits_bb	byte	byte				k:int
+QT GUI Range	variable_qtgui_range						label:string	rangeType:float,int, ("float")	value:$rangeType.type (50)	start:$rangeType.type (0)	stop:$rangeType.type (100)	step:$rangeType.type (1)	widget:counter_slider,counter,slider,dial, (counter_slider)	orient:Qt.Horizontal,Qt.Vertical, (Qt.Horizontal)	min_len:int (200)	gui_hint:gui_hint
+OFDM Serializer	digital_ofdm_serializer_vcc	complex<$fft_len>	complex				fft_len:int (fft_len)	occupied_carriers:raw	len_tag_key:string	packet_len_tag_key:string ("")	symbols_skipped:int (0)	carr_offset_key:string ("")	input_is_shifted:bool (True)
+QT GUI Bercurve Sink	qtgui_bercurve_sink	byte[len($esno)*2*$num_curves]					esno:raw (numpy.arange(0.0, 4.0, .5))	berminerrors:int (100)	berlimit:real (-7.0)	num_curves:int (1)	curvenames:raw ([])	ymin:real (-10)	ymax:real (0)	update_time:real (0.10)	gui_hint:gui_hint	label1:string	width1:int (1)	color1:"blue","red","green","black","cyan","magenta","yellow","dark red","dark green","Dark Blue",	style1:1,2,3,4,5,0,	marker1:0,1,2,3,4,6,7,8,9,-1,	alpha1:float (1.0)	label2:	width2:	color2: ("red")	style2:	marker2:	alpha2:	label3:	width3:	color3: ("green")	style3:	marker3:	alpha3:	label4:	width4:	color4: ("black")	style4:	marker4:	alpha4:	label5:	width5:	color5: ("cyan")	style5:	marker5:	alpha5:	label6:	width6:	color6: ("magenta")	style6:	marker6:	alpha6:	label7:	width7:	color7: ("yellow")	style7:	marker7:	alpha7:	label8:	width8:	color8: ("dark red")	style8:	marker8:	alpha8:	label9:	width9:	color9: ("dark green")	style9:	marker9:	alpha9:	label10:	width10:	color10: ("dark blue")	style10:	marker10:	alpha10:
+g711 Alaw Audio Encoder	vocoder_alaw_encode_sb	short	byte			
+Sample and Hold	blocks_sample_and_hold_xx	byte	$type	float,int,short,byte,		
+QT GUI Constellation Sink	qtgui_const_sink_x	$type.t[#if $type.t == 'message' then 0 else $nconnections#]		complex,msg_complex,			name:string ("")	size:int (1024)	grid:True,False, (False)	autoscale:True,False, (False)	ymin:real (-2)	ymax:real (2)	xmin:real (-2)	xmax:real (2)	nconnections:int (1)	update_time:real (0.10)	gui_hint:gui_hint	tr_mode:qtgui.TRIG_MODE_FREE,qtgui.TRIG_MODE_AUTO,qtgui.TRIG_MODE_NORM,qtgui.TRIG_MODE_TAG, (qtgui.TRIG_MODE_FREE)	tr_slope:qtgui.TRIG_SLOPE_POS,qtgui.TRIG_SLOPE_NEG, (qtgui.TRIG_MODE_POS)	tr_level:float (0.0)	tr_chan:int (0)	tr_tag:string ("")	legend:True,False, (True)	axislabels:True,False, (True)	label1:string	width1:int (1)	color1:"blue","red","green","black","cyan","magenta","yellow","dark red","dark green","Dark Blue",	style1:0,1,2,3,4,5,	marker1:0,1,2,3,4,6,7,8,9,-1,	alpha1:float (1.0)	label2:	width2:	color2: ("red")	style2:	marker2:	alpha2:	label3:	width3:	color3: ("red")	style3:	marker3:	alpha3:	label4:	width4:	color4: ("red")	style4:	marker4:	alpha4:	label5:	width5:	color5: ("red")	style5:	marker5:	alpha5:	label6:	width6:	color6: ("red")	style6:	marker6:	alpha6:	label7:	width7:	color7: ("red")	style7:	marker7:	alpha7:	label8:	width8:	color8: ("red")	style8:	marker8:	alpha8:	label9:	width9:	color9: ("red")	style9:	marker9:	alpha9:	label10:	width10:	color10: ("red")	style10:	marker10:	alpha10:
+And	blocks_and_xx	$type[$num_inputs]	$type	int,short,byte,			num_inputs:int (2)
+FFT Filter	fft_filter_xxx	$type.input	$type.output	ccc,ccf,fff,			decim:int (1)	taps:$type.taps	samp_delay:int (0)	nthreads:int (1)
+Deinterleave	blocks_deinterleave	$type<$vlen>	$type<$vlen>[$num_streams]	complex,float,int,short,byte,			num_streams:int (2)	blocksize:int (1)	vlen:int (1)
+Chunks to Symbols	digital_chunks_to_symbols_xx	$in_type[$num_ports]	$out_type[$num_ports]				in_type:int,short,byte,	out_type:complex,float,	symbol_table:$out_type.table	dimension:int (2)	num_ports:int (1)
+QT GUI Vector Sink	qtgui_vector_sink_f	float<$vlen>[$nconnections]	message				name:string ("")	vlen:int (1024)	x_start:real (0)	x_step:real (1.0)	x_axis_label:string ("x-Axis")	y_axis_label:string ("y-Axis")	x_units:string ("")	y_units:string ("")	ref_level:real (0)	grid:True,False, (False)	autoscale:True,False, (False)	average:1.0,0.2,0.1,0.05, (False)	ymin:real (-140)	ymax:real (10)	nconnections:int (1)	update_time:real (0.10)	gui_hint:gui_hint	showports:False,True, (True)	label1:string	width1:int (1)	color1:"blue","red","green","black","cyan","magenta","yellow","dark red","dark green","dark blue",	alpha1:float (1.0)	label2:	width2:	color2: ("red")	alpha2:	label3:	width3:	color3: ("green")	alpha3:	label4:	width4:	color4: ("black")	alpha4:	label5:	width5:	color5: ("cyan")	alpha5:	label6:	width6:	color6: ("magenta")	alpha6:	label7:	width7:	color7: ("yellow")	alpha7:	label8:	width8:	color8: ("dark red")	alpha8:	label9:	width9:	color9: ("dark green")	alpha9:	label10:	width10:	color10: ("dark blue")	alpha10:
+Dummy Encoder Definition	variable_dummy_encoder_def						ndim:0,1,2, (0)	dim1:int (1)	dim2:int (1)	framebits:int (2048)
+Alaw Audio Decoder	vocoder_alaw_decode_bs	byte	short			
+File Meta Source	blocks_file_meta_source		$type<$vlen>	complex,float,int,short,byte,			file:file_open	repeat:True,False, (True)	detached:True,False, (False)	hdr_file:file_open	vlen:int (1)
+Packet Header Parser (Default)	digital_packet_headerparser_b_default	byte	message				header_len:int	len_tag_key:string ("packet_len")
+OFDM Frame Sink	digital_ofdm_frame_sink	byte	complex<$occ_tones>		[Core]/Deprecated		syms:complex_vector	vals:int_vector	queue:raw	occ_tones:int	ph_gain:real (0.25)	frq_gain:real (0.015625)
+Tagged Stream Multiply Length Tag	blocks_tagged_stream_multiply_length	message	$type<$vlen>	complex,float,int,short,byte,			lengthtagname:string	vlen:int (1)	c:real (1.0)
+Message Strobe	blocks_message_strobe	message	message				msg:raw (pmt.intern("TEST"))	period:real (1000)
+Binary Slicer	digital_binary_slicer_fb	float	byte			
+BBscrambler	dtv_dvb_bbscrambler_bb	byte	byte				standard:STANDARD_DVBS2,STANDARD_DVBT2,	framesize1:FECFRAME_NORMAL,FECFRAME_SHORT,	framesize2:FECFRAME_NORMAL,FECFRAME_MEDIUM,FECFRAME_SHORT,	rate1:C1_2,C3_5,C2_3,C3_4,C4_5,C5_6,	rate2:C1_3,C2_5,C1_2,C3_5,C2_3,C3_4,C4_5,C5_6,	rate3:C1_4,C1_3,C2_5,C1_2,C3_5,C2_3,C3_4,C4_5,C5_6,C8_9,C9_10,C2_9_VLSNR,C13_45,C9_20,C90_180,C96_180,C11_20,C100_180,C104_180,C26_45,C18_30,C28_45,C23_36,C116_180,C20_30,C124_180,C25_36,C128_180,C13_18,C132_180,C22_30,C135_180,C140_180,C7_9,C154_180,	rate4:C1_5_MEDIUM,C11_45_MEDIUM,C1_3_MEDIUM,	rate5:C1_4,C1_3,C2_5,C1_2,C3_5,C2_3,C3_4,C4_5,C5_6,C8_9,C11_45,C4_15,C14_45,C7_15,C8_15,C26_45,C32_45,C1_5_VLSNR_SF2,C11_45_VLSNR_SF2,C1_5_VLSNR,C4_15_VLSNR,C1_3_VLSNR,
+MPSK SNR Estimator Probe	digital_probe_mpsk_snr_est_c	complex	message	0,1,2,3,			msg_nsamples:int (10000)	alpha:real (0.001)
+Float To Complex	blocks_float_to_complex	float<$vlen>	complex<$vlen>				vlen:int (1)
+FM Preemphasis	analog_fm_preemph	float	float				samp_rate:real	tau:real (75e-6)	fh:real (-1.0)
+QT GUI Sink	qtgui_sink_x	message	message	complex,float,			name:string ("")	fftsize:int (1024)	wintype:int (firdes.WIN_BLACKMAN_hARRIS)	fc:real (0)	bw:real (samp_rate)	rate:real (10)	showrf:True,False, (False)	plotfreq:bool (True)	plotwaterfall:bool (True)	plottime:bool (True)	plotconst:bool (True)	gui_hint:gui_hint	freqchangevar:raw (None)	showports:False,True, (True)
+HRPT Deframer	noaa_hrpt_deframer	byte	short		[Core]/NOAA	
+Decimating FIR Filter	fir_filter_xxx	$type.input	$type.output	ccc,ccf,fcc,fff,fsf,scc,			decim:int (1)	taps:$type.taps	samp_delay:int (0)
+ATSC Equalizer	dtv_atsc_equalizer	byte<4096>	byte<4096>			
+Streams to Vector	blocks_streams_to_vector	$type<$vlen>[$num_streams]	$type<$vlen*$num_streams>	complex,float,int,short,byte,			num_streams:int (2)	vlen:int (1)
+Not	blocks_not_xx	$type	$type	int,short,byte,		
+Protocol Parser	digital_protocol_parser_b	byte	message				format:raw
+Fractional Interpolator	fractional_interpolator_xx	$type	$type	complex,float,			phase_shift:real	interp_ratio:real
+Inner Coder	dtv_dvbt_inner_coder	byte<$ninput>	byte<$noutput>				ninput:int (1)	noutput:int (1512)	constellation:qpsk,16qam,64qam,	hierarchy:nh,alpha1,alpha2,alpha4,	code_rate:C1_2,C2_3,C3_4,C5_6,C7_8,
+Stream Mux	blocks_stream_mux	$type<$vlen>[$num_inputs]	$type<$vlen>	complex,float,int,short,byte,			lengths:int_vector (1, 1)	num_inputs:int (2)	vlen:int (1)
+VCO	blocks_vco_f	float	float				samp_rate:real	sensitivity:real	amplitude:real
+SCCC Decoder	trellis_sccc_decoder_x	float	$out_type.io		[Core]/Trellis Coding		out_type:i,s,b,	o_fsm_args:raw	o_init_state:int (0)	o_final_state:int (-1)	i_fsm_args:raw	i_init_state:int (0)	i_final_state:int (-1)	interleaver:raw	block_size:int	iterations:int (10)	siso_type:trellis.TRELLIS_MIN_SUM,trellis.TRELLIS_SUM_PRODUCT,
+UHD: USRP Async Msg Source	uhd_amsg_source		msg				dev_addr:string
+QT GUI Entry	variable_qtgui_entry			real,int,string,bool,raw,			label:string	value:$type (0)	gui_hint:gui_hint
+High-pass Filter Taps	variable_high_pass_filter_taps						gain:float (1.0)	samp_rate:float (samp_rate)	cutoff_freq:float	width:float	win:int (firdes.WIN_HAMMING)	beta:float (6.76)
+Tone Reservation PAPR	dtv_dvbt2_paprtr_cc	complex<$fftsize.vlength>	complex<$fftsize.vlength>				carriermode:CARRIERS_NORMAL,CARRIERS_EXTENDED,	fftsize:FFTSIZE_1K,FFTSIZE_2K,FFTSIZE_4K,FFTSIZE_8K,FFTSIZE_8K_T2GI,FFTSIZE_16K,FFTSIZE_16K_T2GI,FFTSIZE_32K,FFTSIZE_32K_T2GI,	pilotpattern:PILOT_PP1,PILOT_PP2,PILOT_PP3,PILOT_PP4,PILOT_PP5,PILOT_PP6,PILOT_PP7,PILOT_PP8,	guardinterval:GI_1_32,GI_1_16,GI_1_8,GI_1_4,GI_1_128,GI_19_128,GI_19_256,	numdatasyms:int (100)	paprmode1:PAPR_OFF,PAPR_ACE,PAPR_TR,PAPR_BOTH,	paprmode2:PAPR_OFF,PAPR_ACE,PAPR_TR,PAPR_BOTH,	version:VERSION_111,VERSION_131,	vclip:float (3.3)	iterations:int (10)
+Bit Inner Deinterleaver	dtv_dvbt_bit_inner_deinterleaver	byte<$transmission_mode.payload_length>	byte<$transmission_mode.payload_length>[$hierarchy.num_streams]				constellation:qpsk,16qam,64qam,	hierarchy:nh,alpha1,alpha2,alpha4,	transmission_mode:T2k,T8k,
+4-Level Slicer/DCR	pager_slicer_fb	float	byte		[Core]/Pager		alpha:real (1e-6)
+SCCC Encoder	trellis_sccc_encoder_xx	$type.input	$type.output	bb,bs,bi,ss,si,ii,	[Core]/Trellis Coding		o_fsm_args:raw	o_init_state:int (0)	i_fsm_args:raw	i_init_state:int (0)	interleaver_args:raw	bl:int
+Complex To IChar	blocks_complex_to_interleaved_char	complex	byte<$vector_output.vlen>				vector_output:False,True, (False)
+AM Demod	analog_am_demod_cf	complex	float				chan_rate:real	audio_decim:int	audio_pass:real (5000)	audio_stop:real (5500)
+Transcendental	blocks_transcendental	$type.type	$type.type	complex_double,float,			name:string (cos)
+Unpack K Bits	blocks_unpack_k_bits_bb	byte	byte				k:int
+AGC	analog_agc_xx	$type	$type	complex,float,			rate:real (1e-4)	reference:real (1.0)	gain:real (1.0)	max_gain:real (65536)
+Reed-Solomon Decoder	dtv_dvbt_reed_solomon_dec	byte<$blocks*($n-$s)>	byte<$blocks*($k-$s)>				p:int (2)	m:int (8)	gfpoly:raw (0x11d)	n:int (255)	k:int (239)	t:int (8)	s:int (51)	blocks:int (8)
+CtrlPort Performance Monitor	blocks_ctrlport_monitor_performance						en:True,False,
+Default Header Format Obj.	variable_header_format_default						access_code:string (0)	threshold:int (0)	bps:int (1)
+Probe Density	digital_probe_density_b	byte					alpha:real (1)	probe_rate:real (10)
+Tag Gate	blocks_tag_gate	$type<$vlen>	$type<$vlen>	complex,float,int,short,byte,			vlen:int (1)	propagate_tags:True,False, (False)	single_key:string ("")
+Complex to Imag	blocks_complex_to_imag	complex<$vlen>	float<$vlen>				vlen:int (1)
+ATSC Interleaver	dtv_atsc_interleaver	byte<256>	byte<256>			
+Multiply	blocks_multiply_xx	$type<$vlen>[$num_inputs]	$type<$vlen>	complex,float,int,short,			num_inputs:int (2)	vlen:int (1)
+File Descriptor Source	blocks_file_descriptor_source		$type<$vlen>	complex,float,int,short,byte,			fd:int	repeat:True,False, (True)	vlen:int (1)
+WX GUI Scope Sink	wxgui_scopesink2	$type[$num_inputs]		complex,float,	[Core]/Instrumentation/WX		title:string (Scope Plot)	samp_rate:real (samp_rate)	v_scale:real (0)	v_offset:real (0)	t_scale:real (0)	ac_couple:bool (False)	xy_mode:False,True, (False)	num_inputs:int (1)	win_size:int_vector	grid_pos:grid_pos	notebook:notebook	trig_mode:wxgui.TRIG_MODE_AUTO,wxgui.TRIG_MODE_NORM,wxgui.TRIG_MODE_FREE,wxgui.TRIG_MODE_STRIPCHART,	y_axis_label:string (Counts)
+Schmidl & Cox OFDM synch.	digital_ofdm_sync_sc_cfb	complex	byte				fft_len:int	cp_len:int	use_even_carriers:False,True, (False)	threshold:real (0.9)
+LDPC Generator Matrix	variable_ldpc_G_matrix_def						value:raw ("ok")	filename:file_open
+GSM full-rate Audio Encoder	vocoder_gsm_fr_encode_sp	short	byte<33>			
+Differential Decoder	digital_diff_decoder_bb	byte	byte				modulus:int
+Third Order Distortion	channels_distortion_3_gen	complex	complex				beta:float (0)
+Costas Loop	digital_costas_loop_cc	message	float				w:real	order:int	use_snr:True,False, (False)
+ATSC RX Filter	dtv_atsc_rx_filter	complex	complex				rate:float	sps:float
+Stream to Vector	blocks_stream_to_vector	$type<$vlen>	$type<$vlen*$num_items>	complex,float,int,short,byte,			num_items:int (2)	vlen:int (1)
+g723_40 Audio Decoder	vocoder_g723_40_decode_bs	byte	short			
+Polyphase Channelizer	pfb_channelizer_ccf	complex	complex[$nchans]				nchans:int (1)	taps:real_vector	osr:real (1.0)	atten:real (100)	samp_delay:int (0)	ch_map:int_vector ([])	bus_conns:raw ([[0,],])
+ZMQ PULL Message Source	zeromq_pull_msg_source		message		[Core]/ZeroMQ Interfaces		address:string	timeout:float (100)
+FEC Extended Decoder	fec_extended_decoder	float	byte				value:string (fec_extended_decoder)	decoder_list:raw (decoder_variable)	threadtype:capillary,ordinary,none,	ann:raw (None)	puncpat:string ('11')
+Polyphase Decimator	pfb_decimator_ccf	complex	complex				decim:int	taps:real_vector	channel:int (0)	atten:real (100)	fft_rot:raw (True)	fft_filts:raw (True)	samp_delay:int (0)
+Constellation Modulator	digital_constellation_modulator	byte	complex				constellation:raw	differential:bool (True)	samples_per_symbol:int (2)	excess_bw:real (0.35)	verbose:bool (False)	log:bool (False)
+Demod Reference Signals	dtv_dvbt_demod_reference_signals	complex<$transmission_mode.fft_length>	complex<$transmission_mode.payload_length>	complex,float,int,short,byte,			constellation:qpsk,16qam,64qam,	hierarchy:nh,alpha1,alpha2,alpha4,	code_rate_hp:C1_2,C2_3,C3_4,C5_6,C7_8,	code_rate_lp:C1_2,C2_3,C3_4,C5_6,C7_8,	guard_interval:GI_1_32,GI_1_16,GI_1_8,GI_1_4,	transmission_mode:T2k,T8k,	include_cell_id:call_id_yes,cell_id_no,	cell_id:int (0)
+Head	blocks_head	$type<$vlen>	$type<$vlen>	complex,float,int,short,byte,			num_items:int (1024)	vlen:int (1)
+CPFSK	analog_cpfsk_bc	byte	complex		[Core]/Deprecated		k:real	amplitude:real	samples_per_symbol:int (2)
+WX GUI Slider	variable_slider				[Core]/GUI Widgets/WX		label:string	value:real (50)	min:real (0)	max:real (100)	num_steps:int (100)	style:wx.SL_HORIZONTAL,wx.SL_VERTICAL, (wx.SL_HORIZONTAL)	converver:float_converter,int_converter, (float_converter)	grid_pos:grid_pos	notebook:notebook
+Audio Sink	audio_sink	float[$num_inputs]			[Core]/Audio		samp_rate:int (samp_rate)	device_name:string	ok_to_block:True,False, (True)	num_inputs:int (1)
+LMS DD Equalizer	digital_lms_dd_equalizer_cc	complex	complex				mu:real	num_taps:int	sps:int	cnst:raw
+Xlating Low Pass Filter	xlating_low_pass_filter	$type.input	$type.output	ccc,ccf,fcc,fcf,scc,scf,			decim:int (1)	gain:real (1)	samp_rate:real (samp_rate)	center_freq:real (0)	cutoff_freq:real	width:real	win:int (firdes.WIN_HAMMING)	beta:real (6.76)
+Vector Insert	blocks_vector_insert_x	$type	$type	byte,complex,float,int,short,			vector:$type.vec_type (0, 0, 0)	period:int (100)	offset:int (0)
+Message Strobe Random-Delay	blocks_message_strobe_random	message	message				msg:raw (pmt.intern("TEST"))	dist:blocks.STROBE_POISSON,blocks.STROBE_UNIFORM,blocks.STROBE_GAUSSIAN,	mean:real (1000)	std:real (100)
+DPSK Demod	digital_dxpsk_demod	complex	byte	dbpsk,dqpsk,	[Core]/Deprecated		samples_per_symbol:int (2)	excess_bw:real (0.35)	freq_bw:real (6.28/100.0)	phase_bw:real (6.28/100.0)	timing_bw:real (6.28/100.0)	mod_code:"gray","none",	verbose:bool (False)	log:bool (False)	sync_out:bool (False)
+Fast Noise Source	analog_fastnoise_source_x		$type	complex,float,int,short,			noise_type:int (analog.GR_GAUSSIAN)	amp:real (1)	seed:int (0)	samples:int (8192)
+File Meta Sink	blocks_file_meta_sink	$type<$vlen>		complex,float,int,short,byte,			file:file_save	samp_rate:real (samp_rate)	rel_rate:real (1)	vlen:int (1)	max_seg_size:int (1000000)	extra_dict:string ("")	detached:bool (False)	unbuffered:bool (False)
+DVB-T Demap	dtv_dvbt_demap	complex<$transmission_mode.payload_length>	byte<$transmission_mode.payload_length>				constellation:qpsk,16qam,64qam,	hierarchy:nh,alpha1,alpha2,alpha4,	transmission_mode:T2k,T8k,	gain:complex (1)
+UDP Source	blocks_udp_source		$type<$vlen>	complex,float,int,short,byte,			ipaddr:string (127.0.0.1)	port:int (1234)	psize:int (1472)	eof:bool (True)	vlen:int (1)
+Multiply by Matrix	blocks_multiply_matrix_xx	message	$type[len($A)]	float,complex,			A:raw (((1, 0), (0, 1)))	tag_propagation_policy:gr.TPP_ALL_TO_ALL,gr.TPP_ONE_TO_ONE,gr.TPP_DONT,gr.TPP_CUSTOM,
+Log Power FFT	logpwrfft_x	$type	float<$fft_size>	complex,float,			sample_rate:real (samp_rate)	fft_size:int (1024)	ref_scale:real (2)	frame_rate:real (30)	average:bool (False)	avg_alpha:real (1.0)
+Multiply Conjugate	blocks_multiply_conjugate_cc	complex<$vlen>	complex<$vlen>				vlen:int (1)
+Band Pass Filter	band_pass_filter	$type.input	$type.output	fir_filter_ccf,interp_fir_filter_ccf,fir_filter_fff,interp_fir_filter_fff,fir_filter_ccc,interp_fir_filter_ccc,fir_filter_fcc,interp_fir_filter_fcc,			decim:int (1)	interp:int (1)	gain:real (1)	samp_rate:real (samp_rate)	low_cutoff_freq:real	high_cutoff_freq:real	width:real	win:int (firdes.WIN_HAMMING)	beta:real (6.76)
+Protocol Formatter (Async)	digital_protocol_formatter_async	message	message				format:raw
+FEC Extended Async Encoder	fec_extended_async_encoder	message	message				encoder_list:raw (encoder_variable)	puncpat:string ('11')
+LDPC Parity Check Matrix	variable_ldpc_H_matrix_def						value:raw ("ok")	filename:file_open	gap:int
+WX GUI Check Box	variable_check_box				[Core]/GUI Widgets/WX		label:string	value:raw (True)	true:raw (True)	false:raw (False)	grid_pos:grid_pos	notebook:notebook
+FLL Band-Edge	digital_fll_band_edge_cc	$type.input	float	cc,			samps_per_sym:real	rolloff:real	filter_size:int	w:real
+Streams to Stream	blocks_streams_to_stream	$type<$vlen>[$num_streams]	$type<$vlen>	complex,float,int,short,byte,			num_streams:int (2)	vlen:int (1)
+Viterbi Decoder	dtv_dvbt_viterbi_decoder	byte	$type.io	i,s,b,			constellation:qpsk,16qam,64qam,	hierarchy:nh,alpha1,alpha2,alpha4,	code_rate:C1_2,C2_3,C3_4,C5_6,C7_8,	block_size:int
+PLL Freq Det	analog_pll_freqdet_cf	complex	float				w:real	max_freq:real	min_freq:real
+CODEC2 Audio Decoder	vocoder_codec2_decode_ps	byte<{ 0: 64, 1: 48, 2: 64, 3: 56, 4: 52, 5: 48 }[$mode]>	short				mode:int (codec2.MODE_2400)
+UDP Sink	blocks_udp_sink	$type<$vlen>		complex,float,int,short,byte,			ipaddr:string	port:int	psize:int (1472)	eof:bool (True)	vlen:int (1)
+ATSC Receive Pipeline	dtv_atsc_rx	complex	byte				rate:float	sps:float
+ATSC Randomizer	dtv_atsc_randomizer	byte<256>	byte<256>			
+Quadrature Demod	analog_quadrature_demod_cf	complex	float				gain:real (samp_rate/(2*math.pi*fsk_deviation_hz/8.0))
+Peak Detector2	blocks_peak_detector2_fb	float	float				threshold_factor_rise:real (7)	look_ahead:int (1000)	alpha:real (0.001)
+Regenerate	blocks_regenerate_bb	byte	byte				period:int	max_regen:int (500)
+HDLC Framer	digital_hdlc_framer_pb	message	byte				frame_tag_name:string
+Valve	blks2_valve	$type<$vlen>[$num_inputs]	$type<$vlen>[$num_outputs]	complex,float,int,short,byte,	[Core]/Deprecated		open:raw (0)	vlen:int (1)
+Test Tag Variable Rate	blocks_test_tag_variable_rate_ff	float[1]	float[1]				once:True,False, (False)	step:float (0.001)
+Simple Squelch	analog_simple_squelch_cc	complex	complex				threshold:real	alpha:real
+Nop	blocks_nop	$type<$vlen>[$num_ports]	$type<$vlen>[$num_ports]	complex,float,int,short,byte,			num_ports:int (1)	vlen:int (1)
+Tag Share	blocks_tag_share	$share_type<$vlen>	$io_type<$vlen>				io_type:complex,float,int,short,byte,	share_type:complex,float,int,short,byte,	vlen:int (1)
+FEC Extended Encoder	fec_extended_encoder	byte	byte				encoder_list:raw (encoder_variable)	threadtype:capillary,ordinary,none,	puncpat:string ('11')
+Constellation Rect. Object	variable_constellation_rect				Modulators		sym_map:int_vector ([0, 1, 3, 2])	const_points:complex_vector ([-1-1j, -1+1j, 1+1j, 1-1j])	rot_sym:int (4)	real_sect:int (2)	imag_sect:int (2)	w_real_sect:int (1)	w_imag_sect:int (1)	precision:int (8)	soft_dec_lut:raw (None)
+QT GUI Time Sink	qtgui_time_sink_x	$type.t[#if $type.t == 'message' then 0 else $nconnections#]		complex,float,msg_complex,msg_float,			name:string ("")	ylabel:string (Amplitude)	yunit:string ("")	size:int (1024)	srate:float (samp_rate)	grid:True,False, (False)	autoscale:True,False, (False)	ymin:float (-1)	ymax:float (1)	nconnections:int (1)	update_time:float (0.10)	entags:True,False, (True)	gui_hint:gui_hint	tr_mode:qtgui.TRIG_MODE_FREE,qtgui.TRIG_MODE_AUTO,qtgui.TRIG_MODE_NORM,qtgui.TRIG_MODE_TAG, (qtgui.TRIG_MODE_FREE)	tr_slope:qtgui.TRIG_SLOPE_POS,qtgui.TRIG_SLOPE_NEG, (qtgui.TRIG_MODE_POS)	tr_level:float (0.0)	tr_delay:float (0)	tr_chan:int (0)	tr_tag:string ("")	ctrlpanel:True,False, (False)	legend:True,False, (True)	axislabels:True,False, (True)	stemplot:True,False, (False)	label1:string	width1:int (1)	color1:"blue","red","green","black","cyan","magenta","yellow","dark red","dark green","Dark Blue",	style1:1,2,3,4,5,0,	marker1:-1,0,1,2,3,4,6,7,8,9,	alpha1:float (1.0)	label2:	width2:	color2: ("red")	style2:	marker2:	alpha2:	label3:	width3:	color3: ("green")	style3:	marker3:	alpha3:	label4:	width4:	color4: ("black")	style4:	marker4:	alpha4:	label5:	width5:	color5: ("cyan")	style5:	marker5:	alpha5:	label6:	width6:	color6: ("magenta")	style6:	marker6:	alpha6:	label7:	width7:	color7: ("yellow")	style7:	marker7:	alpha7:	label8:	width8:	color8: ("dark red")	style8:	marker8:	alpha8:	label9:	width9:	color9: ("dark green")	style9:	marker9:	alpha9:	label10:	width10:	color10: ("dark blue")	style10:	marker10:	alpha10:
+Energy Descramble	dtv_dvbt_energy_descramble	byte<188*8>	byte<1>				nsize:int (8)
+OFDM Channel Estimation	digital_ofdm_chanest_vcvc	complex<len($sync_symbol1)>	complex<len($sync_symbol1)>				sync_symbol1:complex_vector	sync_symbol2:complex_vector (())	n_data_symbols:int (1)	eq_noise_red_len:int (0)	max_carr_offset:int (-1)	force_one_symbol:False,True,
+WBFM Receive	analog_wfm_rcv	complex	float				quad_rate:real	audio_decimation:int
+g721 Audio Decoder	vocoder_g721_decode_bs	byte	short			
+TPC Encoder Definition	variable_tpc_encoder_def						value:raw ("ok")	ndim:0,1,2, (0)	dim1:int (4)	dim2:int (4)	row_poly:int_vector ([3])	col_poly:int_vector ([43])	krow:int (26)	kcol:int (6)	bval:int (9)	qval:int (3)
+DVB-T2 Modulator	dtv_dvbt2_modulator_bc	byte	complex				framesize:FECFRAME_NORMAL,FECFRAME_SHORT,	constellation:MOD_QPSK,MOD_16QAM,MOD_64QAM,MOD_256QAM,	rotation:ROTATION_OFF,ROTATION_ON,
+Packet Header Generator (Default)	digital_packet_headergenerator_bb_default	byte	byte				header_len:int	len_tag_key:string ("packet_len")
+Vector to Stream	blocks_vector_to_stream	$type<$vlen*$num_items>	$type<$vlen>	complex,float,int,short,byte,			num_items:int (2)	vlen:int (1)
+Trellis Metrics	trellis_metrics_x	$type.io	float	c,f,i,s,	[Core]/Trellis Coding		card:int	dim:int	table:$type.table	metric_type:digital.TRELLIS_EUCLIDEAN,digital.TRELLIS_HARD_SYMBOL,digital.TRELLIS_HARD_BIT,
+Trellis Encoder	dtv_catv_trellis_enc_bb	byte	byte				constellation:CATV_MOD_64QAM,CATV_MOD_256QAM,
+Single Pole IIR Filter	single_pole_iir_filter_xx	$type<$vlen>	$type<$vlen>	complex,float,			alpha:real (1.0)	vlen:int (1)
+Trellis Encoder	trellis_encoder_xx	$type.input	$type.output	bb,bs,bi,ss,si,ii,	[Core]/Trellis Coding		fsm_args:raw	init_state:int (0)	blockwise:True,False, (False)	blocklength:int (0)
+IChar To Complex	blocks_interleaved_char_to_complex	byte<$vector_input.vlen>	complex				vector_input:False,True, (False)
+FLEX Deinterleave	pager_flex_deinterleave	byte	int		[Core]/Pager	
+Protocol Formatter	digital_protocol_formatter_bb	byte	byte				format:raw	len_tag_key:string ("packet_len")
+QT GUI Check Box	variable_qtgui_check_box			real,int,string,bool,raw,			label:string	value:$type (True)	true:$type (True)	false:$type (False)	gui_hint:gui_hint
+OFDM Carrier Allocator	digital_ofdm_carrier_allocator_cvc	complex	complex<$fft_len>				fft_len:int (fft_len)	occupied_carriers:raw	pilot_carriers:raw (((),))	pilot_symbols:raw (((),))	sync_words:raw (())	len_tag_key:string ("packet_len")
+Constellation Receiver	digital_constellation_receiver_cb	message	complex				constellation:raw	loop_bw:real	fmin:real	fmax:real	showports:False,True, (True)
+Stream CRC32	digital_crc32_bb	byte	byte				check:False,True,	lengthtagname:string ("packet_len")	packed:bool (True)
+Burst Shaper	digital_burst_shaper_xx	$type	$type	float,complex,	[Core]/Packet Operators		window:$(type.taps) (([]))	pre_padding:int (0)	post_padding:int (0)	insert_phasing:False,True, (False)	length_tag_name:string ("packet_len")
+Scrambler	digital_scrambler_bb	byte	byte				mask:hex (0x8A)	seed:hex (0x7F)	len:int (7)
+Frequency Mod	analog_frequency_modulator_fc	float	complex				sensitivity:real
+WX GUI Chooser	variable_chooser			drop_down,radio_buttons,button,	[Core]/GUI Widgets/WX		label:string	value:raw (1)	choices:raw ([1, 2, 3])	labels:raw ([])	style:wx.RA_HORIZONTAL,wx.RA_VERTICAL, (wx.RA_HORIZONTAL)	grid_pos:grid_pos	notebook:notebook
+Puncture	fec_puncture_xx	$type	$type	byte,float,			puncsize:int	puncpat:int	delay:int (0)
+ATSC Field Sync Checker	dtv_atsc_fs_checker	byte<4096>	byte<4096>			
+Dynamic Channel Model	channels_dynamic_channel_model	complex	complex				samp_rate:real (samp_rate)	cfo_stdev:real (0.01)	cfo_maxdev:real (1e3)	sro_stdev:real (0.01)	sro_maxdev:real (1e3)	noise_amp:real (1.0)	N:int (8)	fD:real (2.0)	LOS:False,True,	K:real (4.0)	seed:int (0)	delays:real_vector (0.0,0.1,1.3)	mags:real_vector (1,0.99,0.97)	ntaps:int (8)
+Stretch	blocks_stretch_ff	float<$vlen>	float<$vlen>				lo:real	vlen:int (1)
+Simple Framer	digital_simple_framer	byte	byte				payload_bytesize:int
+CODEC2 Audio Encoder	vocoder_codec2_encode_sp	short	byte<{ 0: 64, 1: 48, 2: 64, 3: 56, 4: 52, 5: 48 }[$mode]>				mode:int (codec2.MODE_2400)
+Max	blocks_max_xx	$type<$vlen>[$num_inputs]	$type<$vlen_out>	float,int,short,			num_inputs:int (1)	vlen:int (1)	vlen_out:int (1)
+Bit Inner Interleaver	dtv_dvbt_bit_inner_interleaver	byte<$transmission_mode.payload_length>[$hierarchy.num_streams]	byte<$transmission_mode.payload_length>				constellation:qpsk,16qam,64qam,	hierarchy:nh,alpha1,alpha2,alpha4,	transmission_mode:T2k,T8k,
+CTCSS Squelch	analog_ctcss_squelch_ff	float	float				rate:real (samp_rate)	freq:real (100.0)	level:real (0.01)	len:int (0)	ramp:int (0)	gate:bool (False)
+AGC3	analog_agc3_xx	$type	$type	complex,			attack_rate:real (1e-3)	decay_rate:real (1e-4)	reference:real (1.0)	gain:real (1.0)	max_gain:real (65536)	iir_update_decim:real (1)
+Random PDU Generator	blocks_random_pdu	message	message				minsize:int (50)	maxsize:int (2000)	mask:int (0xFF)	length_modulo:int (2)
+ATSC Trellis Encoder	dtv_atsc_trellis_encoder	byte<256>	byte<256>			
+TCP Sink	blks2_tcp_sink	$type<$vlen>		complex,float,int,short,byte,	[Core]/Deprecated		addr:string (127.0.0.1)	port:int (0)	server:True,False, (False)	vlen:int (1)
+QT GUI Frequency Sink	qtgui_freq_sink_x	message	message	complex,float,msg_complex,msg_float,			name:string ("")	fftsize:int (1024)	freqhalf:True,False, (True)	wintype:firdes.WIN_BLACKMAN_hARRIS,firdes.WIN_HAMMING,firdes.WIN_HANN,firdes.WIN_BLACKMAN,firdes.WIN_RECTANGULAR,firdes.WIN_KAISER,firdes.WIN_FLATTOP, (firdes.WIN_BLACKMAN_hARRIS)	fc:real (0)	bw:real (samp_rate)	grid:True,False, (False)	autoscale:True,False, (False)	average:1.0,0.2,0.1,0.05, (False)	ymin:real (-140)	ymax:real (10)	label:string (Relative Gain)	units:string (dB)	nconnections:int (1)	update_time:real (0.10)	gui_hint:gui_hint	showports:False,True, (True)	tr_mode:qtgui.TRIG_MODE_FREE,qtgui.TRIG_MODE_AUTO,qtgui.TRIG_MODE_NORM,qtgui.TRIG_MODE_TAG, (qtgui.TRIG_MODE_FREE)	tr_level:float (0.0)	tr_chan:int (0)	tr_tag:string ("")	ctrlpanel:True,False, (False)	legend:True,False, (True)	axislabels:True,False, (True)	label1:string	width1:int (1)	color1:"blue","red","green","black","cyan","magenta","yellow","dark red","dark green","dark blue",	alpha1:float (1.0)	label2:	width2:	color2: ("red")	alpha2:	label3:	width3:	color3: ("green")	alpha3:	label4:	width4:	color4: ("black")	alpha4:	label5:	width5:	color5: ("cyan")	alpha5:	label6:	width6:	color6: ("magenta")	alpha6:	label7:	width7:	color7: ("yellow")	alpha7:	label8:	width8:	color8: ("dark red")	alpha8:	label9:	width9:	color9: ("dark green")	alpha9:	label10:	width10:	color10: ("dark blue")	alpha10:
+ZMQ SUB Message Source	zeromq_sub_msg_source		message		[Core]/ZeroMQ Interfaces		address:string	timeout:float (100)
+OFDM Transmitter	digital_ofdm_tx	byte	complex				fft_len:int (64)	cp_len:int (16)	packet_len_key:string (length)	occupied_carriers:raw (())	pilot_carriers:raw (())	pilot_symbols:raw (())	sync_word1:raw (())	sync_word2:raw (())	header_mod:"BPSK","QPSK",	payload_mod:"BPSK","QPSK","8-PSK",	rolloff:int (0)	scramble_bits:False,True, (False)	log:False,True, (False)
+Framer Sink 1	digital_framer_sink_1	byte					target_queue:raw
+Fast Multiply Const	blocks_multiply_const_xx	$type<$vlen>	$type<$vlen>	complex,float,int,short,			const:$type (0)	vlen:int (1)
+Selector	blks2_selector	$type<$vlen>[$num_inputs]	$type<$vlen>[$num_outputs]	complex,float,int,short,byte,	[Core]/Deprecated		num_inputs:int (2)	num_outputs:int (2)	input_index:int (0)	output_index:int (0)	vlen:int (1)
+Freq. Selective IQ Correction	channels_conj_fs_iqcorr	complex	complex				delay:int (0)	taps:complex_vector (0)
+Rail	analog_rail_ff	float	float				lo:real	hi:real
+PSK Demod	digital_psk_demod	complex	byte		[Core]/Deprecated		constellation_points:int (8)	differential:bool (True)	samples_per_symbol:int (2)	excess_bw:real (0.35)	freq_bw:real (6.28/100.0)	timing_bw:real (6.28/100.0)	phase_bw:real (6.28/100.0)	mod_code:"gray","none",	verbose:bool (False)	log:bool (False)
+IQ Imbalance Generator	channels_iqbal_gen	complex	complex				mag:float (0)	phase:float (0)	mode:1,0, (0)
+XMLRPC Client	xmlrpc_client						addr:string (localhost)	port:int (8080)	callback:string (set_)	variable:raw
+Vector to Streams	blocks_vector_to_streams	$type<$vlen*$num_streams>	$type<$vlen>[$num_streams]	complex,float,int,short,byte,			num_streams:int (2)	vlen:int (1)
+LDPC Decoder Definition	variable_ldpc_decoder_def						value:raw ("ok")	ndim:0,1,2, (0)	dim1:int (4)	dim2:int (4)	file:file_open	sigma:float (0.5)	max_iter:int (50)
+Additive Scrambler	digital_additive_scrambler_bb	byte	byte				mask:hex (0x8A)	seed:hex (0x7F)	len:int (7)	count:int (0)	bits_per_byte:int (1)	reset_tag_key:string ("")
+DC Blocker	dc_blocker_xx	$type.input	$type.output	cc,ff,			length:int (32)	long_form:bool (True)
+Reed-Solomon Encoder	dtv_catv_reed_solomon_enc_bb	byte	byte			
+NBFM Transmit	analog_nbfm_tx	float	complex				audio_rate:int	quad_rate:int	tau:real (75e-6)	max_dev:real (5e3)	fh:real (-1.0)
+TUNTAP PDU	blocks_tuntap_pdu	message	message				ifn:string (tap0)	mtu:int (10000)	istunflag:True,False, (False)
+Polyphase Synthesizer	pfb_synthesizer_ccf	complex[$connections]	complex				numchans:int (2)	connections:int (2)	taps:real_vector	twox:bool (False)	samp_delay:int (0)	ch_map:int_vector ([])	bus_conns:raw ([[0,],])
+Probe Signal	blocks_probe_signal_x	$type		complex,float,int,short,byte,		
+Repack Bits	blocks_repack_bits_bb	byte	byte				k:int (1)	l:int (8)	len_tag_key:string ("")	align_output:True,False, (False)	endianness:int (gr.GR_LSB_FIRST)
+Phase Balance	channels_phase_bal	complex	complex				alpha:float (0)
+Funcube Dongle Source	fcd_source_c		complex		[Core]/FCD		device_name:string (hw:1)	freq:real (145500000)	lna:real (20.0)	mixer:real (+12)	ppm:int (-120)	dci:real (0.0)	dcq:real (0.0)	iq_phase:real (0.0)	iq_gain:real (1.0)
+Video SDL Sink	video_sdl_sink	$type<1>[$num_channels]		byte,short,			width:int (640)	height:int (480)	display_width:int (640)	display_height:int (480)	fps:float (0)	num_channels:1,2,3,
+ATSC Derandomizer	dtv_atsc_derandomizer	byte<256>	byte<256>			
+Frequency Xlating FFT Filter	freq_xlating_fft_filter_ccc	complex	complex				decim:int (1)	taps:complex_vector	center_freq:real (0)	samp_rate:real (samp_rate)	samp_delay:int (0)	nthreads:int (1)
+ATSC Field Sync Mux	dtv_atsc_field_sync_mux	byte<256>	byte<1024>			
+Detect Peak	analog_dpll_bb	byte	byte				period:real	gain:real
+Frame Mapper	dtv_dvbt2_framemapper_cc	complex	complex				framesize:FECFRAME_NORMAL,FECFRAME_SHORT,	rate:C1_3,C2_5,C1_2,C3_5,C2_3,C3_4,C4_5,C5_6,	constellation:MOD_QPSK,MOD_16QAM,MOD_64QAM,MOD_256QAM,	rotation:ROTATION_OFF,ROTATION_ON,	fecblocks:int (168)	tiblocks:int (3)	carriermode:CARRIERS_NORMAL,CARRIERS_EXTENDED,	fftsize1:FFTSIZE_1K,FFTSIZE_2K,FFTSIZE_4K,FFTSIZE_8K,FFTSIZE_8K_T2GI,FFTSIZE_16K,FFTSIZE_32K,FFTSIZE_32K_T2GI,	fftsize2:FFTSIZE_2K,FFTSIZE_4K,FFTSIZE_8K,FFTSIZE_8K_T2GI,FFTSIZE_16K,FFTSIZE_16K_T2GI,	guardinterval:GI_1_32,GI_1_16,GI_1_8,GI_1_4,GI_1_128,GI_19_128,GI_19_256,	l1constellation:L1_MOD_BPSK,L1_MOD_QPSK,L1_MOD_16QAM,L1_MOD_64QAM,	pilotpattern:PILOT_PP1,PILOT_PP2,PILOT_PP3,PILOT_PP4,PILOT_PP5,PILOT_PP6,PILOT_PP7,PILOT_PP8,	t2frames:int (2)	numdatasyms:int (100)	paprmode1:PAPR_OFF,PAPR_ACE,PAPR_TR,PAPR_BOTH,	paprmode2:PAPR_OFF,PAPR_ACE,PAPR_TR,PAPR_BOTH,	version:VERSION_111,VERSION_131,	preamble1:PREAMBLE_T2_SISO,PREAMBLE_T2_MISO,	preamble2:PREAMBLE_T2_SISO,PREAMBLE_T2_MISO,PREAMBLE_T2_LITE_SISO,PREAMBLE_T2_LITE_MISO,	inputmode:INPUTMODE_NORMAL,INPUTMODE_HIEFF,	reservedbiasbits:RESERVED_OFF,RESERVED_ON,	l1scrambled:L1_SCRAMBLED_OFF,L1_SCRAMBLED_ON,	inband:INBAND_OFF,INBAND_ON,
+High Pass Filter	high_pass_filter	$type.input	$type.output	fir_filter_ccf,interp_fir_filter_ccf,fir_filter_fff,interp_fir_filter_fff,			decim:int (1)	interp:int (1)	gain:real (1)	samp_rate:real (samp_rate)	cutoff_freq:real	width:real	win:int (firdes.WIN_HAMMING)	beta:real (6.76)
+Complex to Mag^2	blocks_complex_to_mag_squared	complex<$vlen>	float<$vlen>				vlen:int (1)
+ZMQ SUB Source	zeromq_sub_source		$type<$vlen>	complex,float,int,short,byte,	[Core]/ZeroMQ Interfaces		vlen:int (1)	address:string	timeout:float (100)	pass_tags:True,False, (False)	hwm:int (-1)
+Symbol Inner Interleaver	dtv_dvbt_symbol_inner_interleaver	byte<$transmission_mode.payload_length>	byte<$transmission_mode.payload_length>				transmission_mode:T2k,T8k,	direction:Interleave,Deinterleave,
+ZMQ PULL Source	zeromq_pull_source		$type<$vlen>	complex,float,int,short,byte,	[Core]/ZeroMQ Interfaces		vlen:int (1)	address:string	timeout:float (100)	pass_tags:True,False, (False)	hwm:int (-1)
+CMA Equalizer	digital_cma_equalizer_cc	complex	complex				num_taps:int	modulus:real	mu:real	sps:int
+FEC Encoder	fec_generic_encoder	$itype	$otype				encoder:raw (encoder_variable)	itype:complex,float,int,short,byte,	otype:complex,float,int,short,byte,
+Burst Tagger	blocks_burst_tagger	short<1>	$type<1>	complex,float,int,short,byte,			true_key:string (burst)	true_value:bool (True)	false_key:string (burst)	false_value:bool (False)
+systematic POLAR Decoder SC Definition	variable_polar_decoder_sc_systematic_def						ndim:0,1,2, (0)	dim1:int (1)	dim2:int (4)	block_size:int	num_info_bits:int	frozen_bit_positions:int_vector
+Correlate Access Code	digital_correlate_access_code_bb	byte	byte				access_code:string (101010)	threshold:int
+FM Deemphasis	analog_fm_deemph	float	float				samp_rate:real	tau:real (75e-6)
+Stream to Vec Decim	blocks_stream_to_vector_decimator	$type	$type<$vlen>	complex,float,int,short,byte,			sample_rate:real (samp_rate)	vec_rate:real (30)	vlen:int (1024)
+PCCC Decoder Combo	trellis_pccc_decoder_combined_xx	$type.io	$out_type.io	c,f,	[Core]/Trellis Coding		out_type:i,s,b,	o_fsm_args:raw	o_init_state:int (0)	o_final_state:int (-1)	i_fsm_args:raw	i_init_state:int (0)	i_final_state:int (-1)	interleaver:raw	block_size:int	iterations:int (10)	dim:int	table:$type.table	metric_type:digital.TRELLIS_EUCLIDEAN,digital.TRELLIS_HARD_SYMBOL,digital.TRELLIS_HARD_BIT,	siso_type:trellis.TRELLIS_MIN_SUM,trellis.TRELLIS_SUM_PRODUCT,	scaling:real (1.0)
+Reference Signals	dtv_dvbt_reference_signals	complex<$transmission_mode.payload_length>	complex<$transmission_mode.fft_length>	complex,float,int,short,byte,			constellation:qpsk,16qam,64qam,	hierarchy:nh,alpha1,alpha2,alpha4,	code_rate_hp:C1_2,C2_3,C3_4,C5_6,C7_8,	code_rate_lp:C1_2,C2_3,C3_4,C5_6,C7_8,	guard_interval:GI_1_32,GI_1_16,GI_1_8,GI_1_4,	transmission_mode:T2k,T8k,	include_cell_id:call_id_yes,cell_id_no,	cell_id:int (0)
+Fading Model	channels_fading_model	complex	complex				N:int (8)	fDTs:real (10.0/samp_rate)	LOS:False,True,	K:real (4.0)	seed:int (0)
+Xor	blocks_xor_xx	$type[$num_inputs]	$type	int,short,byte,			num_inputs:int (2)
+Repetition Encoder Definition	variable_repetition_encoder_def						ndim:0,1,2,	dim1:int (1)	dim2:int (1)	framebits:int (2048)	rep:int (3)
+Kurtotic Equalizer	digital_kurtotic_equalizer_cc	complex	complex				num_taps:int	mu:real
+Power Squelch	analog_pwr_squelch_xx	$type	$type	complex,float,			threshold:real	alpha:real (1e-4)	ramp:int (0)	gate:True,False,
+Null Sink	blocks_null_sink	$type<$vlen>[$num_inputs]		complex,float,int,short,byte,			vlen:int (1)	num_inputs:int (1)	bus_conns:raw ([[0,],])
+Channel Model	channels_channel_model	complex	complex				noise_voltage:real (0.0)	freq_offset:real (0.0)	epsilon:real (1.0)	taps:complex_vector (1.0 + 1.0j)	seed:int (0)	block_tags:True,False, (False)
+Ctrlport Probe	blocks_ctrlport_probe2_c	complex					name:string (samples)	desc:string (Sample Points)	len:int (1024)	disp_mask:int (gr.DISPTIME)
+Decode CCSDS 27	fec_decode_ccsds_27_fb	float	byte			
+Char To Float	blocks_char_to_float	byte<$vlen>	float<$vlen>				vlen:int (1)	scale:real (1)
+FM Detector	analog_fmdet_cf	complex	float				samplerate:real	freq_low:real	freq_high:real	scl:real
+OFDM Sampler	digital_ofdm_sampler	byte	byte<$fft_length>		[Core]/Deprecated		fft_length:int	symbol_length:int	timeout:int (1000)
+BER Curve Gen.	fec_bercurve_generator		byte[len($esno)*2]				esno:raw (numpy.arange(0.0, 4.0, .5))	samp_rate:float (3200000)	encoder_list:raw (0)	decoder_list:raw (0)	puncpat:string ('11')	threadtype:"capillary","ordinary","none",	seed:int (0)
+PLL Carrier Tracking	analog_pll_carriertracking_cc	complex	complex				w:real	max_freq:real	min_freq:real
+Ctrlport Probe	blocks_ctrlport_probe2_x	$type		complex,float,int,short,byte,			name:string (samples)	desc:string (Sample Points)	len:int (1024)	disp_mask:int (gr.DISPTIME)
+GFSK Mod	digital_gfsk_mod	byte	complex				samples_per_symbol:int (2)	sensitivity:real (1.0)	bt:real (0.35)	verbose:bool (False)	log:bool (False)
+ATSC Viterbi Decoder	dtv_atsc_viterbi_decoder	byte<4096>	byte<256>			
+Float To Int	blocks_float_to_int	float<$vlen>	int<$vlen>				vlen:int (1)	scale:real (1)
+GMSK Mod	digital_gmsk_mod	byte	complex				samples_per_symbol:int (2)	bt:real (0.35)	verbose:bool (False)	log:bool (False)
+CC Encoder Definition	variable_cc_encoder_def						ndim:0,1,2, (0)	dim1:int (1)	dim2:int (1)	framebits:int (2048)	k:int (7)	rate:int (2)	polys:int_vector ([79,109])	state_start:int (0)	mode:fec.CC_STREAMING,fec.CC_TERMINATED,fec.CC_TAILBITING,fec.CC_TRUNCATED,	padding:False,True, (False)
+g723_24 Audio Decoder	vocoder_g723_24_decode_bs	byte	short			
+OFDM Frame Acquisition	digital_ofdm_frame_acquisition	byte<$fft_length>	byte		[Core]/Deprecated		occupied_carriers:int	fft_length:int	cplen:int	known_symbol:complex_vector	max_fft_shift_len:int
+Short To Float	blocks_short_to_float	short<$vlen>	float<$vlen>				vlen:int (1)	scale:real (1)
+Unpacked to Packed	blocks_unpacked_to_packed_xx	$type[$num_ports]	$type[$num_ports]	int,short,byte,			bits_per_chunk:int (2)	endianness:int	num_ports:int (1)
+Frequency Interleaver	dtv_dvbt2_freqinterleaver_cc	complex	complex				carriermode:CARRIERS_NORMAL,CARRIERS_EXTENDED,	fftsize:FFTSIZE_1K,FFTSIZE_2K,FFTSIZE_4K,FFTSIZE_8K,FFTSIZE_8K_T2GI,FFTSIZE_16K,FFTSIZE_16K_T2GI,FFTSIZE_32K,FFTSIZE_32K_T2GI,	pilotpattern:PILOT_PP1,PILOT_PP2,PILOT_PP3,PILOT_PP4,PILOT_PP5,PILOT_PP6,PILOT_PP7,PILOT_PP8,	guardinterval:GI_1_32,GI_1_16,GI_1_8,GI_1_4,GI_1_128,GI_19_128,GI_19_256,	numdatasyms:int (100)	paprmode1:PAPR_OFF,PAPR_ACE,PAPR_TR,PAPR_BOTH,	paprmode2:PAPR_OFF,PAPR_ACE,PAPR_TR,PAPR_BOTH,	version:VERSION_111,VERSION_131,	preamble1:PREAMBLE_T2_SISO,PREAMBLE_T2_MISO,	preamble2:PREAMBLE_T2_SISO,PREAMBLE_T2_MISO,PREAMBLE_T2_LITE_SISO,PREAMBLE_T2_LITE_MISO,
+Keep 1 in N	blocks_keep_one_in_n	$type<$vlen>	$type<$vlen>	complex,float,int,short,byte,			n:int (1)	vlen:int (1)
+PDU Set	blocks_pdu_set	message	message				k:raw (pmt.intern("key"))	v:raw (pmt.intern("value"))
+DPSK Mod	digital_dxpsk_mod	byte	complex	dbpsk,dqpsk,	[Core]/Deprecated		samples_per_symbol:int (2)	excess_bw:real (0.35)	mod_code:"gray","none",	verbose:bool (False)	log:bool (False)
+Goertzel	goertzel_fc	float	complex				rate:int	len:int	freq:real
+Rational Resampler	rational_resampler_xxx	$type.input	$type.output	ccc,ccf,fcc,fff,			interp:int (1)	decim:int (1)	taps:$type.taps	fbw:real (0)
+Float To Char	blocks_float_to_char	float<$vlen>	byte<$vlen>				vlen:int (1)	scale:real (1)
+Noise Source	analog_noise_source_x		$type	complex,float,int,short,			noise_type:int (analog.GR_GAUSSIAN)	amp:real (1)	seed:int (0)
+Fractional Resampler	fractional_resampler_xx	message	$type	complex,float,			phase_shift:real	resamp_ratio:real
+PN Correlator	digital_pn_correlator_cc	complex	complex				degree:int	mask:int (0)	seed:int (1)
+Wav File Sink	blocks_wavfile_sink	float[$nchan]					file:file_save	nchan:int (1)	samp_rate:int (samp_rate)	bits_per_sample:int (8)
+Repeat	blocks_repeat	$type<$vlen>	$type<$vlen>	complex,float,int,short,byte,			interp:int	vlen:int (1)
+WBFM Transmit	analog_wfm_tx	float	complex				audio_rate:int	quad_rate:int	tau:real (75e-6)	max_dev:real (75e3)	fh:real (-1.0)
+OFDM Sync PN	digital_ofdm_sync_pn	complex	byte		[Core]/Deprecated		fft_length:int	cp_length:int	logging:bool (False)
+Skip Head	blocks_skiphead	$type<$vlen>	$type<$vlen>	complex,float,int,short,byte,			num_items:int (1024)	vlen:int (1)
+Amplitude Balance	channels_amp_bal	complex	complex				alpha:float (0)
+systematic POLAR Encoder Definition	variable_polar_encoder_systematic_def						ndim:0,1,2, (0)	dim1:int (1)	dim2:int (4)	block_size:int	num_info_bits:int	frozen_bit_positions:int_vector
+TCP Source	blks2_tcp_source		$type<$vlen>	complex,float,int,short,byte,	[Core]/Deprecated		addr:string (127.0.0.1)	port:int (0)	server:True,False, (True)	vlen:int (1)
+Continuous Phase Modulation	digital_cpmmod_bc	byte	complex	analog.cpm.LREC,analog.cpm.LRC,analog.cpm.LSRC,analog.cpm.TFM,analog.cpm.GAUSSIAN,			mod_index:real (0.5)	samples_per_symbol:int (4)	L:int (4)	beta:real (0.3)
+QT GUI Label	variable_qtgui_label			real,int,string,bool,raw,			label:string	value:$type (0)	formatter:raw (None)	gui_hint:gui_hint
+Correlate Access Code - Tag	digital_correlate_access_code_tag_xx	$type	$type	byte,float,			access_code:string (101010)	threshold:int	tagname:string
+FEC Tagged Decoder	fec_tagged_decoder	$itype	$otype				decoder:raw (decoder_variable)	mtu:int (1500)	itype:byte,float,	otype:byte,float,	lentagname:string ("pkt_len")
+Abs	blocks_abs_xx	$type<$vlen>	$type<$vlen>	int,short,float,			vlen:int (1)
+Error Rate	blks2_error_rate	byte	float	'BER','SER',	[Core]/Deprecated		win_size:int (1000)	bits_per_symbol:int (2)
+GLFSR Source	digital_glfsr_source_x		$type	float,byte,			degree:int	repeat:True,False,	mask:int (0)	seed:int (1)
+Tagged Stream Align	blocks_tagged_stream_align	$type<$vlen>	$type<$vlen>	complex,float,int,short,byte,			lengthtagname:string (packet_len)	vlen:int (1)
+ZMQ REQ Message Source	zeromq_req_msg_source		message		[Core]/ZeroMQ Interfaces		address:string	timeout:float (100)
+Constellation Soft Decoder	digital_constellation_soft_decoder_cf	complex	float				constellation:raw
+POLAR Decoder SC List Definition	variable_polar_decoder_sc_list_def						ndim:0,1,2, (0)	dim1:int (1)	dim2:int (4)	max_list_size:int	block_size:int	num_info_bits:int	frozen_bit_positions:int_vector	frozen_bit_values:int_vector
+Clock Recovery MM	digital_clock_recovery_mm_xx	$type	$type	complex,float,			omega:real (samp_per_sym*(1+0.0))	gain_omega:real (0.25*0.175*0.175)	mu:real (0.5)	gain_mu:real (0.175)	omega_relative_limit:real (0.005)
+g723_24 Audio Encoder	vocoder_g723_24_encode_sb	short	byte			
+Dummy Decoder Definition	variable_dummy_decoder_def						value:raw ("ok")	ndim:0,1,2,	dim1:int (1)	dim2:int (1)	framebits:int (2048)
+Convolutional Interleaver	dtv_dvbt_convolutional_interleaver	byte<$blocks*$I>	byte<1>				blocks:int (136)	I:int (12)	M:int (17)
+Packet Encoder	blks2_packet_encoder	$type	byte	complex,float,int,short,byte,	[Core]/Deprecated		samples_per_symbol:int	bits_per_symbol:int	preamble:string	access_code:string	pad_for_usrp:True,False,	payload_length:int (0)
+Or	blocks_or_xx	$type[$num_inputs]	$type	int,short,byte,			num_inputs:int (2)
+PCCC Decoder	trellis_pccc_decoder_x	float	$out_type.io		[Core]/Trellis Coding		out_type:i,s,b,	o_fsm_args:raw	o_init_state:int (0)	o_final_state:int (-1)	i_fsm_args:raw	i_init_state:int (0)	i_final_state:int (-1)	interleaver:raw	block_size:int	iterations:int (10)	siso_type:trellis.TRELLIS_MIN_SUM,trellis.TRELLIS_SUM_PRODUCT,
+Threshold	blocks_threshold_ff	float	float				low:real (-100)	high:real (100)	init:real (0)
+Wav File Source	blocks_wavfile_source		float[$nchan]				file:file_open	repeat:True,False, (True)	nchan:int (1)
+ZMQ PUSH Message Sink	zeromq_push_msg_sink	message			[Core]/ZeroMQ Interfaces		address:string	timeout:float (100)
+WX GUI Static Text	variable_static_text				[Core]/GUI Widgets/WX		label:string	value:raw (0)	converver:float_converter,int_converter,str_converter, (float_converter)	formatter:raw (None)	grid_pos:grid_pos	notebook:notebook
+CVSD Decoder	vocoder_cvsd_decode_bf	byte	float				resample:int (8)	bw:real (0.5)
+ulaw Audio Encoder	vocoder_ulaw_encode_sb	short	byte			
+XMLRPC Server	xmlrpc_server						addr:string (localhost)	port:int (8080)
+Constellation Object	variable_constellation			calcdist,bpsk,qpsk,dqpsk,8psk,16qam,	Modulators		sym_map:int_vector ([0, 1, 3, 2])	const_points:complex_vector ([-1-1j, -1+1j, 1+1j, 1-1j])	rot_sym:int (4)	dims:int (1)	precision:int (8)	soft_dec_lut:raw (None)
+POLAR Decoder SC Definition	variable_polar_decoder_sc_def						ndim:0,1,2, (0)	dim1:int (1)	dim2:int (4)	block_size:int	num_info_bits:int	frozen_bit_positions:int_vector	frozen_bit_values:int_vector
+ZMQ PUB Sink	zeromq_pub_sink	$type<$vlen>		complex,float,int,short,byte,	[Core]/ZeroMQ Interfaces		vlen:int (1)	address:string	timeout:float (100)	pass_tags:True,False, (False)	hwm:int (-1)
+File Sink	blocks_file_sink	$type<$vlen>		complex,float,int,short,byte,			file:file_save	vlen:int (1)	unbuffered:bool (False)	append:bool (False)
+Transport Framing Encoder	dtv_catv_transport_framing_enc_bb	byte	byte			
+Short To Char	blocks_short_to_char	short<$vlen>	byte<$vlen>				vlen:int (1)
+Root Raised Cosine Filter	root_raised_cosine_filter	$type.input	$type.output	fir_filter_ccf,interp_fir_filter_ccf,fir_filter_fff,interp_fir_filter_fff,			decim:int (1)	interp:int (1)	gain:real (1)	samp_rate:real (samp_rate)	sym_rate:real (1.0)	alpha:real (0.35)	ntaps:int (11*samp_rate)
+Complex to Mag	blocks_complex_to_mag	complex<$vlen>	float<$vlen>				vlen:int (1)
+Vector Source	blocks_vector_source_x		$type<$vlen>	complex,float,int,short,byte,			vector:raw ((0, 0, 0))	tags:raw ([])	repeat:True,False, (True)	vlen:int (1)
+Packet Decoder	blks2_packet_decoder	byte	$type	complex,float,int,short,byte,	[Core]/Deprecated		access_code:string	threshold:int (-1)
+Divide	blocks_divide_xx	$type<$vlen>[$num_inputs]	$type<$vlen>	complex,float,int,short,			vlen:int (1)	num_inputs:int (2)
+Simple Correlator	digital_simple_correlator	float	byte				payload_bytesize:int
+QT GUI Number Sink	qtgui_number_sink	$type[$nconnections]		float,int,short,byte,			name:string ("")	autoscale:True,False, (False)	avg:float (0)	graph_type:qtgui.NUM_GRAPH_HORIZ,qtgui.NUM_GRAPH_VERT,qtgui.NUM_GRAPH_NONE,	nconnections:int (1)	min:float (-1)	max:float (1)	update_time:float (0.10)	gui_hint:gui_hint	label1:string	unit1:string	color1:("black", "black"),("blue", "red"),("black", "white"),("white", "black"),("black", "red"),	factor1:float (1)	label2:	unit2:	color2:	factor2:	label3:	unit3:	color3:	factor3:	label4:	unit4:	color4:	factor4:	label5:	unit5:	color5:	factor5:	label6:	unit6:	color6:	factor6:	label7:	unit7:	color7:	factor7:	label8:	unit8:	color8:	factor8:	label9:	unit9:	color9:	factor9:	label10:	unit10:	color10:	factor10:
+Frequency Selective Fading Model	channels_selective_fading_model	complex	complex				N:int (8)	fDTs:real (10.0/samp_rate)	LOS:False,True,	K:real (4.0)	seed:int (0)	delays:real_vector (0.0,0.1,1.3)	mags:real_vector (1,0.99,0.97)	ntaps:int (8)
+PDU Filter	blocks_pdu_filter	message	message				k:raw (pmt.intern("key"))	v:raw (pmt.intern("value"))	invert:bool (False)
+Vector Sink	blocks_vector_sink_x	$type<$vlen>		complex,float,int,short,byte,			vlen:int (1)	reserve_items:int (1024)
+Tagged File Sink	blocks_tagged_file_sink	$type<$vlen>		complex,float,int,short,byte,			samp_rate:int (samp_rate)	vlen:int (1)
+IIR Filter	iir_filter_xxx	$type.input	$type.output	ffd,ccf,ccd,ccc,ccz,			fftaps:$type.taps	fbtaps:$type.taps	oldstyle:True,False, (True)
+Viterbi	trellis_viterbi_x	float	$type.io	i,s,b,	[Core]/Trellis Coding		fsm_args:raw	block_size:int	init_state:int (0)	final_state:int (-1)
+OFDM Receiver	digital_ofdm_rx	complex	byte				fft_len:int (64)	cp_len:int (16)	packet_len_key:string ("length")	occupied_carriers:raw (())	pilot_carriers:raw (())	pilot_symbols:raw (())	sync_word1:raw (())	sync_word2:raw (())	header_mod:"BPSK","QPSK",	payload_mod:"BPSK","QPSK","8-PSK",	scramble_bits:False,True, (False)	log:False,True, (False)
+Float To Short	blocks_float_to_short	float<$vlen>	short<$vlen>				vlen:int (1)	scale:real (1)
+FEC Async Encoder	fec_async_encoder	message	message				encoder:raw	mtu:int (1500)	packed:False,True, (False)	rev_unpack:True,False, (True)	rev_pack:True,False, (True)
+DVB-S2X Modulator	dtv_dvbs2_modulator_bc	byte	complex				framesize:FECFRAME_NORMAL,FECFRAME_MEDIUM,FECFRAME_SHORT,	rate1:C1_4,C1_3,C2_5,C1_2,C3_5,C2_3,C3_4,C4_5,C5_6,C8_9,C9_10,C2_9_VLSNR,C13_45,C9_20,C90_180,C96_180,C11_20,C100_180,C104_180,C26_45,C18_30,C28_45,C23_36,C116_180,C20_30,C124_180,C25_36,C128_180,C13_18,C132_180,C22_30,C135_180,C140_180,C7_9,C154_180,	rate2:C1_5_MEDIUM,C11_45_MEDIUM,C1_3_MEDIUM,	rate3:C1_4,C1_3,C2_5,C1_2,C3_5,C2_3,C3_4,C4_5,C5_6,C8_9,C11_45,C4_15,C14_45,C7_15,C8_15,C26_45,C32_45,C1_5_VLSNR_SF2,C11_45_VLSNR_SF2,C1_5_VLSNR,C4_15_VLSNR,C1_3_VLSNR,	constellation:MOD_QPSK,MOD_8PSK,MOD_8APSK,MOD_16APSK,MOD_8_8APSK,MOD_32APSK,MOD_4_12_16APSK,MOD_4_8_4_16APSK,MOD_64APSK,MOD_8_16_20_20APSK,MOD_4_12_20_28APSK,MOD_128APSK,MOD_256APSK,MOD_64QAM,MOD_256QAM,MOD_BPSK,MOD_BPSK_SF2,MOD_8VSB,	interpolation:INTERPOLATION_OFF,INTERPOLATION_ON,
+Generic Filterbank	filterbank_vcvcf	complex<len($taps)>	complex<len($taps)>				taps:raw
+Message Burst Source	blocks_message_burst_source	msg	$type<$vlen>	complex,float,int,short,byte,	[Core]/Deprecated		vlen:int (1)
+AGC2	analog_agc2_xx	$type	$type	complex,float,			attack_rate:real (1e-1)	decay_rate:real (1e-2)	reference:real (1.0)	gain:real (1.0)	max_gain:real (65536)
+GMSK Demod	digital_gmsk_demod	complex	byte				samples_per_symbol:int (2)	gain_mu:real (0.175)	mu:real (0.5)	omega_relative_limit:real (0.005)	freq_error:real (0.0)	verbose:bool (False)	log:bool (False)
+BCH Encoder	dtv_dvb_bch_bb	byte	byte				standard:STANDARD_DVBS2,STANDARD_DVBT2,	framesize1:FECFRAME_NORMAL,FECFRAME_SHORT,	framesize2:FECFRAME_NORMAL,FECFRAME_MEDIUM,FECFRAME_SHORT,	rate1:C1_2,C3_5,C2_3,C3_4,C4_5,C5_6,	rate2:C1_3,C2_5,C1_2,C3_5,C2_3,C3_4,C4_5,C5_6,	rate3:C1_4,C1_3,C2_5,C1_2,C3_5,C2_3,C3_4,C4_5,C5_6,C8_9,C9_10,C2_9_VLSNR,C13_45,C9_20,C90_180,C96_180,C11_20,C100_180,C104_180,C26_45,C18_30,C28_45,C23_36,C116_180,C20_30,C124_180,C25_36,C128_180,C13_18,C132_180,C22_30,C135_180,C140_180,C7_9,C154_180,	rate4:C1_5_MEDIUM,C11_45_MEDIUM,C1_3_MEDIUM,	rate5:C1_4,C1_3,C2_5,C1_2,C3_5,C2_3,C3_4,C4_5,C5_6,C8_9,C11_45,C4_15,C14_45,C7_15,C8_15,C26_45,C32_45,C1_5_VLSNR_SF2,C11_45_VLSNR_SF2,C1_5_VLSNR,C4_15_VLSNR,C1_3_VLSNR,
+Ctrlport Complex Probe	blocks_ctrlport_probe_c	complex					name:string (constellation)	desc:string (Constellation Points)
+Frequency Xlating FIR Filter	freq_xlating_fir_filter_xxx	message	$type.output	ccc,ccf,fcc,fcf,scc,scf,			decim:int (1)	taps:$type.taps	center_freq:real (0)	samp_rate:real (samp_rate)
+QT GUI Waterfall Sink	qtgui_waterfall_sink_x	message	message	complex,float,msg_complex,msg_float,			name:string ("")	fftsize:int (1024)	freqhalf:True,False, (True)	wintype:int (firdes.WIN_BLACKMAN_hARRIS)	fc:real (0)	bw:real (samp_rate)	int_min:float (-140)	int_max:float (10)	grid:True,False, (False)	nconnections:int (1)	update_time:real (0.10)	gui_hint:gui_hint	showports:False,True, (True)	legend:True,False, (True)	label1:string	axislabels:True,False, (True)	color1:0,1,2,3,5,6,	alpha1:float (1.0)	label2:	color2:	alpha2:	label3:	color3:	alpha3:	label4:	color4:	alpha4:	label5:	color5:	alpha5:	label6:	color6:	alpha6:	label7:	color7:	alpha7:	label8:	color8:	alpha8:	label9:	color9:	alpha9:	label10:	color10:	alpha10:
+NBFM Receive	analog_nbfm_rx	complex	float				audio_rate:int	quad_rate:int	tau:real (75e-6)	max_dev:real (5e3)
+Probe Avg Mag^2	analog_probe_avg_mag_sqrd_x	$type.input	float	c,f,cf,			threshold:real (0)	alpha:real (1)
+Trellis Permutation	trellis_permutation	$type<$vlen>	$type<$vlen>	complex,float,int,short,byte,	[Core]/Trellis Coding		interleaver_size:int	table:int_vector	syms_per_block:int	vlen:int (1)
+MPSK SNR Estimator	digital_mpsk_snr_est_cc	complex	complex	0,1,2,3,			tag_nsamples:int (10000)	alpha:real (0.001)
+Async CRC32	digital_crc32_async_bb	message	message				check:False,True,
+Cell/Time Interleaver	dtv_dvbt2_cellinterleaver_cc	complex	complex				framesize:FECFRAME_NORMAL,FECFRAME_SHORT,	constellation:MOD_QPSK,MOD_16QAM,MOD_64QAM,MOD_256QAM,	fecblocks:int (168)	tiblocks:int (3)
+Argmax	blocks_argmax_xx	$type<$vlen>[$num_inputs]	short	float,int,short,			num_inputs:int (2)	vlen:int (1)
+Constellation Decoder	digital_constellation_decoder_cb	complex	byte				constellation:raw
+Packet Header Generator	digital_packet_headergenerator_bb	byte	byte				header_formatter:raw	len_tag_key:string ("packet_len")
+Physical Layer Framer	dtv_dvbs2_physical_cc	complex	complex				framesize:FECFRAME_NORMAL,FECFRAME_MEDIUM,FECFRAME_SHORT,	rate1:C1_4,C1_3,C2_5,C1_2,C3_5,C2_3,C3_4,C4_5,C5_6,C8_9,C9_10,C2_9_VLSNR,C13_45,C9_20,C90_180,C96_180,C11_20,C100_180,C104_180,C26_45,C18_30,C28_45,C23_36,C116_180,C20_30,C124_180,C25_36,C128_180,C13_18,C132_180,C22_30,C135_180,C140_180,C7_9,C154_180,	rate2:C1_5_MEDIUM,C11_45_MEDIUM,C1_3_MEDIUM,	rate3:C1_4,C1_3,C2_5,C1_2,C3_5,C2_3,C3_4,C4_5,C5_6,C8_9,C11_45,C4_15,C14_45,C7_15,C8_15,C26_45,C32_45,C1_5_VLSNR_SF2,C11_45_VLSNR_SF2,C1_5_VLSNR,C4_15_VLSNR,C1_3_VLSNR,	constellation:MOD_QPSK,MOD_8PSK,MOD_8APSK,MOD_16APSK,MOD_8_8APSK,MOD_32APSK,MOD_4_12_16APSK,MOD_4_8_4_16APSK,MOD_64APSK,MOD_8_16_20_20APSK,MOD_4_12_20_28APSK,MOD_128APSK,MOD_256APSK,MOD_BPSK,MOD_BPSK_SF2,	pilots:PILOTS_OFF,PILOTS_ON,	goldcode:int (0)
+Differential Phasor	digital_diff_phasor_cc	complex	complex			
+Stream to Tagged Stream	blocks_stream_to_tagged_stream	$type<$vlen>	$type<$vlen>	complex,float,int,short,byte,			vlen:int (1)	packet_len:int	len_tag_key:string ("packet_len")
+Band-pass Filter Taps	variable_band_pass_filter_taps			taps_real,taps_complex,			gain:float (1.0)	samp_rate:float (samp_rate)	low_cutoff_freq:float	high_cutoff_freq:float	width:float	win:int (firdes.WIN_HAMMING)	beta:float (6.76)
+Interleaver	dtv_dvbs2_interleaver_bb	byte	byte				framesize:FECFRAME_NORMAL,FECFRAME_MEDIUM,FECFRAME_SHORT,	rate1:C1_4,C1_3,C2_5,C1_2,C3_5,C2_3,C3_4,C4_5,C5_6,C8_9,C9_10,C2_9_VLSNR,C13_45,C9_20,C90_180,C96_180,C11_20,C100_180,C104_180,C26_45,C18_30,C28_45,C23_36,C116_180,C20_30,C124_180,C25_36,C128_180,C13_18,C132_180,C22_30,C135_180,C140_180,C7_9,C154_180,	rate2:C1_5_MEDIUM,C11_45_MEDIUM,C1_3_MEDIUM,	rate3:C1_4,C1_3,C2_5,C1_2,C3_5,C2_3,C3_4,C4_5,C5_6,C8_9,C11_45,C4_15,C14_45,C7_15,C8_15,C26_45,C32_45,C1_5_VLSNR_SF2,C11_45_VLSNR_SF2,C1_5_VLSNR,C4_15_VLSNR,C1_3_VLSNR,	constellation:MOD_QPSK,MOD_8PSK,MOD_8APSK,MOD_16APSK,MOD_8_8APSK,MOD_32APSK,MOD_4_12_16APSK,MOD_4_8_4_16APSK,MOD_64APSK,MOD_8_16_20_20APSK,MOD_4_12_20_28APSK,MOD_128APSK,MOD_256APSK,MOD_BPSK,MOD_BPSK_SF2,
+Audio Source	audio_source		float[$num_outputs]		[Core]/Audio		samp_rate:int (samp_rate)	device_name:string	ok_to_block:True,False, (True)	num_outputs:int (1)
+PDU to Tagged Stream	blocks_pdu_to_tagged_stream	message	$type	byte,complex,float,			tag:string (packet_len)
+Polyphase Interpolator	pfb_interpolator_ccf	complex	complex				interp:int	taps:real_vector	atten:real (100)	samp_delay:int (0)
+FEC Tagged Encoder	fec_tagged_encoder	$itype	$otype				encoder:raw (encoder_variable)	mtu:int (1500)	itype:byte,float,	otype:byte,float,	lentagname:string ("pkt_len")
+Keep M in N	blocks_keep_m_in_n	$type<1>	$type<1>	complex,float,int,short,byte,			m:int (1)	n:int (2)	offset:int (0)
+WX GUI Waterfall Sink	wxgui_waterfallsink2	$type		complex,float,	[Core]/Instrumentation/WX		title:string (Waterfall Plot)	samp_rate:real (samp_rate)	baseband_freq:real (0)	dynamic_range:real (100)	ref_level:real (0)	ref_scale:real (2.0)	fft_size:int (512)	fft_rate:int (15)	average:True,False, (False)	avg_alpha:real (0)	win:raw (None)	win_size:int_vector	grid_pos:grid_pos	notebook:notebook	freqvar:raw (None)
+Interleave	blocks_interleave	$type<$vlen>[$num_streams]	$type<$vlen>	complex,float,int,short,byte,			num_streams:int (2)	blocksize:int (1)	vlen:int (1)
+Add	blocks_add_xx	$type<$vlen>[$num_inputs]	$type<$vlen>	complex,float,int,short,			num_inputs:int (2)	vlen:int (1)
+MPSK Receiver	digital_mpsk_receiver_cc	complex	complex		[Core]/Deprecated		M:int (4)	theta:real (0)	w:real (cmath.pi/100.0)	fmin:real (-0.5)	fmax:real (0.5)	mu:real (0.25)	gain_mu:real (0.01)	omega:real (2)	gain_omega:real (0.001)	omega_relative_limit:real (0.001)
+Header/Payload Demux	digital_header_payload_demux	message	$type<{True: $items_per_symbol, False: 1}[$output_symbols]>	complex,float,int,short,byte,			header_len:int	header_padding:int (0)	items_per_symbol:int	guard_interval:int (0)	length_tag_key:string ("frame_len")	trigger_tag_key:string ("")	output_symbols:False,True,	timing_tag_key:string ("rx_time")	samp_rate:int (samp_rate)	special_tags:raw ((,))
+OFDM Insert Preamble	digital_ofdm_insert_preamble	byte	byte		[Core]/Deprecated		fft_length:int	preamble:raw
+LDPC Encoder Definition (via Parity Check)	variable_ldpc_encoder_H_def						value:raw ("ok")	ndim:0,1,2,	dim1:int (1)	dim2:int (1)	H:raw
+Feed Forward AGC	analog_feedforward_agc_cc	complex	complex				num_samples:int (1024)	reference:real (1.0)
+WX GUI Text Box	variable_text_box				[Core]/GUI Widgets/WX		label:string	value:raw (0)	converver:float_converter,int_converter,str_converter,eval_converter, (float_converter)	formatter:raw (None)	grid_pos:grid_pos	notebook:notebook
+CCSDS Encoder Definition	variable_ccsds_encoder_def						ndim:0,1,2, (0)	dim1:int (1)	dim2:int (1)	framebits:int (2048)	state_start:int (0)	mode:fec.CC_STREAMING,fec.CC_TERMINATED,fec.CC_TAILBITING,fec.CC_TRUNCATED,
+SISO Combo	trellis_siso_combined_f	float	float		[Core]/Trellis Coding		fsm_args:raw	block_size:int	init_state:int (0)	final_state:int (-1)	a_post_in:True,False,	a_post_out:True,False,	siso_type:trellis.TRELLIS_MIN_SUM,trellis.TRELLIS_SUM_PRODUCT,	dim:int	table:real_vector	metric_type:trellis.TRELLIS_EUCLIDEAN,trellis.TRELLIS_HARD_SYMBOL,trellis.TRELLIS_HARD_BIT,
+FEC Extended Tagged Decoder	fec_extended_tagged_decoder	float	byte				value:string (fec_extended_decoder)	decoder_list:raw (decoder_variable)	mtu:int (1500)	ann:raw (None)	puncpat:string ('11')	lentagname:string (None)
+Multiply by Tag Value	blocks_multiply_by_tag_value_cc	complex	complex				tagname:string	vlen:int (1)
+Complex To Real	blocks_complex_to_real	complex<$vlen>	float<$vlen>				vlen:int (1)
+LDPC Encoder Definition (via Generator)	variable_ldpc_encoder_G_def						value:raw ("ok")	ndim:0,1,2,	dim1:int (1)	dim2:int (1)	G:raw
+Second Order Distortion	channels_distortion_2_gen	complex	complex				beta:float (0)
+Pilot Generator and IFFT	dtv_dvbt2_pilotgenerator_cc	complex	complex<$fftsize.vlength>				carriermode:CARRIERS_NORMAL,CARRIERS_EXTENDED,	fftsize:FFTSIZE_1K,FFTSIZE_2K,FFTSIZE_4K,FFTSIZE_8K,FFTSIZE_8K_T2GI,FFTSIZE_16K,FFTSIZE_16K_T2GI,FFTSIZE_32K,FFTSIZE_32K_T2GI,	pilotpattern:PILOT_PP1,PILOT_PP2,PILOT_PP3,PILOT_PP4,PILOT_PP5,PILOT_PP6,PILOT_PP7,PILOT_PP8,	guardinterval:GI_1_32,GI_1_16,GI_1_8,GI_1_4,GI_1_128,GI_19_128,GI_19_256,	numdatasyms:int (100)	paprmode1:PAPR_OFF,PAPR_ACE,PAPR_TR,PAPR_BOTH,	paprmode2:PAPR_OFF,PAPR_ACE,PAPR_TR,PAPR_BOTH,	version:VERSION_111,VERSION_131,	preamble1:PREAMBLE_T2_SISO,PREAMBLE_T2_MISO,	preamble2:PREAMBLE_T2_SISO,PREAMBLE_T2_MISO,PREAMBLE_T2_LITE_SISO,PREAMBLE_T2_LITE_MISO,	misogroup:MISO_TX1,MISO_TX2,	equalization:EQUALIZATION_OFF,EQUALIZATION_ON,	bandwidth:BANDWIDTH_1_7_MHZ,BANDWIDTH_5_0_MHZ,BANDWIDTH_6_0_MHZ,BANDWIDTH_7_0_MHZ,BANDWIDTH_8_0_MHZ,BANDWIDTH_10_0_MHZ,
+LDPC Encoder	dtv_dvb_ldpc_bb	byte	byte				standard:STANDARD_DVBS2,STANDARD_DVBT2,	framesize1:FECFRAME_NORMAL,FECFRAME_SHORT,	framesize2:FECFRAME_NORMAL,FECFRAME_MEDIUM,FECFRAME_SHORT,	rate1:C1_2,C3_5,C2_3,C3_4,C4_5,C5_6,	rate2:C1_3,C2_5,C1_2,C3_5,C2_3,C3_4,C4_5,C5_6,	rate3:C1_4,C1_3,C2_5,C1_2,C3_5,C2_3,C3_4,C4_5,C5_6,C8_9,C9_10,C2_9_VLSNR,C13_45,C9_20,C90_180,C96_180,C11_20,C100_180,C104_180,C26_45,C18_30,C28_45,C23_36,C116_180,C20_30,C124_180,C25_36,C128_180,C13_18,C132_180,C22_30,C135_180,C140_180,C7_9,C154_180,	rate4:C1_5_MEDIUM,C11_45_MEDIUM,C1_3_MEDIUM,	rate5:C1_4,C1_3,C2_5,C1_2,C3_5,C2_3,C3_4,C4_5,C5_6,C8_9,C11_45,C4_15,C14_45,C7_15,C8_15,C26_45,C32_45,C1_5_VLSNR_SF2,C11_45_VLSNR_SF2,C1_5_VLSNR,C4_15_VLSNR,C1_3_VLSNR,	constellation:MOD_OTHER,MOD_128APSK,
+ZMQ PUB Message Sink	zeromq_pub_msg_sink	message			[Core]/ZeroMQ Interfaces		address:string	timeout:float (100)
+Signal Source	analog_sig_source_x	message	$type	complex,float,int,short,			samp_rate:real (samp_rate)	waveform:int (analog.GR_COS_WAVE)	freq:real (1000)	amp:real (1)	offset:$type.offset_type (0)
+WX GUI Histo Sink	wxgui_histosink2	float			[Core]/Instrumentation/WX		title:string (Histogram Plot)	num_bins:int (27)	frame_size:int (1000)	win_size:int_vector	grid_pos:grid_pos	notebook:notebook
+Socket PDU	blocks_socket_pdu	message	message	"TCP_SERVER","TCP_CLIENT","UDP_SERVER","UDP_CLIENT",			host:string	port:string (52001)	mtu:int (10000)	tcp_no_delay:True,False, (False)
+Min	blocks_min_xx	$type<$vlen>[$num_inputs]	$type<$vlen_out>	float,int,short,			num_inputs:int (1)	vlen:int (1)	vlen_out:int (1)
+Channel Model 2	channels_channel_model2	float	complex				noise_voltage:real (0.0)	epsilon:real (1.0)	taps:complex_vector (1.0 + 1.0j)	seed:int (0)	block_tags:True,False, (False)
+IShort To Complex	blocks_interleaved_short_to_complex	short<$vector_input.vlen>	complex				vector_input:False,True, (False)	swap:True,False, (False)
+Integrate	blocks_integrate_xx	$type<$vlen>	$type<$vlen>	complex,float,int,short,			decim:int	vlen:int (1)
+Polyphase Arbitrary Resampler	pfb_arb_resampler_xxx	$type.input	$type.output	ccf,fff,ccc,			rrate:real	taps:$type.taps	nfilts:int (32)	atten:real (100)	samp_delay:int (0)
+QT GUI Time Raster Sink	qtgui_time_raster_sink_x	$type.t[#if $type.t == 'message' then 0 else $nconnections#]		byte,float,msg_byte,msg_float,			name:string ("")	samp_rate:real (samp_rate)	nrows:int	ncols:int	grid:True,False, (False)	zmin:real (-1)	zmax:real (1)	mult:real_vector ([])	offset:real_vector ([])	nconnections:int (1)	update_time:real (0.10)	gui_hint:gui_hint	axislabels:True,False, (True)	label1:string	color1:0,1,2,3,5,6,	alpha1:float (1.0)	label2:	color2:	alpha2:	label3:	color3:	alpha3:	label4:	color4:	alpha4:	label5:	color5:	alpha5:	label6:	color6:	alpha6:	label7:	color7:	alpha7:	label8:	color8:	alpha8:	label9:	color9:	alpha9:	label10:	color10:	alpha10:
+Mute	blocks_mute_xx	message	$type	complex,float,int,short,			mute:raw (False)
+QT GUI Tab Widget	qtgui_tab_widget						num_tabs:1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20, (1)	label0:string (Tab 0)	label1:string (Tab 1)	label2:string (Tab 2)	label3:string (Tab 3)	label4:string (Tab 4)	label5:string (Tab 5)	label6:string (Tab 6)	label7:string (Tab 7)	label8:string (Tab 8)	label9:string (Tab 9)	label10:string (Tab 10)	label11:string (Tab 11)	label12:string (Tab 12)	label13:string (Tab 13)	label14:string (Tab 14)	label15:string (Tab 15)	label16:string (Tab 16)	label17:string (Tab 17)	label18:string (Tab 18)	label19:string (Tab 19)	gui_hint:gui_hint
+Hierarchical Polyphase Channelizer	pfb_channelizer_hier_ccf	complex	complex[$nchans]				nchans:int (3)	n_filterbanks:int (4)	taps:raw (None)	outchans:raw (None)	atten:real (100)	bw:real (1.0)	tb:real (0.2)	ripple:real (0.1)
+CtrlPort Monitor	blocks_ctrlport_monitor						en:True,False,
+WX GUI Notebook	notebook				[Core]/GUI Widgets/WX		style:wx.NB_TOP,wx.NB_RIGHT,wx.NB_BOTTOM,wx.NB_LEFT, (wx.NB_TOP)	labels:raw (['tab1', 'tab2', 'tab3'])	grid_pos:grid_pos	notebook:notebook
+Rotator	blocks_rotator_cc	complex	complex				phase_inc:real (0.0)
+Probe Rate	blocks_probe_rate	$type<$vlen>	message	complex,float,int,short,byte,			vlen:int (1)	mintime:real (500.0)	alpha:real (0.15)
+Endian Swap	blocks_endian_swap	$type	$type	complex,s32,s16,		
+Random Source	analog_random_source_x		$type	int,short,byte,			min:int (0)	max:int (2)	num_samps:int (1000)	repeat:True,False, (True)
+File Descriptor Sink	blocks_file_descriptor_sink	$type<$vlen>		complex,float,int,short,byte,			fd:int	vlen:int (1)
+PCCC Encoder	trellis_pccc_encoder_xx	$type.input	$type.output	bb,bs,bi,ss,si,ii,	[Core]/Trellis Coding		o_fsm_args:raw	o_init_state:int (0)	i_fsm_args:raw	i_init_state:int (0)	interleaver_args:raw	bl:int
+Complex To Mag Phase	blocks_complex_to_magphase	complex<$vlen>	float<$vlen>				vlen:int (1)
+LDPC Encoder Definition	variable_ldpc_encoder_def						value:raw ("ok")	ndim:0,1,2, (0)	dim1:int (1)	dim2:int (4)	file:file_open
+ZMQ PUSH Sink	zeromq_push_sink	$type<$vlen>		complex,float,int,short,byte,	[Core]/ZeroMQ Interfaces		vlen:int (1)	address:string	timeout:float (100)	pass_tags:True,False, (False)	hwm:int (-1)
+QT GUI Message Edit Box	qtgui_edit_box_msg	message	message	string,int,float,double,complex,int_vec,flt_vec,dbl_vec,cpx_vec,			value:string	label:string	is_pair:False,True, (True)	is_static:False,True, (True)	key:string	gui_hint:gui_hint
+GMSK Modulator	digital_gmskmod_bc	byte	complex				samples_per_symbol:int (2)	bt:real (0.3)	L:int (4)
+Reed-Solomon Encoder	dtv_dvbt_reed_solomon_enc	byte<$blocks*($k-$s)>	byte<$blocks*($n-$s)>				p:int (2)	m:int (8)	gfpoly:raw (0x11d)	n:int (255)	k:int (239)	t:int (8)	s:int (51)	blocks:int (8)
+MISO Processing	dtv_dvbt2_miso_cc	complex	complex[2]				carriermode:CARRIERS_NORMAL,CARRIERS_EXTENDED,	fftsize:FFTSIZE_1K,FFTSIZE_2K,FFTSIZE_4K,FFTSIZE_8K,FFTSIZE_8K_T2GI,FFTSIZE_16K,FFTSIZE_16K_T2GI,FFTSIZE_32K,FFTSIZE_32K_T2GI,	pilotpattern:PILOT_PP1,PILOT_PP2,PILOT_PP3,PILOT_PP4,PILOT_PP5,PILOT_PP6,PILOT_PP7,PILOT_PP8,	guardinterval:GI_1_32,GI_1_16,GI_1_8,GI_1_4,GI_1_128,GI_19_128,GI_19_256,	numdatasyms:int (100)	paprmode1:PAPR_OFF,PAPR_ACE,PAPR_TR,PAPR_BOTH,	paprmode2:PAPR_OFF,PAPR_ACE,PAPR_TR,PAPR_BOTH,	version:VERSION_111,VERSION_131,
+QAM Demod	digital_qam_demod	complex	byte		[Core]/Deprecated		constellation_points:int (16)	differential:bool (True)	samples_per_symbol:int (2)	excess_bw:real (0.35)	freq_bw:real (6.28/100.0)	timing_bw:real (6.28/100.0)	phase_bw:real (6.28/100.0)	mod_code:"gray","none",	verbose:bool (False)	log:bool (False)
+Symbol Sync	digital_symbol_sync_xx	$type.input	float	cc,ff,	[Core]/Synchronizers		ted_type:digital.TED_MUELLER_AND_MULLER,digital.TED_MOD_MUELLER_AND_MULLER,digital.TED_ZERO_CROSSING,digital.TED_GARDNER,digital.TED_EARLY_LATE,digital.TED_DANDREA_AND_MENGALI_GEN_MSK,digital.TED_MENGALI_AND_DANDREA_GMSK,digital.TED_SIGNAL_TIMES_SLOPE_ML,digital.TED_SIGNUM_TIMES_SLOPE_ML,	constellation:raw (digital.constellation_bpsk().base())	sps:real (sps)	ted_gain:real (1.0)	loop_bw:real (0.045)	damping:real (1.0)	max_dev:real (1.5)	osps:int (1)	resamp_type:digital.IR_MMSE_8TAP,digital.IR_PFB_NO_MF,digital.IR_PFB_MF,	nfilters:int (128)	pfb_mf_taps:real_vector ([])
+Modulate Vector	variable_modulate_vector				Modulators		mod:raw	data:int_vector	taps:float_vector
+g721 Audio Encoder	vocoder_g721_encode_sb	short	byte			
+PSK Mod	digital_psk_mod	byte	complex		[Core]/Deprecated		constellation_points:int (8)	mod_code:"gray","none",	differential:bool (True)	samples_per_symbol:int (2)	excess_bw:real (0.35)	verbose:bool (False)	log:bool (False)
+ZMQ REP Sink	zeromq_rep_sink	$type<$vlen>		complex,float,int,short,byte,	[Core]/ZeroMQ Interfaces		vlen:int (1)	address:string	timeout:float (100)	pass_tags:True,False, (False)	hwm:int (-1)
+Plateau Detector	blocks_plateau_detector_fb	float	byte				max_len:int	threshold:real (0.9)
+FEC Extended Tagged Encoder	fec_extended_tagged_encoder	byte	byte				encoder_list:raw (encoder_variable)	mtu:int (1500)	puncpat:string ('11')	lentagname:string (None)
+CVSD Encoder	vocoder_cvsd_encode_fb	float	byte				resample:int (8)	bw:real (0.5)
+QT GUI Chooser	variable_qtgui_chooser			real,int,string,raw,			label:string	num_opts:0,1,2,3,4,5, (3)	value:$type (0)	options:raw ([0, 1, 2])	labels:raw ([])	option0:$type (0)	label0:string	option1:$type (1)	label1:string	option2:$type (2)	label2:string	option3:$type (3)	label3:string	option4:$type (4)	label4:string	widget:combo_box,radio_buttons, (combo_box)	orient:Qt.QHBoxLayout,Qt.QVBoxLayout, (Qt.QVBoxLayout)	gui_hint:gui_hint
+Probe Signal Vector	blocks_probe_signal_vx	$type<$vlen>		complex,float,int,short,byte,			vlen:int (1)
+HRPT PLL	noaa_hrpt_pll_cf	complex	float		[Core]/NOAA		alpha:real	beta:real	max_offset:real
+VCO (complex)	blocks_vco_c	float	complex				samp_rate:real	sensitivity:real	amplitude:real
+BBheader	dtv_dvb_bbheader_bb	byte	byte				standard:STANDARD_DVBS2,STANDARD_DVBT2,	framesize1:FECFRAME_NORMAL,FECFRAME_SHORT,	framesize2:FECFRAME_NORMAL,FECFRAME_MEDIUM,FECFRAME_SHORT,	rate1:C1_2,C3_5,C2_3,C3_4,C4_5,C5_6,	rate2:C1_3,C2_5,C1_2,C3_5,C2_3,C3_4,C4_5,C5_6,	rate3:C1_4,C1_3,C2_5,C1_2,C3_5,C2_3,C3_4,C4_5,C5_6,C8_9,C9_10,C2_9_VLSNR,C13_45,C9_20,C90_180,C96_180,C11_20,C100_180,C104_180,C26_45,C18_30,C28_45,C23_36,C116_180,C20_30,C124_180,C25_36,C128_180,C13_18,C132_180,C22_30,C135_180,C140_180,C7_9,C154_180,	rate4:C1_5_MEDIUM,C11_45_MEDIUM,C1_3_MEDIUM,	rate5:C1_4,C1_3,C2_5,C1_2,C3_5,C2_3,C3_4,C4_5,C5_6,C8_9,C11_45,C4_15,C14_45,C7_15,C8_15,C26_45,C32_45,C1_5_VLSNR_SF2,C11_45_VLSNR_SF2,C1_5_VLSNR,C4_15_VLSNR,C1_3_VLSNR,	rolloff:RO_0_35,RO_0_25,RO_0_20,RO_0_15,RO_0_10,RO_0_05,	mode:INPUTMODE_NORMAL,INPUTMODE_HIEFF,	inband:INBAND_OFF,INBAND_ON,	fecblocks:int (168)	tsrate:int (4000000)
+ATSC Receiver FPLL	dtv_atsc_fpll	complex	float				rate:float
+PDU Remove	blocks_pdu_remove	message	message				k:raw (pmt.intern("key"))
+Low Pass Filter	low_pass_filter	$type.input	$type.output	fir_filter_ccf,interp_fir_filter_ccf,fir_filter_fff,interp_fir_filter_fff,			decim:int (1)	interp:int (1)	gain:real (1)	samp_rate:real (samp_rate)	cutoff_freq:real	width:real	win:int (firdes.WIN_HAMMING)	beta:real (6.76)
+ATSC Reed–Solomon Decoder	dtv_atsc_rs_decoder	byte<256>	byte<256>			
+Interpolating FIR Filter	interp_fir_filter_xxx	$type.input	$type.output	ccc,ccf,fcc,fff,fsf,scc,			interp:int (1)	taps:$type.taps	samp_delay:int (0)
+Float To UChar	blocks_float_to_uchar	float	byte			
+OFDM Frame Equalizer	digital_ofdm_frame_equalizer_vcvc	complex<$fft_len>	complex<$fft_len>				fft_len:int (fft_len)	cp_len:int (fft_len/4)	equalizer:raw	len_tag_key:string	propagate_channel_state:True,False,	fixed_frame_len:int (0)
+SCCC Decoder Combo	trellis_sccc_decoder_combined_xx	$type.io	$out_type.io	c,f,	[Core]/Trellis Coding		out_type:i,s,b,	o_fsm_args:raw	o_init_state:int (0)	o_final_state:int (-1)	i_fsm_args:raw	i_init_state:int (0)	i_final_state:int (-1)	interleaver:raw	block_size:int	iterations:int (10)	dim:int	table:$type.table	metric_type:digital.TRELLIS_EUCLIDEAN,digital.TRELLIS_HARD_SYMBOL,digital.TRELLIS_HARD_BIT,	siso_type:trellis.TRELLIS_MIN_SUM,trellis.TRELLIS_SUM_PRODUCT,	scaling:real (1.0)
+Depuncture	fec_depuncture_bb	byte	byte				puncsize:int	puncpat:int	delay:int (0)	sym:int (127)
+Rational Resampler Base	rational_resampler_base_xxx	$type.input	$type.output	ccc,ccf,fcc,fff,fsf,scc,			interp:int (1)	decim:int (1)	taps:$type.taps
+Message Sink	blocks_message_sink	$type<$vlen>	msg	complex,float,int,short,byte,	[Core]/Deprecated		dont_block:True,False, (False)	vlen:int (1)
+Complex To Float	blocks_complex_to_float	complex<$vlen>	float<$vlen>				vlen:int (1)
+CVSD Audio Decoder (Raw Bit-Level)	vocoder_cvsd_decode_bs	byte	short			
+Repetition Decoder Definition	variable_repetition_decoder_def						value:raw ("ok")	ndim:0,1,2,	dim1:int (1)	dim2:int (1)	framebits:int (2048)	rep:int (3)	prob:float (0.5)
+RRC Filter Taps	variable_rrc_filter_taps						gain:float (1.0)	samp_rate:float (samp_rate)	sym_rate:float	alpha:float (0.35)	ntaps:int (11*sps)
+POLAR code Configurator	variable_polar_code_configurator						channel:string (polar.CHANNEL_TYPE_BEC)	block_size:int (32)	num_info_bits:int (16)	design_snr:float (0.0)	mu:int (16)
+BER	fec_ber_bf	byte	float				test_mode:False,True, (False)	berminerrors:int (100)	berlimit:float (-7.0)
+Band Reject Filter	band_reject_filter	$type.input	$type.output	fir_filter_ccf,interp_fir_filter_ccf,fir_filter_fff,interp_fir_filter_fff,			decim:int (1)	interp:int (1)	gain:real (1)	samp_rate:real (samp_rate)	low_cutoff_freq:real	high_cutoff_freq:real	width:real	win:int (firdes.WIN_HAMMING)	beta:real (6.76)
+FFT	fft_vxx	$type<$fft_size>	complex<$fft_size>	complex,float,			fft_size:int (1024)	forward:True,False,	window:real_vector (window.blackmanharris(1024))	shift:True,False,	nthreads:int (1)
+RMS	blocks_rms_xx	$type	float	complex,float,			alpha:real (0.0001)
+Hilbert	hilbert_fc	float	complex				num_taps:int (65)	win:int (firdes.WIN_HAMMING)	beta:real (6.76)
+Throttle	blocks_throttle	$type<$vlen>	$type<$vlen>	complex,float,int,short,byte,			samples_per_second:real (samp_rate)	vlen:int (1)	ignoretag:bool (True)
+WX GUI Number Sink	wxgui_numbersink2	$type		complex,float,	[Core]/Instrumentation/WX		title:string (Number Plot)	units:string (Units)	samp_rate:real (samp_rate)	min_value:real (-100)	max_value:real (100)	factor:real (1.0)	decimal_places:int (10)	ref_level:real (0)	number_rate:int (15)	peak_hold:True,False, (False)	average:True,False, (False)	avg_alpha:real (0)	show_gauge:True,False, (True)	win_size:int_vector	grid_pos:grid_pos	notebook:notebook
+Complex to Arg	blocks_complex_to_arg	complex<$vlen>	float<$vlen>				vlen:int (1)
+Random Uniform Source	analog_random_uniform_source_x		$type	int,short,byte,			minimum:int	maximum:int	seed:int (0)
+Tag Object	variable_tag_object						offset:int (0)	key:raw (pmt.intern("key"))	value:raw (pmt.intern("value"))	src:raw (pmt.intern("src"))
+ulaw Audio Decoder	vocoder_ulaw_decode_bs	byte	short			
+Add Const	blocks_add_const_vxx	$type<$vlen>	$type<$vlen>	complex,float,int,short,			const:$type.const_type (0)	vlen:int (1)
+Stream to Streams	blocks_stream_to_streams	$type<$vlen>	$type<$vlen>[$num_streams]	complex,float,int,short,byte,			num_streams:int (2)	vlen:int (1)
+TCP Server Sink	blocks_tcp_server_sink	$type<$vlen>		complex,float,int,short,byte,			ipaddr:string	port:int	noblock:True,False,	vlen:int (1)
+Energy Dispersal	dtv_dvbt_energy_dispersal	byte<1>	byte<1504*$nsize>				nsize:int (8)
+And Const	blocks_and_const_xx	$type	$type	int,short,byte,			const:int (0)
+Tagged Stream Mux	blocks_tagged_stream_mux	$type<$vlen>[$ninputs]	$type<$vlen>	complex,float,int,short,byte,			ninputs:int	lengthtagname:string	vlen:int (1)	tag_preserve_head_pos:int (0)
+ZMQ REP Message Sink	zeromq_rep_msg_sink	message			[Core]/ZeroMQ Interfaces		address:string	timeout:float (100)
+Phase Noise Generator	channels_phase_noise_gen	complex	complex				noise_mag:float (0)	alpha:float (0.1)
+ATSC Depad	dtv_atsc_depad	byte<256>	byte			
+Tag Debug	blocks_tag_debug	$type<$vlen>[$num_inputs]		complex,float,int,short,byte,			name:string	filter:string ("")	num_inputs:int (1)	vlen:int (1)	display:bool (True)
+g723_40 Audio Encoder	vocoder_g723_40_encode_sb	short	byte			
+CVSD Audio Encoder (Raw Bit-Level)	vocoder_cvsd_encode_sb	short	byte			
+Quantizer	channels_quantizer	float	float				bits:int (16)
+Packet Sink	digital_packet_sink	float					sync_vector:int_vector	target_queue:raw	threshold:int (-1)
+ATSC Pad	dtv_atsc_pad	byte	byte<256>			
+QT GUI Histogram Sink	qtgui_histogram_sink_x	$type.t[#if $type.t == 'message' then 0 else $nconnections#]		float,msg_float,			name:string ("")	size:int (1024)	bins:int (100)	grid:True,False, (False)	autoscale:True,False, (True)	accum:True,False, (False)	xmin:real (-1)	xmax:real (1)	nconnections:int (1)	update_time:float (0.10)	gui_hint:gui_hint	legend:True,False, (True)	axislabels:True,False, (True)	label1:string	width1:int (1)	color1:"blue","red","green","black","cyan","magenta","yellow","dark red","dark green","dark blue",	style1:1,2,3,4,5,0,	marker1:-1,0,1,2,3,4,6,7,8,9,	alpha1:float (1.0)	label2:	width2:	color2: ("red")	style2:	marker2:	alpha2:	label3:	width3:	color3: ("green")	style3:	marker3:	alpha3:	label4:	width4:	color4: ("black")	style4:	marker4:	alpha4:	label5:	width5:	color5: ("cyan")	style5:	marker5:	alpha5:	label6:	width6:	color6: ("magenta")	style6:	marker6:	alpha6:	label7:	width7:	color7: ("yellow")	style7:	marker7:	alpha7:	label8:	width8:	color8: ("dark red")	style8:	marker8:	alpha8:	label9:	width9:	color9: ("dark green")	style9:	marker9:	alpha9:	label10:	width10:	color10: ("dark blue")	style10:	marker10:	alpha10:
+WX GUI Constellation Sink	wxgui_constellationsink2	complex			[Core]/Instrumentation/WX		title:string (Constellation Plot)	samp_rate:real (samp_rate)	frame_rate:real (5)	const_size:real (2048)	M:int (4)	theta:real (0)	loop_bw:real (6.28/100.0)	fmax:real (0.06)	mu:real (0.5)	gain_mu:real (0.005)	symbol_rate:real (samp_rate/4.)	omega_limit:real (0.005)	win_size:int_vector	grid_pos:grid_pos	notebook:notebook
+Message Debug	blocks_message_debug	message				
+Descrambler	digital_descrambler_bb	byte	byte				mask:hex (0x8A)	seed:hex (0x7F)	len:int (7)
+CC Decoder Definition	variable_cc_decoder_def						value:raw ("ok")	ndim:0,1,2, (0)	dim1:int (1)	dim2:int (1)	framebits:int (2048)	k:int (7)	rate:int (2)	polys:int_vector ([79,109])	state_start:int (0)	state_end:int (-1)	mode:fec.CC_STREAMING,fec.CC_TERMINATED,fec.CC_TAILBITING,fec.CC_TRUNCATED,	padding:False,True, (False)
+QAM Mod	digital_qam_mod	byte	complex		[Core]/Deprecated		constellation_points:int (16)	mod_code:"gray","none",	differential:bool (True)	samples_per_symbol:int (2)	excess_bw:real (0.35)	verbose:bool (False)	log:bool (False)
+GSM full-rate Audio Decoder	vocoder_gsm_fr_decode_ps	byte<33>	short			
+QT GUI Push Button	variable_qtgui_push_button			real,int,string,bool,raw,			label:string	value:$type (0)	pressed:$type (1)	released:$type (0)	gui_hint:gui_hint
+Tags Strobe	blocks_tags_strobe		$type<$vlen>	complex,float,int,short,byte,			value:raw (pmt.intern("TEST"))	key:raw (pmt.intern("strobe"))	nsamps:int (1000)	vlen:int (1)
+Char To Short	blocks_char_to_short	byte<$vlen>	short<$vlen>				vlen:int (1)
+Bit Interleaver	dtv_dvbt2_interleaver_bb	byte	byte				framesize:FECFRAME_NORMAL,FECFRAME_SHORT,	rate:C1_3,C2_5,C1_2,C3_5,C2_3,C3_4,C4_5,C5_6,	constellation:MOD_QPSK,MOD_16QAM,MOD_64QAM,MOD_256QAM,
+GFSK Demod	digital_gfsk_demod	complex	byte				samples_per_symbol:int (2)	sensitivity:real (1.0)	gain_mu:real (0.175)	mu:real (0.5)	omega_relative_limit:real (0.005)	freq_error:real (0.0)	verbose:bool (False)	log:bool (False)
+Standard Squelch	analog_standard_squelch	float	float				audio_rate:real	threshold:real
+Correlation Estimator	digital_corr_est_cc	complex	complex				symbols:complex_vector	sps:float	mark_delay:int	threshold:float (0.9)
+Peak Detector	blocks_peak_detector_xb	$type	byte	float,int,short,			threshold_factor_rise:real (0.25)	threshold_factor_fall:real (0.40)	look_ahead:int (10)	alpha:real (0.001)

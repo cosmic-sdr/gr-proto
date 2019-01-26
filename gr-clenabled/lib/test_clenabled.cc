@@ -2402,33 +2402,43 @@ main (int argc, char **argv)
 	std::cout << std::endl;
 */
 
+    std::cout << "-----------------";
 	was_successful = testMultiplyConst();
 	std::cout << std::endl;
 
+    std::cout << "-----------------";
 	was_successful = testCostasLoop();
 	std::cout << std::endl;
 
+    std::cout << "-----------------";
 	was_successful = testSigSource();
 	std::cout << std::endl;
 
+    std::cout << "-----------------";
 	was_successful = testMultiply();
 	std::cout << std::endl;
 
+    std::cout << "-----------------";
 	was_successful = testComplexToMag();
 	std::cout << std::endl;
 
+    std::cout << "-----------------";
 	was_successful = testComplexToMagPhase();
 	std::cout << std::endl;
 
+    std::cout << "-----------------";
 	was_successful = testComplexToArg();
 	std::cout << std::endl;
 
+    std::cout << "-----------------";
 	was_successful = testMagPhaseToComplex();
 	std::cout << std::endl;
 
+    std::cout << "-----------------";
 	was_successful = testQuadDemod();
 	std::cout << std::endl;
 
+    std::cout << "-----------------";
 	was_successful = testFFT(true);
 	std::cout << std::endl;
 /*
