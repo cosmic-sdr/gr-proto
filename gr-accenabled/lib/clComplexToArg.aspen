@@ -2,13 +2,8 @@ model clComplexToArg {
 param aspen_param_default = 1
 data fast_atan_table as Array(257, aspen_param_sizeof_float)
 param aspen_param_sizeof_float = 4
-param aspen_param_sizeof_FComplex
-param x_abs
-param y_abs
-param z
-param y
-param x
 param noutput_items = 8192
+param aspen_param_sizeof_FComplex = 8
 kernel fast_atan2f {
 execute  "block_fast_atan2f19" {
 flops [1] as sp
@@ -16,7 +11,8 @@ flops [1] as sp
 flops [2] as sp
 flops [1] as sp
 }
-if (y_abs<x_abs) {
+probability {
+[0.5] {
 execute  "block_fast_atan2f26" {
 flops [1] as sp
 }
@@ -25,10 +21,12 @@ execute  "block_fast_atan2f27" {
 flops [1] as sp
 }
 }
-execute  "block_fast_atan2f31" {
+}
+execute  "block_fast_atan2f29" {
 flops [1] as dp
 }
-if (( ! z<0.003921569)) {
+probability {
+[(1-0.5)] {
 execute  "block_fast_atan2f34" {
 flops [1] as sp
 flops [1] as sp
@@ -38,22 +36,26 @@ flops [3] as sp, simd
 flops [1] as integer
 }
 }
-execute  "block_fast_atan2f41" {
+}
+execute  "block_fast_atan2f39" {
 flops [1] as sp
 }
-if (x_abs>y_abs) {
-execute  "block_fast_atan2f43" {
+probability {
+[0.5] {
+execute  "block_fast_atan2f41" {
 flops [1] as dp
 }
-if (x>=0.0) {
-execute  "block_fast_atan2f46" {
+probability {
+[0.5] {
+execute  "block_fast_atan2f44" {
 flops [1] as dp
 }
 } else {
-execute  "block_fast_atan2f53" {
+execute  "block_fast_atan2f51" {
 flops [1] as dp
 }
-if (y>=0.0) {
+probability {
+[0.5] {
 execute  "block_fast_atan2f54" {
 flops [1] as sp
 }
@@ -63,15 +65,19 @@ flops [1] as sp
 }
 }
 }
+}
+}
 } else {
-execute  "block_fast_atan2f58" {
+execute  "block_fast_atan2f56" {
 flops [1] as dp
 }
-if (y>=0.0) {
-execute  "block_fast_atan2f62" {
+probability {
+[0.5] {
+execute  "block_fast_atan2f60" {
 flops [1] as dp
 }
-if (x>=0.0) {
+probability {
+[0.5] {
 execute  "block_fast_atan2f63" {
 flops [1] as sp
 }
@@ -80,11 +86,13 @@ execute  "block_fast_atan2f64" {
 flops [1] as sp
 }
 }
+}
 } else {
-execute  "block_fast_atan2f69" {
+execute  "block_fast_atan2f67" {
 flops [1] as dp
 }
-if (x>=0.0) {
+probability {
+[0.5] {
 execute  "block_fast_atan2f70" {
 flops [1] as sp
 }
@@ -96,21 +104,24 @@ flops [1] as sp
 }
 }
 }
+}
+}
+}
 kernel main {
-execute [noutput_items] "block_clComplexToArg_kernel3" {
+execute [noutput_items] "block_clComplexToArg_kernel4" {
 flops [1] as integer
 }
-execute  "block_clComplexToArg_kernel3__intracommIN" {
+execute  "block_clComplexToArg_kernel4__intracommIN" {
 intracomm [(aspen_param_sizeof_FComplex*noutput_items)] as copyin
 }
-map [noutput_items] "mapblock_clComplexToArg_kernel3" {
-execute  "block_clComplexToArg_kernel4" {
+map [noutput_items] "mapblock_clComplexToArg_kernel4" {
+execute  "block_clComplexToArg_kernel5" {
 loads [(2*aspen_param_sizeof_FComplex)] as stride(1)
 stores [(1*aspen_param_sizeof_float)] as stride(1)
 }
 call fast_atan2f()
 }
-execute  "block_clComplexToArg_kernel3__intracommOUT" {
+execute  "block_clComplexToArg_kernel4__intracommOUT" {
 intracomm [(aspen_param_sizeof_float*noutput_items)] as copyout
 }
 }

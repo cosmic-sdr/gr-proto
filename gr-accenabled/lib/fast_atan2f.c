@@ -130,9 +130,19 @@
     y_abs = fabsf(y);
     x_abs = fabsf(x);
     /* don't divide by zero! */
+#ifdef _OPENARC_
+#ifdef GEN_ASPEN
+	#pragma aspen control probability(0.5)
+#endif
+#endif
     if(!((y_abs > 0.0f) || (x_abs > 0.0f)))
       return 0.0;
 
+#ifdef _OPENARC_
+#ifdef GEN_ASPEN
+	#pragma aspen control probability(0.5)
+#endif
+#endif
     if(y_abs < x_abs)
       z = y_abs / x_abs;
     else
@@ -140,6 +150,11 @@
 
     /* when ratio approaches the table resolution, the angle is */
     /* best approximated with the argument itself... */
+#ifdef _OPENARC_
+#ifdef GEN_ASPEN
+	#pragma aspen control probability(0.5)
+#endif
+#endif
     if(z < TAN_MAP_RES)
       base_angle = z;
     else {
@@ -153,8 +168,23 @@
       base_angle += (fast_atan_table[index + 1] - fast_atan_table[index]) * alpha;
     }
 
+#ifdef _OPENARC_
+#ifdef GEN_ASPEN
+	#pragma aspen control probability(0.5)
+#endif
+#endif
     if(x_abs > y_abs) { /* -45 -> 45 or 135 -> 225 */
+#ifdef _OPENARC_
+#ifdef GEN_ASPEN
+	#pragma aspen control probability(0.5)
+#endif
+#endif
       if(x >= 0.0) { /* -45 -> 45 */
+#ifdef _OPENARC_
+#ifdef GEN_ASPEN
+	#pragma aspen control probability(0.5)
+#endif
+#endif
         if(y >= 0.0)
           angle = base_angle; /* 0 -> 45, angle OK */
         else
@@ -162,6 +192,11 @@
       }
       else { /* 135 -> 180 or 180 -> -135 */
         angle = 3.14159265358979323846;
+#ifdef _OPENARC_
+#ifdef GEN_ASPEN
+	#pragma aspen control probability(0.5)
+#endif
+#endif
         if(y >= 0.0)
           angle -= base_angle; /* 135 -> 180, angle = 180 - angle */
         else
@@ -169,8 +204,18 @@
       }
     }
     else { /* 45 -> 135 or -135 -> -45 */
+#ifdef _OPENARC_
+#ifdef GEN_ASPEN
+	#pragma aspen control probability(0.5)
+#endif
+#endif
       if(y >= 0.0) { /* 45 -> 135 */
         angle = 1.57079632679489661923;
+#ifdef _OPENARC_
+#ifdef GEN_ASPEN
+	#pragma aspen control probability(0.5)
+#endif
+#endif
         if(x >= 0.0)
           angle -= base_angle; /* 45 -> 90, angle = 90 - angle */
         else
@@ -178,6 +223,11 @@
       }
       else { /* -135 -> -45 */
         angle = -1.57079632679489661923;
+#ifdef _OPENARC_
+#ifdef GEN_ASPEN
+	#pragma aspen control probability(0.5)
+#endif
+#endif
         if(x >= 0.0)
           angle += base_angle; /* -90 -> -45, angle = -90 + angle */
         else
@@ -186,6 +236,11 @@
     }
 
   #ifdef ZERO_TO_TWOPI
+#ifdef _OPENARC_
+#ifdef GEN_ASPEN
+	#pragma aspen control probability(0.5)
+#endif
+#endif
     if (angle < 0)
       return (angle + TWOPI);
     else
