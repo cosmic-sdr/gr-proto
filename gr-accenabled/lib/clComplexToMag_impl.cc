@@ -24,7 +24,6 @@
 
 #include <gnuradio/io_signature.h>
 #include "clComplexToMag_impl.h"
-#include "fast_atan2f.h"
 #include <volk/volk.h>
 
 namespace gr {
@@ -48,7 +47,7 @@ namespace gr {
       : gr::sync_block("clComplexToMag",
               gr::io_signature::make(1, 1, sizeof(gr_complex)),
               gr::io_signature::make(1, 1, sizeof(float))),
-	  GRCLBase(DTYPE_COMPLEX, sizeof(gr_complex),openCLPlatformType,devSelector,platformId,devId,setDebug)
+	  GRACCBase(openCLPlatformType,devSelector,platformId,devId,setDebug)
 {
     	int imaxItems=gr::block::max_noutput_items();
     	if (imaxItems==0)
@@ -98,78 +97,10 @@ namespace gr {
     bool clComplexToMag_impl::stop() {
     	curBufferSize = 0;
 
-    	if (aBuffer) {
-    		delete aBuffer;
-    		aBuffer = NULL;
-    	}
-
-    	if (cBuffer) {
-    		delete cBuffer;
-    		cBuffer = NULL;
-    	}
-
     	return GRCLBase::stop();
     }
 
-    void clComplexToMag_impl::buildKernel(int numItems) {
-    	maxConstItems = (int)((float)maxConstMemSize / ((float)dataSize));
-    	bool useConst;
-
-    	if (numItems > maxConstItems)
-    		useConst = false;
-    	else
-    		useConst = true;
-
-		if (debugMode) {
-			if (useConst)
-				std::cout << "OpenCL INFO: ComplexToMag building kernel with __constant params..." << std::endl;
-			else
-				std::cout << "OpenCL INFO: ComplexToMag - too many items for constant memory.  Building kernel with __global params..." << std::endl;
-		}
-
-    	// Now we set up our OpenCL kernel
-        std::string srcStdStr="";
-        std::string fnName = "complextomag";
-
-    	srcStdStr += "struct ComplexStruct {\n";
-    	srcStdStr += "float real;\n";
-    	srcStdStr += "float imag; };\n";
-    	srcStdStr += "typedef struct ComplexStruct SComplex;\n";
-
-    	if (useConst)
-    		srcStdStr += "__kernel void complextomag(__constant SComplex * a, __global float * restrict c) {\n";
-    	else
-    		srcStdStr += "__kernel void complextomag(__global SComplex * restrict a, __global float * restrict c) {\n";
-
-    	srcStdStr += "    size_t index =  get_global_id(0);\n";
-    	srcStdStr += "    float aval = a[index].imag;\n";
-    	srcStdStr += "    float bval = a[index].real;\n";
-    	srcStdStr += "    c[index] = sqrt((aval*aval)+(bval*bval));\n";
-    	srcStdStr += "}\n";
-
-        GRCLBase::CompileKernel((const char *)srcStdStr.c_str(),(const char *)fnName.c_str());
-    }
-
-
     void clComplexToMag_impl::setBufferLength(int numItems) {
-    	if (aBuffer)
-    		delete aBuffer;
-
-    	if (cBuffer)
-    		delete cBuffer;
-
-    	aBuffer = new cl::Buffer(
-            *context,
-            CL_MEM_READ_ONLY,
-			numItems * sizeof(gr_complex));
-
-        cBuffer = new cl::Buffer(
-            *context,
-            CL_MEM_READ_WRITE,
-			numItems * sizeof(float));
-
-        buildKernel(numItems);
-
         curBufferSize=numItems;
     }
 
@@ -205,49 +136,26 @@ namespace gr {
             gr_vector_const_void_star &input_items,
             gr_vector_void_star &output_items)
     {
-
-		if (kernel == NULL) {
-			return 0;
-		}
-
     	if (noutput_items > curBufferSize) {
     		setBufferLength(noutput_items);
     	}
 
-    	int inputSize = noutput_items*sizeof(gr_complex);
-
     	// Protect context from switching
         gr::thread::scoped_lock guard(d_mutex);
 
-    	queue->enqueueWriteBuffer(*aBuffer,CL_TRUE,0,inputSize,input_items[0]);
-
 		// Do the work
 
-		// Set kernel args
-		kernel->setArg(0, *aBuffer);
-		kernel->setArg(1, *cBuffer);
-
-		cl::NDRange localWGSize=cl::NullRange;
+		unsigned int localWGSize=0;
 
 		if (contextType!=CL_DEVICE_TYPE_CPU) {
 			if (noutput_items % preferredWorkGroupSizeMultiple == 0) {
 				// for some reason problems start to happen when we're no longer using constant memory
-				localWGSize=cl::NDRange(preferredWorkGroupSizeMultiple);
+				localWGSize=preferredWorkGroupSizeMultiple;
 			}
 		}
 
 		// Do the work
-		queue->enqueueNDRangeKernel(
-			*kernel,
-			cl::NullRange,
-			cl::NDRange(noutput_items),
-			localWGSize);
-
-
-    // Map cBuffer to host pointer. This enforces a sync with
-    // the host
-
-	queue->enqueueReadBuffer(*cBuffer,CL_TRUE,0,noutput_items*sizeof(float),(void *)output_items[0]);
+		clComplexToMag_kernel(noutput_items, (const FComplex *)input_items[0], (float *)output_items[0]);
 
       // Tell runtime system how many output items we produced.
       return noutput_items;
