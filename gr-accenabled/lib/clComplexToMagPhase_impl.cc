@@ -48,7 +48,7 @@ namespace gr {
       : gr::sync_block("clComplexToMagPhase",
               gr::io_signature::make(1, 1, sizeof(gr_complex)),
               gr::io_signature::make(2, 2, sizeof(float))),
-			  GRCLBase(DTYPE_COMPLEX, sizeof(gr_complex),openCLPlatformType,devSelector,platformId,devId,setDebug)
+			  GRACCBase(openCLPlatformType,devSelector,platformId,devId,setDebug)
     {
     	int imaxItems=gr::block::max_noutput_items();
     	if (imaxItems==0)
@@ -99,102 +99,10 @@ namespace gr {
     bool clComplexToMagPhase_impl::stop() {
     	curBufferSize = 0;
 
-    	if (aBuffer) {
-    		delete aBuffer;
-    		aBuffer = NULL;
-    	}
-
-    	if (bBuffer) {
-    		delete bBuffer;
-    		bBuffer = NULL;
-    	}
-
-    	if (cBuffer) {
-    		delete cBuffer;
-    		cBuffer = NULL;
-    	}
-
     	return GRCLBase::stop();
     }
 
-
-    void clComplexToMagPhase_impl::buildKernel(int numItems) {
-    	maxConstItems = (int)((float)maxConstMemSize / ((float)dataSize));
-    	bool useConst;
-
-    	if (numItems > maxConstItems)
-    		useConst = false;
-    	else
-    		useConst = true;
-
-    	if (!hasDoublePrecisionSupport) {
-    		std::cout << "OpenCL Complex To Mag/Phase Warning: Your selected OpenCL platform doesn't support double precision math.  The resulting output from this block is going to contain potentially impactful 'noise' (plot it on a frequency plot versus native block for comparison)." << std::endl;
-    	}
-
-		if (debugMode) {
-			if (useConst)
-				std::cout << "OpenCL INFO: ComplexToMag Const building kernel with __constant params..." << std::endl;
-			else
-				std::cout << "OpenCL INFO: ComplexToMag - too many items for constant memory.  Building kernel with __global params..." << std::endl;
-		}
-
-    	// Now we set up our OpenCL kernel
-        std::string srcStdStr="";
-        std::string fnName = "complextomagphase";
-
-    	srcStdStr += "struct ComplexStruct {\n";
-    	srcStdStr += "float real;\n";
-    	srcStdStr += "float imag; };\n";
-    	srcStdStr += "typedef struct ComplexStruct SComplex;\n";
-
-    	if (useConst)
-    		srcStdStr += "__kernel void complextomagphase(__constant SComplex * a, __global float * restrict b, __global float * restrict c) {\n";
-    	else
-    		srcStdStr += "__kernel void complextomagphase(__global SComplex * restrict a, __global float * restrict b, __global float * restrict c) {\n";
-
-    	srcStdStr += "    size_t index =  get_global_id(0);\n";
-    	srcStdStr += "    float aval = a[index].imag;\n";
-    	srcStdStr += "    float bval = a[index].real;\n";
-    	srcStdStr += "    b[index] = sqrt((aval*aval)+(bval*bval));\n";
-    	if (hasDoublePrecisionSupport) {
-        	srcStdStr += "    c[index] = (float)atan2((double)aval,(double)bval);\n";
-    	}
-    	else {
-        	srcStdStr += "    c[index] = atan2(aval,bval);\n";
-    	}
-    	srcStdStr += "}\n";
-
-        GRCLBase::CompileKernel((const char *)srcStdStr.c_str(),(const char *)fnName.c_str());
-    }
-
-
     void clComplexToMagPhase_impl::setBufferLength(int numItems) {
-    	if (aBuffer)
-    		delete aBuffer;
-
-    	if (bBuffer)
-    		delete bBuffer;
-
-    	if (cBuffer)
-    		delete cBuffer;
-
-    	aBuffer = new cl::Buffer(
-            *context,
-            CL_MEM_READ_ONLY,
-			numItems * sizeof(gr_complex));
-
-        bBuffer = new cl::Buffer(
-            *context,
-            CL_MEM_READ_WRITE,
-			numItems * sizeof(float));
-
-        cBuffer = new cl::Buffer(
-            *context,
-            CL_MEM_READ_WRITE,
-			numItems * sizeof(float));
-
-        buildKernel(numItems);
-
         curBufferSize=numItems;
     }
 
@@ -236,50 +144,26 @@ namespace gr {
             gr_vector_void_star &output_items)
     {
 
-		if (kernel == NULL) {
-			return 0;
-		}
-
     	if (noutput_items > curBufferSize) {
     		setBufferLength(noutput_items);
     	}
 
-    	int inputSize = noutput_items*sizeof(gr_complex);
-
     	// Protect context from switching
         gr::thread::scoped_lock guard(d_mutex);
 
-        queue->enqueueWriteBuffer(*aBuffer,CL_TRUE,0,inputSize,input_items[0]);
-
 		// Do the work
 
-		// Set kernel args
-		kernel->setArg(0, *aBuffer);
-		kernel->setArg(1, *bBuffer);
-		kernel->setArg(2, *cBuffer);
-
-		cl::NDRange localWGSize=cl::NullRange;
+		unsigned int localWGSize=0;
 
 		if (contextType!=CL_DEVICE_TYPE_CPU) {
 			if (noutput_items % preferredWorkGroupSizeMultiple == 0) {
 				// for some reason problems start to happen when we're no longer using constant memory
-				localWGSize=cl::NDRange(preferredWorkGroupSizeMultiple);
+				localWGSize=preferredWorkGroupSizeMultiple;
 			}
 		}
 
 		// Do the work
-		queue->enqueueNDRangeKernel(
-			*kernel,
-			cl::NullRange,
-			cl::NDRange(noutput_items),
-			localWGSize);
-
-
-    // Map cBuffer to host pointer. This enforces a sync with
-    // the host
-
-	queue->enqueueReadBuffer(*bBuffer,CL_TRUE,0,noutput_items*sizeof(float),(void *)output_items[0]);
-	queue->enqueueReadBuffer(*cBuffer,CL_TRUE,0,noutput_items*sizeof(float),(void *)output_items[1]);
+		clComplexToMagPhase_kernel(noutput_items, (const FComplex *)input_items[0], (float *)output_items[0], (float *)output_items[1]);
 
       // Tell runtime system how many output items we produced.
       return noutput_items;

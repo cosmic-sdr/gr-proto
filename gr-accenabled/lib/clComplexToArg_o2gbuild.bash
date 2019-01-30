@@ -5,6 +5,8 @@ benchname="clComplexToArg"
 #inputSource="${benchname}_kernel.c fast_atan2f.c"
 inputSource="${benchname}_kernel.c"
 entryFunction="${benchname}_kernel"
+usefastmath=0
+buildprogram=0
 
 function usage()
 {
@@ -14,6 +16,8 @@ function usage()
     echo -e "\t-p=name --program=name (default: ${benchname})"
     echo -e "\t-i=data --input=data (default: ${inputSize1})"
     echo -e "\t-f=inputfile --file=inputfile (default: ${inputSource})"
+    echo -e "\t-u --usefastmath (default: no)"
+    echo -e "\t-b --buildprogram (default: no)"
     echo ""
 }
 
@@ -34,6 +38,12 @@ while [ "$1" != "" ]; do
         -f | --file)
             inputSource=${VALUE}
             ;;
+        -u | --usefastmath)
+			usefastmath=1
+            ;;
+        -b | --buildprogram)
+			buildprogram=1
+            ;;
         *)
             echo "ERROR: unknown parameter \"$PARAM\""
             usage
@@ -53,4 +63,8 @@ if [ ! -f "${openarc}/bin/openarc" ]; then
     exit
 fi
 
-${openarc}/bin/openarc -addIncludePath=${openarc}/openarcrt -macro=__INPUTSIZE1__=${inputSize1} -gpuConfFile=openarcConf_${benchname}.txt acc_helper.c  ${inputSource}
+if [ $usefastmath -eq 0 ]; then
+	${openarc}/bin/openarc -addIncludePath=${openarc}/openarcrt -macro=__INPUTSIZE1__=${inputSize1} -gpuConfFile=openarcConf_${benchname}.txt acc_helper.c  ${inputSource}
+else
+	${openarc}/bin/openarc -addIncludePath=${openarc}/openarcrt -macro=__INPUTSIZE1__=${inputSize1},USE_FAST_ATAN2 -gpuConfFile=openarcConf_${benchname}.txt acc_helper.c  ${inputSource}
+fi

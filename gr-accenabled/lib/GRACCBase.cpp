@@ -43,6 +43,12 @@ void GRACCBase::InitOpenACC(int openCLPlatformType, int devSelector,int platform
 	acc_initializer(deviceType, devSelector, devId); 
 }
 
+GRACCBase::GRACCBase(int idataType, size_t dsize, int openCLPlatformType, int devSelector,int platformId, int devId, bool setDebug) {
+	dataType = idataType;
+	dataSize = dsize;
+	InitOpenACC(openCLPlatformType,devSelector,platformId,devId,setDebug);
+}
+
 GRACCBase::GRACCBase(int openCLPlatformType, int devSelector,int platformId, int devId, bool setDebug) {
 	InitOpenACC(openCLPlatformType,devSelector,platformId,devId,setDebug);
 }

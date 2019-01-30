@@ -1,7 +1,7 @@
 #! /bin/bash
 
 inputSize1=8192
-benchname="clComplexToMag"
+benchname="clComplexToMagPhase"
 #inputSource="${benchname}_kernel.c fast_atan2f.c"
 inputSource="${benchname}_kernel.c"
 entryFunction="${benchname}_kernel"
@@ -15,7 +15,7 @@ function usage()
     echo -e "\t-p=name --program=name (default: ${benchname})"
     echo -e "\t-i=data --input=data (default: ${inputSize1})"
     echo -e "\t-f=inputfile --file=inputfile (default: ${inputSource})"
-    echo -e "\t-u --usefastmath (default: no)"
+	echo -e "\t-u --usefastmath (default: no)"
     echo ""
 }
 
@@ -38,7 +38,7 @@ while [ "$1" != "" ]; do
             ;;
         -u | --usefastmath)
             usefastmath=1
-            ;;
+            ;;  
         *)
             echo "ERROR: unknown parameter \"$PARAM\""
             usage

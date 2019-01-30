@@ -100,6 +100,7 @@ public:
 
 	GRACCBase(int openCLPlatformType, bool setDebug=false); // selects First of specified type
 	GRACCBase(int openCLPlatformType, int devSelector,int platformId, int devId, bool setDebug=false);
+	GRACCBase(int idataType, size_t dsize, int openCLPlatformType, int devSelector,int platformId, int devId, bool setDebug=false);
 	virtual ~GRACCBase();
     virtual bool stop();
 
