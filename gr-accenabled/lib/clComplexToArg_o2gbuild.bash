@@ -64,7 +64,7 @@ if [ ! -f "${openarc}/bin/openarc" ]; then
 fi
 
 if [ $usefastmath -eq 0 ]; then
-	${openarc}/bin/openarc -addIncludePath=${openarc}/openarcrt -macro=__INPUTSIZE1__=${inputSize1} -gpuConfFile=openarcConf_${benchname}.txt acc_helper.c  ${inputSource}
+	${openarc}/bin/openarc -addIncludePath=${openarc}/openarcrt -macro=__INPUTSIZE1__=${inputSize1} -gpuConfFile=openarcConf_${benchname}.txt ${inputSource}
 else
-	${openarc}/bin/openarc -addIncludePath=${openarc}/openarcrt -macro=__INPUTSIZE1__=${inputSize1},USE_FAST_ATAN2 -gpuConfFile=openarcConf_${benchname}.txt acc_helper.c  ${inputSource}
+	${openarc}/bin/openarc -addIncludePath=${openarc}/openarcrt -macro=__INPUTSIZE1__=${inputSize1},USE_FAST_ATAN2 -gpuConfFile=openarcConf_${benchname}.txt ${inputSource}
 fi

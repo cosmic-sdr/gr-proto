@@ -22,12 +22,13 @@
 #define INCLUDED_CLENABLED_CLCOMPLEXTOMAGPHASE_IMPL_H
 
 #include <clenabled/clComplexToMagPhase.h>
-#include "GRCLBase.h"
+#include "clComplexToMagPhase_kernel.h"
+#include "GRACCBase.h"
 
 namespace gr {
   namespace clenabled {
 
-    class clComplexToMagPhase_impl : public clComplexToMagPhase, public GRCLBase
+    class clComplexToMagPhase_impl : public clComplexToMagPhase, public GRACCBase
     {
      private:
       // Nothing to declare in this block.

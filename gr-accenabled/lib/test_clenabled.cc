@@ -44,13 +44,13 @@
 #include "clMathOpTypes.h"
 #include "firdes.h"
 #include "clFFT_impl.h"
-//#include "clLog_impl.h"
+#include "clLog_impl.h"
 #include "clSNR_impl.h"
 #include <chrono>
 #include <ctime>
 #include "clComplexToMag_impl.h"
 #include "clComplexToMagPhase_impl.h"
-//#include "clComplexToArg_impl.h"
+#include "clComplexToArg_impl.h"
 #include "clMagPhaseToComplex_impl.h"
 #include "clSignalSource_impl.h"
 #include "clCostasLoop_impl.h"
@@ -480,7 +480,6 @@ bool testComplexToMagPhase() {
 	return true;
 }
 
-/*
 bool testComplexToArg() {
 	std::cout << "----------------------------------------------------------" << std::endl;
 
@@ -601,7 +600,6 @@ bool testComplexToArg() {
 
 	return true;
 }
-*/
 
 bool testComplexToMag() {
 	std::cout << "----------------------------------------------------------" << std::endl;
@@ -1345,7 +1343,6 @@ bool testMultiplyConst() {
 
 	std::cout << std::endl;
 
-/*
 	// switch to Log10 of float
 	std::cout << "----------------------------------------------------------" << std::endl;
 
@@ -1407,7 +1404,7 @@ bool testMultiplyConst() {
     << std::setprecision(6) << elapsed_time << " s  (" << throughput << " sps)" << std::endl << std::endl;
 
 	delete testLog;
-*/
+	
 	// switch to SNR Helper
 	std::cout << "----------------------------------------------------------" << std::endl;
 	std::vector<float> inputFloats2;
@@ -2423,8 +2420,8 @@ main (int argc, char **argv)
 	was_successful = testComplexToMagPhase();
 	std::cout << std::endl;
 
-//	was_successful = testComplexToArg();
-//	std::cout << std::endl;
+	was_successful = testComplexToArg();
+	std::cout << std::endl;
 
 	was_successful = testMagPhaseToComplex();
 	std::cout << std::endl;

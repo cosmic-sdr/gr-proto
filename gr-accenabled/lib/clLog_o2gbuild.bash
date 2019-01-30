@@ -52,4 +52,4 @@ if [ ! -f "${openarc}/bin/openarc" ]; then
     exit
 fi
 
-${openarc}/bin/openarc -addIncludePath=${openarc}/openarcrt -macro=__INPUTSIZE1__=${inputSize1} -gpuConfFile=openarcConf_${benchname}.txt acc_helper.c  ${inputSource}
+${openarc}/bin/openarc -addIncludePath=${openarc}/openarcrt -macro=__INPUTSIZE1__=${inputSize1} -gpuConfFile=openarcConf_${benchname}.txt ${inputSource}

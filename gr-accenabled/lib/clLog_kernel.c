@@ -1,4 +1,12 @@
-#include <math.h>
+#include "clLog_kernel.h"
+
+void clLog_init(acc_device_t deviceType, int devSelector, int devId) {
+    acc_init(deviceType);
+    if( devSelector == OCLDEVICESELECTOR_SPECIFIC ) { 
+        acc_set_device_num(devId, deviceType);
+    }   
+}
+
 
 void clLog_kernel( int noutput_items, float n_val, float k_val, unsigned int localWGSize, const float * in1, float * out ) {
 	int i;

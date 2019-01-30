@@ -48,6 +48,7 @@ namespace gr {
               gr::io_signature::make(1, 1, sizeof(gr_complex))),
   	  	  	  GRACCBase(openCLPlatformType,devSelector,platformId,devId,setDebug)
     {
+		clMagPhaseToComplex_init(deviceType, devSelector, devId);
     	int imaxItems=gr::block::max_noutput_items();
     	if (imaxItems==0)
     		imaxItems=8192;
@@ -97,7 +98,7 @@ namespace gr {
     bool clMagPhaseToComplex_impl::stop() {
     	curBufferSize = 0;
 
-    	return GRCLBase::stop();
+    	return GRACCBase::stop();
     }
 
     void clMagPhaseToComplex_impl::setBufferLength(int numItems) {

@@ -45,7 +45,8 @@
 
 #endif
 
-#include "acc_helper.h"
+//#include "acc_helper.h"
+#include "openacc.h"
 
 namespace gr {
 namespace clenabled {

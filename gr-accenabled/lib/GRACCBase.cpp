@@ -40,7 +40,7 @@ void GRACCBase::InitOpenACC(int openCLPlatformType, int devSelector,int platform
 		deviceType = acc_device_gpu;
 		platformName = "GPU";
 	}
-	acc_initializer(deviceType, devSelector, devId); 
+	//acc_initializer(deviceType, devSelector, devId); 
 }
 
 GRACCBase::GRACCBase(int idataType, size_t dsize, int openCLPlatformType, int devSelector,int platformId, int devId, bool setDebug) {

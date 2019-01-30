@@ -2,6 +2,14 @@
 
 #include "math.h"
 
+void clMagPhaseToComplex_init(acc_device_t deviceType, int devSelector, int devId) {
+    acc_init(deviceType);
+    if( devSelector == OCLDEVICESELECTOR_SPECIFIC ) { 
+        acc_set_device_num(devId, deviceType);
+    }   
+}
+
+
 void clMagPhaseToComplex_kernel(int noutput_items, const float *a, const float *b, FComplex *c) {
 	int i;
 #ifdef GEN_ASPEN

@@ -75,8 +75,8 @@ if [ ! -f "${openarc}/bin/openarc" ]; then
     exit
 fi
 
-${openarc}/bin/openarc -addIncludePath=${openarc}/openarcrt -SetAccEntryFunction=${entryFunction} -ASPENModelGen=mode=${runMode}:modelname=${benchname}:postprocessing=${postprocessing}:entryfunction=${entryFunction} -macro=GEN_ASPEN,__INPUTSIZE1__=${inputSize1} ${inputSource}
+${openarc}/bin/openarc -addIncludePath=${openarc}/openarcrt -outdir=aspen_output_${benchname} -SetAccEntryFunction=${entryFunction} -ASPENModelGen=mode=${runMode}:modelname=${benchname}:postprocessing=${postprocessing}:entryfunction=${entryFunction} -macro=GEN_ASPEN,__INPUTSIZE1__=${inputSize1} ${inputSource}
 
-if [ -f "./cetus_output/${benchname}.aspen" ]; then
-	cp "./cetus_output/${benchname}.aspen" .
+if [ -f "./aspen_output_${benchname}/${benchname}.aspen" ]; then
+	cp "./aspen_output_${benchname}/${benchname}.aspen" .
 fi

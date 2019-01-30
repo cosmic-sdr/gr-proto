@@ -52,6 +52,7 @@ namespace gr {
 			  GRACCBase(openCLPlatformType,devSelector,platformId,devId,setDebug)
 
     {
+		clLog_init(deviceType, devSelector, devId);
     	n_val = nValue;
     	k_val = kValue;
 

@@ -5,6 +5,13 @@
 #include "fast_atan2f.c"
 #endif
 
+void clComplexToArg_init(acc_device_t deviceType, int devSelector, int devId) {
+    acc_init(deviceType);
+    if( devSelector == OCLDEVICESELECTOR_SPECIFIC ) { 
+        acc_set_device_num(devId, deviceType);
+    }   
+}
+
 void clComplexToArg_kernel(int noutput_items, const FComplex *in, float *out) {
 	int i;
 #ifdef GEN_ASPEN

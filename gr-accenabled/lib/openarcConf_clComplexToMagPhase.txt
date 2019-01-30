@@ -815,7 +815,7 @@
 targetArch=1
 #AccAnalysisOnly=1
 #SkipGPUTranslation=N
-#showInternalAnnotations=1
+showInternalAnnotations=0
 #skipKernelLoopBoundChecking
 SetAccEntryFunction=clComplexToMagPhase_kernel
 SetOutputKernelFileNameBase=openarc_kernel_clComplexToMagPhase
@@ -824,7 +824,7 @@ SetOutputKernelFileNameBase=openarc_kernel_clComplexToMagPhase
 defaultNumWorkers=64
 #maxNumGangs=N
 #maxNumWorkers=N
-#outdir=cetus_output
+outdir=cetus_output_clComplexToMagPhase
 #loopUnrollFactor=N
 #pipelineTransformation=N
 #slidingWindowTransformation=N
