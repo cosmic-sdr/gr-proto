@@ -227,8 +227,11 @@ main (int argc, char **argv)
 	}
 	bool was_successful;
 
-	was_successful = testComplexToArg();
-	std::cout << std::endl;
+	for(int i=4; i<=30; i++) {
+		largeBlockSize = (int)exp2f((float)i);
+		was_successful = testComplexToArg();
+		std::cout << std::endl;
+	}
 
 	return was_successful ? 0 : 1;
 }

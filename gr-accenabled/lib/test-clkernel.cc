@@ -490,10 +490,13 @@ main (int argc, char **argv)
 	std::cout << "Running function " << fnName << std::endl;
 	std::cout <<"Kernel file: " << inputFile << std::endl;
 
-	if (inputStreams == 1)
-		testkernel1to1();
-	else
-		testkernel2to1();
+	for(int i=4; i<=30; i++) {
+		largeBlockSize = (int)exp2f((float)i);
+		if (inputStreams == 1)
+			testkernel1to1();
+		else
+			testkernel2to1();
+	}
 
 	return 0;
 }

@@ -238,8 +238,11 @@ main (int argc, char **argv)
 	std::cout << std::endl;
 */
 
-	was_successful = testMultiplyConst();
-	std::cout << std::endl;
+	for(int i=4; i<=30; i++) {
+		largeBlockSize = (int)exp2f((float)i);
+		was_successful = testMultiplyConst();
+		std::cout << std::endl;
+	}
 
 	return was_successful ? 0 : 1;
 }

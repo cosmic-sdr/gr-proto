@@ -383,8 +383,11 @@ main (int argc, char **argv)
 
 	was_successful = testFFTValidation();
 
-	was_successful = testFFT(true);
-	std::cout << std::endl;
+	for(int i=4; i<=30; i++) {
+		largeBlockSize = (int)exp2f((float)i);
+		was_successful = testFFT(true);
+		std::cout << std::endl;
+	}
 
 	return 0;
 }
