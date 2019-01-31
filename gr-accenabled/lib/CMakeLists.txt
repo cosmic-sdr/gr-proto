@@ -353,7 +353,6 @@ add_dependencies(clComplexToArgAspenGen clLogAspenGen)
 list(APPEND test_clcomplextomag_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/test-clcomplextomag.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/clComplexToMag_impl.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/fast_atan2f.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/GRACCBase.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/clComplexToMag_kernel.cpp
 )
@@ -431,7 +430,6 @@ add_dependencies(clComplexToMagPhaseAspenGen clComplexToMagAspenGen)
 list(APPEND test_clmagphasetocomplex_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/test-clmagphasetocomplex.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/clMagPhaseToComplex_impl.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/fast_atan2f.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/GRACCBase.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/clMagPhaseToComplex_kernel.cpp
 )
