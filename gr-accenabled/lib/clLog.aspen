@@ -2,7 +2,7 @@ model clLog {
 param aspen_param_default = 1
 param aspen_param_sizeof_float = 4
 param noutput_items = 8192
-kernel main {
+kernel clLog {
 execute [noutput_items] "block_clLog_kernel6" {
 flops [1] as integer
 }

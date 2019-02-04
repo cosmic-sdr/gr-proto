@@ -78,5 +78,6 @@ fi
 ${openarc}/bin/openarc -addIncludePath=${openarc}/openarcrt -outdir=aspen_output_${benchname} -SetAccEntryFunction=${entryFunction} -ASPENModelGen=mode=${runMode}:modelname=${benchname}:postprocessing=${postprocessing}:entryfunction=${entryFunction} -macro=GEN_ASPEN,__INPUTSIZE1__=${inputSize1} ${inputSource}
 
 if [ -f "./aspen_output_${benchname}/${benchname}.aspen" ]; then
-	cp "./aspen_output_${benchname}/${benchname}.aspen" .
+	cat "./aspen_output_${benchname}/${benchname}.aspen" | sed "s|kernel main|kernel ${benchname}|" > "${benchname}.aspen"
+	#cp "./aspen_output_${benchname}/${benchname}.aspen" .
 fi

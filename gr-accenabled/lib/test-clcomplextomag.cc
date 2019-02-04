@@ -34,7 +34,7 @@
 #include <fstream>
 #include <boost/algorithm/string/replace.hpp>
 #include <math.h>  // fabsf
-
+#include <volk/volk.h>
 #include "clSComplex.h"
 #include "clMathOpTypes.h"
 #include "clComplexToMag_impl.h"
