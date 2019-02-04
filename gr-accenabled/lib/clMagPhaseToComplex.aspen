@@ -3,7 +3,7 @@ param aspen_param_default = 1
 param aspen_param_sizeof_float = 4
 param noutput_items = 8192
 param aspen_param_sizeof_FComplex = 8
-kernel clMagPhaseToComplex {
+kernel main {
 execute [noutput_items] "block_clMagPhaseToComplex_kernel4" {
 flops [1] as integer
 }

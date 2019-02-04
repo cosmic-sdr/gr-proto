@@ -43,7 +43,7 @@
 
 #include "clFilter_impl.h"
 
-bool verbose=false;
+bool verbose=true;
 int largeBlockSize=8192;
 int opencltype=OCLTYPE_ANY;
 int selectorType=OCLDEVICESELECTOR_FIRST;

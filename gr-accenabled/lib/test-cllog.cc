@@ -43,8 +43,9 @@
 
 //#include "window.h"
 
-bool verbose=false;
-int largeBlockSize=8192;
+bool verbose=true;
+int blockSizeUL=16;
+int largeBlockSize=16;
 int opencltype=OCLTYPE_ANY;
 int selectorType=OCLDEVICESELECTOR_FIRST;
 int platformId=0;
@@ -61,7 +62,7 @@ bool testMultiplyConst() {
 
 
 	if (verbose) {
-		std::cout << "building test array..." << std::endl;
+        std::cout << "building test array of size " << largeBlockSize << std::endl;
 	}
 
 	std::vector<gr_complex> inputItems;
@@ -212,8 +213,8 @@ main (int argc, char **argv)
 			}else if (atoi(argv[i]) > 0) {
 				int newVal=atoi(argv[i]);
 
-				largeBlockSize=newVal;
-				std::cout << "Running with user-defined test buffer size of " << largeBlockSize << std::endl;
+				blockSizeUL=newVal;
+				std::cout << "Running with user-defined test buffer size of " << blockSizeUL << std::endl;
 			}
 			else {
 				std::cout << "ERROR: Unknown parameter." << std::endl;
@@ -238,10 +239,12 @@ main (int argc, char **argv)
 	std::cout << std::endl;
 */
 
-	for(int i=4; i<=30; i++) {
-		largeBlockSize = (int)exp2f((float)i);
+	//for(int i=4; i<=30; i++) {
+		//largeBlockSize = (int)exp2f((float)i);
+	while ( largeBlockSize <= blockSizeUL ) {
 		was_successful = testMultiplyConst();
 		std::cout << std::endl;
+		largeBlockSize *= 2;
 	}
 
 	return was_successful ? 0 : 1;

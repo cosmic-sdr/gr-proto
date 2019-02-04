@@ -43,7 +43,7 @@
 #include "clFFT_impl.h"
 #include "window.h"
 
-bool verbose=false;
+bool verbose=true;
 int largeBlockSize=8192;
 int opencltype=OCLTYPE_ANY;
 int selectorType=OCLDEVICESELECTOR_FIRST;
@@ -130,7 +130,7 @@ bool testFFT(bool runReverse) {
 
 
 	if (verbose) {
-		std::cout << "building test array for FFT..." << std::endl;
+        std::cout << "building test array of size " << largeBlockSize << std::endl;
 	}
 
 	float frequency_signal = 10;

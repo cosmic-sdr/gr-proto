@@ -17,7 +17,7 @@
 #include "clKernel1To1_impl.h"
 #include "clKernel2To1_impl.h"
 
-bool verbose=false;
+bool verbose=true;
 int largeBlockSize=8192;
 int opencltype=OCLTYPE_ANY;
 int selectorType=OCLDEVICESELECTOR_FIRST;
