@@ -69,7 +69,7 @@ print STDOUT "Input file ${inputFile}\n";
 print STDOUT "Output file ${outputFile}\n";
 open(INFO, ">$outputFile");
 
-print INFO "InputSize\tIrregLoad\tRegLoad\tLoadAll\tIrregStore\tRegStore\tStoreAll\tIrregBytes\tRegBytes\tBytesAll\tSIMDFlops\tScalarFlops\tFlopsAll\tIntops\tFlops/Bite\n";
+print INFO "InputSize\tIrregLoad\tRegLoad\tLoadAll\tIrregStore\tRegStore\tStoreAll\tIrregBytes\tRegBytes\tBytesAll\tSIMDFlops\tScalarFlops\tFlopsAll\tIntops\tFlops/Bite\tFlops/Input\tIntops/Input\tLoads/Input\tStores/Input\n";
 
 for ($k = 0; $k < ${KernelListSize}; ++$k) {
 	$inputKernel = $inputKernelList[$k];
@@ -113,12 +113,17 @@ for ($k = 0; $k < ${KernelListSize}; ++$k) {
 		push(@Bytes, $Results[2] + $Results[5]);
 
 		$flopsperbite = $Results[8]/$Bytes[2];
+		$flopsperibite = $Results[8]/$size;
+		$intopsperibite = $Results[9]/$size;
+		$loadsperibite = $Results[2]/$size;
+		$storesperibite = $Results[5]/$size;
 		#print INFO "$inputKernel\t";
 		print INFO "$size\t";
 		print INFO "$Results[0]\t$Results[1]\t$Results[2]\t";
 		print INFO "$Results[3]\t$Results[4]\t$Results[5]\t";
 		print INFO "$Bytes[0]\t$Bytes[1]\t$Bytes[2]\t";
-		print INFO "$Results[6]\t$Results[7]\t$Results[8]\t$Results[9]\t$flopsperbite\n";
+		print INFO "$Results[6]\t$Results[7]\t$Results[8]\t$Results[9]\t";
+		print INFO "$flopsperbite\t$flopsperibite\t$intopsperibite\t$loadsperibite\t$storesperibite\n";
 		$m = $m + 1;
 	}
 }
