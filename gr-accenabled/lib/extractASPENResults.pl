@@ -1,13 +1,27 @@
 #! /usr/bin/perl
 
 $argn = @ARGV;
-if ($argn == 4) { 
+if ($argn == 7) { 
 	$benchname = "$ARGV[0]";
-	$rsc_count = "$ARGV[1]";
-	$gprof_predict = "$ARGV[2]";
-	$inputDevice = "$ARGV[3]";
+	$sweep_begin = "$ARGV[1]";
+	$sweep_stride = "$ARGV[2]";
+	$sweep_end = "$ARGV[3]";
+	$rsc_count = "$ARGV[4]";
+	$gprof_predict = "$ARGV[5]";
+	$inputDevice = "$ARGV[6]";
+} elsif ($argn == 4) { 
+	$benchname = "$ARGV[0]";
+	$sweep_begin = "$ARGV[1]";
+	$sweep_stride = "$ARGV[2]";
+	$sweep_end = "$ARGV[3]";
+	$rsc_count = 1;
+	$gprof_predict = 0;
+	$inputDevice = "p100";
 } elsif ($argn == 1) {
 	$benchname = "$ARGV[0]";
+	$sweep_begin = 64;
+	$sweep_stride = 2;
+	$sweep_end = 64;
 	$rsc_count = 1;
 	$gprof_predict = 0;
 	$inputDevice = "p100";
@@ -17,7 +31,9 @@ if ($argn == 4) {
     print STDOUT "====> Usage:\n";
     print STDOUT "      extractASPENResults.pl benchname \n";
     print STDOUT "      or\n";
-    print STDOUT "      extractASPENResults.pl benchname rsc_count gprof_predict device\n";
+    print STDOUT "      extractASPENResults.pl benchname sweep_begin sweep_stride sweep_end\n";
+    print STDOUT "      or\n";
+    print STDOUT "      extractASPENResults.pl benchname sweep_begin sweep_stride sweep_end rsc_count gprof_predict device\n";
     print STDOUT "\n";
     print STDOUT "      //supported devices: k40 and p100\n";
     exit;   
@@ -53,54 +69,58 @@ print STDOUT "Input file ${inputFile}\n";
 print STDOUT "Output file ${outputFile}\n";
 open(INFO, ">$outputFile");
 
-print INFO "\tIrregLoad\tRegLoad\tLoadAll\tIrregStore\tRegStore\tStoreAll\tIrregBytes\tRegBytes\tBytesAll\tSIMDFlops\tScalarFlops\tFlopsAll\tIntops\n";
+print INFO "InputSize\tIrregLoad\tRegLoad\tLoadAll\tIrregStore\tRegStore\tStoreAll\tIrregBytes\tRegBytes\tBytesAll\tSIMDFlops\tScalarFlops\tFlopsAll\tIntops\tFlops/Bite\n";
 
 for ($k = 0; $k < ${KernelListSize}; ++$k) {
 	$inputKernel = $inputKernelList[$k];
-	@Results = ();
-	@Bytes = ();
+	$m = 0;
+	for ($size = ${sweep_begin}; $size <= ${sweep_end}; $size = $size  * 2) {
+		@Results = ();
+		@Bytes = ();
+		for ($i = 0; $i < 3; ++$i) {
+			$resourceType1 = $resourceTypeList[2 * $i];
+			$resourceType2 = $resourceTypeList[2 * $i + 1];
 
+			@Input_lines = `grep "${resourceType1} '${inputKernel}'" $inputFile`;
+			@line = split(/\s+/, $Input_lines[$m]);
+			$value1 = $line[$#line];           # refers to the last element of array @line
 
-	for ($i = 0; $i < 3; ++$i) {
-		$resourceType1 = $resourceTypeList[2 * $i];
-		$resourceType2 = $resourceTypeList[2 * $i + 1];
+			@Input_lines = `grep "${resourceType2} '${inputKernel}'" $inputFile`;
+			@line = split(/\s+/, $Input_lines[$m]);
+			$value2 = $line[$#line];           # refers to the last element of array @line
 
-		@Input_lines = `grep "${resourceType1} '${inputKernel}'" $inputFile`;
-		@line = split(/\s+/, $Input_lines[0]);
-		$value1 = $line[$#line];           # refers to the last element of array @line
+			if( $i == 2 ) {
+				$resourceType3 = $resourceTypeList[2 * $i + 2];
+				@Input_lines = `grep "${resourceType3} '${inputKernel}'" $inputFile`;
+				@line = split(/\s+/, $Input_lines[$m]);
+				$value4 = $line[$#line];           # refers to the last element of array @line
+				$value2 = $value2 - $value4;
+				$value3 = $value2 - $value1;
+			} else {
+				$value3 = $value2 - $value1;
+			}
 
-		@Input_lines = `grep "${resourceType2} '${inputKernel}'" $inputFile`;
-		@line = split(/\s+/, $Input_lines[0]);
-		$value2 = $line[$#line];           # refers to the last element of array @line
-
-		if( $i == 2 ) {
-			$resourceType3 = $resourceTypeList[2 * $i + 2];
-			@Input_lines = `grep "${resourceType3} '${inputKernel}'" $inputFile`;
-			@line = split(/\s+/, $Input_lines[0]);
-			$value4 = $line[$#line];           # refers to the last element of array @line
-			$value2 = $value2 - $value4;
-			$value3 = $value2 - $value1;
-		} else {
-			$value3 = $value2 - $value1;
+			push(@Results, $value1);
+			push(@Results, $value3);
+			push(@Results, $value2);
+			if( $i == 2 ) {
+				push(@Results, $value4);
+			}
 		}
 
-		push(@Results, $value1);
-		push(@Results, $value3);
-		push(@Results, $value2);
-		if( $i == 2 ) {
-			push(@Results, $value4);
-		}
+		push(@Bytes, $Results[0] + $Results[3]);
+		push(@Bytes, $Results[1] + $Results[4]);
+		push(@Bytes, $Results[2] + $Results[5]);
+
+		$flopsperbite = $Results[8]/$Bytes[2];
+		#print INFO "$inputKernel\t";
+		print INFO "$size\t";
+		print INFO "$Results[0]\t$Results[1]\t$Results[2]\t";
+		print INFO "$Results[3]\t$Results[4]\t$Results[5]\t";
+		print INFO "$Bytes[0]\t$Bytes[1]\t$Bytes[2]\t";
+		print INFO "$Results[6]\t$Results[7]\t$Results[8]\t$Results[9]\t$flopsperbite\n";
+		$m = $m + 1;
 	}
-
-	push(@Bytes, $Results[0] + $Results[3]);
-	push(@Bytes, $Results[1] + $Results[4]);
-	push(@Bytes, $Results[2] + $Results[5]);
-
-	print INFO "$inputKernel\t";
-	print INFO "$Results[0]\t$Results[1]\t$Results[2]\t";
-	print INFO "$Results[3]\t$Results[4]\t$Results[5]\t";
-	print INFO "$Bytes[0]\t$Bytes[1]\t$Bytes[2]\t";
-	print INFO "$Results[6]\t$Results[7]\t$Results[8]\t$Results[9]\n";
 }
 close(INFO);
 

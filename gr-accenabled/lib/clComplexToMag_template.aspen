@@ -1,7 +1,7 @@
 model clComplexToMag {
 param aspen_param_default = 1
 param aspen_param_sizeof_float = 4
-param noutput_items = 8192
+param noutput_items = _inputSize_
 param aspen_param_sizeof_FComplex = 8
 kernel main {
 execute [noutput_items] "block_clComplexToMag_kernel4" {
