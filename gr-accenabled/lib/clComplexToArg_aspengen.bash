@@ -27,12 +27,14 @@ inputSource="${benchname}_kernel.c"
 entryFunction="${benchname}_kernel"
 runMode=3
 postprocessing=0
+genkernelmodel=0
 
 function usage()
 {
     echo "./${benchmark}_aspengen.bash"
     echo "List of options:"
     echo -e "\t-h --help"
+	echo -e "\t-k --genkernel"
     echo -e "\t-p=name --program=name (default: ${benchname})"
     echo -e "\t-i=data --input=data (default: ${inputSize1})"
     echo -e "\t-f=inputfile --file=inputfile (default: ${inputSource})"
@@ -46,6 +48,9 @@ while [ "$1" != "" ]; do
         -h | --help)
             usage
             exit
+            ;;
+        -k | --genkernel)
+            genkernelmodel=1
             ;;
         -p | --program)
             benchname=${VALUE}
@@ -78,6 +83,10 @@ fi
 ${openarc}/bin/openarc -addIncludePath=${openarc}/openarcrt -outdir=aspen_output_${benchname} -SetAccEntryFunction=${entryFunction} -ASPENModelGen=mode=${runMode}:modelname=${benchname}:postprocessing=${postprocessing}:entryfunction=${entryFunction} -macro=GEN_ASPEN,__INPUTSIZE1__=${inputSize1} ${inputSource}
 
 if [ -f "./aspen_output_${benchname}/${benchname}.aspen" ]; then
-	cat "./aspen_output_${benchname}/${benchname}.aspen" | sed "s|kernel main|kernel ${benchname}|" > "${benchname}.aspen"
-	#cp "./aspen_output_${benchname}/${benchname}.aspen" .
+    if [ $genkernelmodel -eq 1 ]; then
+        cat "./aspen_output_${benchname}/${benchname}.aspen" | sed "s|kernel main|kernel ${benchname}|" > "${benchname}.aspen"
+    else
+        cp "./aspen_output_${benchname}/${benchname}.aspen" .
+    fi
+
 fi
