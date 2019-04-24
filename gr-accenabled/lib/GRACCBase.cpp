@@ -66,6 +66,7 @@ void GRACCBase::cleanup() {
 }
 
 GRACCBase::~GRACCBase() {
+	cleanup();
 }
 
 bool GRACCBase::stop() {
