@@ -813,7 +813,7 @@
 #############################
 #acc2gpu=1
 #omp2acc=N
-targetArch=1
+#targetArch=1
 #AccAnalysisOnly=1
 #SkipGPUTranslation=N
 showInternalAnnotations=0

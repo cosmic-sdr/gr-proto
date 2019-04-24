@@ -133,7 +133,15 @@ endif()
 ########################################################################
 find_package(OpenARC)
 if(NOT OpenARC_FOUND)
-	message(FATAL_ERROR "OpenARC is required to compile gr-accenabled")
+	message(FATAL_ERROR "OpenARC is required to compile gr-accenabled; to find OpenARC, environment variable, openarc should be set properly!")
+endif()
+
+########################################################################
+# Find CUDA build dependencies
+########################################################################
+find_package(CUDA)
+if(NOT CUDA_FOUND)
+	message(FATAL_ERROR "CUDA is required to compile gr-accenabled; to find CUDA, CUDA_ROOT macro should be passed to the cmake command!")
 endif()
 
 ########################################################################

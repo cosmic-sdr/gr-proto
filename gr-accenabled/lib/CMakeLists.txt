@@ -28,41 +28,47 @@ ELSE(CMAKE_BUILD_TYPE MATCHES DEBUG)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2")
 ENDIF(CMAKE_BUILD_TYPE MATCHES DEBUG)
 
+IF($ENV{OPENARC_ARCH} MATCHES 0)
+	set(OUTPUTSUFFIX "cu")
+ELSE($ENV{OPENARC_ARCH} MATCHES 0)
+	set(OUTPUTSUFFIX "cl")
+ENDIF($ENV{OPENARC_ARCH} MATCHES 0)
+
 ########################################################################
 # Setup library
 ########################################################################
 include(GrPlatform) #define LIB_SUFFIX
 
-include_directories(${Boost_INCLUDE_DIR} ${OpenCL_INCLUDE_DIRS} ${OpenARC_INCLUDE_DIR})
+include_directories(${Boost_INCLUDE_DIR} ${OpenCL_INCLUDE_DIRS} ${OpenARC_INCLUDE_DIR} ${CUDA_INCLUDE_DIR})
 link_directories(${Boost_LIBRARY_DIRS})
 link_directories(${FFTW3F_LIBRARY_DIRS})
 
 ############################################
 # Generate OpenACC output files by OpenARC #
 ############################################
-#add_custom_command(OUTPUT clLog_kernel.cpp openarc_kernel_clLog.cl clComplexToArg_kernel.cpp openarc_kernel_clComplexToArg.cl
-#	COMMAND ${OpenARC_BIN_DIR}/openarc -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_clLog.txt ${CMAKE_CURRENT_SOURCE_DIR}/clLog_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_clLog/clLog_kernel.cpp ${CMAKE_CURRENT_BINARY_DIR}/ && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_clLog/openarc_kernel_clLog.cl ${CMAKE_CURRENT_BINARY_DIR}/ && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_clLog
-#	COMMAND ${OpenARC_BIN_DIR}/openarc -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_clComplexToArg.txt ${CMAKE_CURRENT_SOURCE_DIR}/clComplexToArg_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_clComplexToArg/clComplexToArg_kernel.cpp ${CMAKE_CURRENT_BINARY_DIR}/ && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_clComplexToArg/openarc_kernel_clComplexToArg.cl ${CMAKE_CURRENT_BINARY_DIR}/ && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_clComplexToArg
+#add_custom_command(OUTPUT clLog_kernel.cpp openarc_kernel_clLog.${OUTPUTSUFFIX} clComplexToArg_kernel.cpp openarc_kernel_clComplexToArg.${OUTPUTSUFFIX}
+#	COMMAND ${OpenARC_BIN_DIR}/openarc -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_clLog.txt ${CMAKE_CURRENT_SOURCE_DIR}/clLog_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_clLog/clLog_kernel.cpp ${CMAKE_CURRENT_BINARY_DIR}/ && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_clLog/openarc_kernel_clLog.${OUTPUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/ && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_clLog
+#	COMMAND ${OpenARC_BIN_DIR}/openarc -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_clComplexToArg.txt ${CMAKE_CURRENT_SOURCE_DIR}/clComplexToArg_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_clComplexToArg/clComplexToArg_kernel.cpp ${CMAKE_CURRENT_BINARY_DIR}/ && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_clComplexToArg/openarc_kernel_clComplexToArg.${OUTPUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/ && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_clComplexToArg
 #	DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/clLog_kernel.c ${CMAKE_CURRENT_SOURCE_DIR}/clComplexToArg_kernel.c)
 
-add_custom_command(OUTPUT clLog_kernel.cpp openarc_kernel_clLog.cl
-	COMMAND ${OpenARC_BIN_DIR}/openarc -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_clLog.txt ${CMAKE_CURRENT_SOURCE_DIR}/clLog_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_clLog/clLog_kernel.cpp ${CMAKE_CURRENT_BINARY_DIR}/ && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_clLog/openarc_kernel_clLog.cl ${CMAKE_CURRENT_BINARY_DIR}/ && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_clLog
+add_custom_command(OUTPUT clLog_kernel.cpp openarc_kernel_clLog.${OUTPUTSUFFIX}
+	COMMAND ${OpenARC_BIN_DIR}/openarc -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_clLog.txt ${CMAKE_CURRENT_SOURCE_DIR}/clLog_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_clLog/clLog_kernel.cpp ${CMAKE_CURRENT_BINARY_DIR}/ && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_clLog/openarc_kernel_clLog.${OUTPUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/ && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_clLog
 	DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/clLog_kernel.c)
 
-add_custom_command(OUTPUT clComplexToArg_kernel.cpp openarc_kernel_clComplexToArg.cl
-	COMMAND ${OpenARC_BIN_DIR}/openarc -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_clComplexToArg.txt ${CMAKE_CURRENT_SOURCE_DIR}/clComplexToArg_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_clComplexToArg/clComplexToArg_kernel.cpp ${CMAKE_CURRENT_BINARY_DIR}/ && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_clComplexToArg/openarc_kernel_clComplexToArg.cl ${CMAKE_CURRENT_BINARY_DIR}/ && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_clComplexToArg
+add_custom_command(OUTPUT clComplexToArg_kernel.cpp openarc_kernel_clComplexToArg.${OUTPUTSUFFIX}
+	COMMAND ${OpenARC_BIN_DIR}/openarc -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_clComplexToArg.txt ${CMAKE_CURRENT_SOURCE_DIR}/clComplexToArg_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_clComplexToArg/clComplexToArg_kernel.cpp ${CMAKE_CURRENT_BINARY_DIR}/ && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_clComplexToArg/openarc_kernel_clComplexToArg.${OUTPUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/ && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_clComplexToArg
 	DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/clComplexToArg_kernel.c)
 
-add_custom_command(OUTPUT clComplexToMag_kernel.cpp openarc_kernel_clComplexToMag.cl
-	COMMAND ${OpenARC_BIN_DIR}/openarc -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_clComplexToMag.txt ${CMAKE_CURRENT_SOURCE_DIR}/clComplexToMag_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_clComplexToMag/clComplexToMag_kernel.cpp ${CMAKE_CURRENT_BINARY_DIR}/ && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_clComplexToMag/openarc_kernel_clComplexToMag.cl ${CMAKE_CURRENT_BINARY_DIR}/ && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_clComplexToMag
+add_custom_command(OUTPUT clComplexToMag_kernel.cpp openarc_kernel_clComplexToMag.${OUTPUTSUFFIX}
+	COMMAND ${OpenARC_BIN_DIR}/openarc -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_clComplexToMag.txt ${CMAKE_CURRENT_SOURCE_DIR}/clComplexToMag_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_clComplexToMag/clComplexToMag_kernel.cpp ${CMAKE_CURRENT_BINARY_DIR}/ && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_clComplexToMag/openarc_kernel_clComplexToMag.${OUTPUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/ && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_clComplexToMag
 	DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/clComplexToMag_kernel.c)
 
-add_custom_command(OUTPUT clComplexToMagPhase_kernel.cpp openarc_kernel_clComplexToMagPhase.cl
-	COMMAND ${OpenARC_BIN_DIR}/openarc -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_clComplexToMagPhase.txt ${CMAKE_CURRENT_SOURCE_DIR}/clComplexToMagPhase_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_clComplexToMagPhase/clComplexToMagPhase_kernel.cpp ${CMAKE_CURRENT_BINARY_DIR}/ && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_clComplexToMagPhase/openarc_kernel_clComplexToMagPhase.cl ${CMAKE_CURRENT_BINARY_DIR}/ && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_clComplexToMagPhase
+add_custom_command(OUTPUT clComplexToMagPhase_kernel.cpp openarc_kernel_clComplexToMagPhase.${OUTPUTSUFFIX}
+	COMMAND ${OpenARC_BIN_DIR}/openarc -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_clComplexToMagPhase.txt ${CMAKE_CURRENT_SOURCE_DIR}/clComplexToMagPhase_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_clComplexToMagPhase/clComplexToMagPhase_kernel.cpp ${CMAKE_CURRENT_BINARY_DIR}/ && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_clComplexToMagPhase/openarc_kernel_clComplexToMagPhase.${OUTPUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/ && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_clComplexToMagPhase
 	DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/clComplexToMagPhase_kernel.c)
 
-add_custom_command(OUTPUT clMagPhaseToComplex_kernel.cpp openarc_kernel_clMagPhaseToComplex.cl
-	COMMAND ${OpenARC_BIN_DIR}/openarc -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_clMagPhaseToComplex.txt ${CMAKE_CURRENT_SOURCE_DIR}/clMagPhaseToComplex_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_clMagPhaseToComplex/clMagPhaseToComplex_kernel.cpp ${CMAKE_CURRENT_BINARY_DIR}/ && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_clMagPhaseToComplex/openarc_kernel_clMagPhaseToComplex.cl ${CMAKE_CURRENT_BINARY_DIR}/ && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_clMagPhaseToComplex
+add_custom_command(OUTPUT clMagPhaseToComplex_kernel.cpp openarc_kernel_clMagPhaseToComplex.${OUTPUTSUFFIX}
+	COMMAND ${OpenARC_BIN_DIR}/openarc -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_clMagPhaseToComplex.txt ${CMAKE_CURRENT_SOURCE_DIR}/clMagPhaseToComplex_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_clMagPhaseToComplex/clMagPhaseToComplex_kernel.cpp ${CMAKE_CURRENT_BINARY_DIR}/ && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_clMagPhaseToComplex/openarc_kernel_clMagPhaseToComplex.${OUTPUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/ && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_clMagPhaseToComplex
 	DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/clMagPhaseToComplex_kernel.c)
 
 list(APPEND clenabled_sources
@@ -104,7 +110,7 @@ if(NOT clenabled_sources)
 endif(NOT clenabled_sources)
 
 add_library(gnuradio-accenabled SHARED ${clenabled_sources})
-target_link_libraries(gnuradio-accenabled ${Boost_LIBRARIES} ${GNURADIO_ALL_LIBRARIES} ${OpenCL_LIBRARY} gnuradio-blocks gnuradio-filter ${VOLK_LIBRARIES} ${Boost_LIBRARIES} ${FFTW3F_LIBRARIES} ${CLFFT_LIBRARIES} ${OpenARC_LIBRARIES})
+target_link_libraries(gnuradio-accenabled ${Boost_LIBRARIES} ${GNURADIO_ALL_LIBRARIES} ${OpenCL_LIBRARY} gnuradio-blocks gnuradio-filter ${VOLK_LIBRARIES} ${Boost_LIBRARIES} ${FFTW3F_LIBRARIES} ${CLFFT_LIBRARIES} ${OpenARC_LIBRARIES} ${CUDA_LIBRARIES})
 set_target_properties(gnuradio-accenabled PROPERTIES DEFINE_SYMBOL "gnuradio_clenabled_EXPORTS")
 
 if(APPLE)
@@ -180,6 +186,7 @@ target_link_libraries(
   ${VOLK_LIBRARIES}
   ${FFTW3F_LIBRARIES}
   ${OpenCL_LIBRARY}
+  ${CUDA_LIBRARIES}
   gnuradio-accenabled
   ${CLFFT_LIBRARIES}
   gnuradio-blocks
@@ -291,13 +298,14 @@ target_compile_definitions(
 target_link_libraries(
   test-acclog
   ${OpenCL_LIBRARY}
+  ${CUDA_LIBRARIES}
   ${GNURADIO_RUNTIME_LIBRARIES}
   ${Boost_LIBRARIES}
   gnuradio-accenabled
 )
 
 install(TARGETS test-acclog DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" RUNTIME)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/openarc_kernel_clLog.cl DESTINATION "${CMAKE_INSTALL_PREFIX}/bin") 
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/openarc_kernel_clLog.${OUTPUTSUFFIX} DESTINATION "${CMAKE_INSTALL_PREFIX}/bin") 
 
 ########################################################
 # Generate ASPEN model for acclog module using OpenARC #
@@ -329,13 +337,14 @@ target_compile_definitions(
 target_link_libraries(
   test-acccomplextoarg
   ${OpenCL_LIBRARY}
+  ${CUDA_LIBRARIES}
   ${GNURADIO_RUNTIME_LIBRARIES}
   ${Boost_LIBRARIES}
   gnuradio-accenabled
 )
 
 install(TARGETS test-acccomplextoarg DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" RUNTIME)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/openarc_kernel_clComplexToArg.cl DESTINATION "${CMAKE_INSTALL_PREFIX}/bin") 
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/openarc_kernel_clComplexToArg.${OUTPUTSUFFIX} DESTINATION "${CMAKE_INSTALL_PREFIX}/bin") 
 
 #################################################################
 # Generate ASPEN model for acccomplextoarg module using OpenARC #
@@ -367,13 +376,14 @@ target_compile_definitions(
 target_link_libraries(
   test-acccomplextomag
   ${OpenCL_LIBRARY}
+  ${CUDA_LIBRARIES}
   ${GNURADIO_RUNTIME_LIBRARIES}
   ${Boost_LIBRARIES}
   gnuradio-accenabled
 )
 
 install(TARGETS test-acccomplextomag DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" RUNTIME)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/openarc_kernel_clComplexToMag.cl DESTINATION "${CMAKE_INSTALL_PREFIX}/bin") 
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/openarc_kernel_clComplexToMag.${OUTPUTSUFFIX} DESTINATION "${CMAKE_INSTALL_PREFIX}/bin") 
 
 #################################################################
 # Generate ASPEN model for acccomplextomag module using OpenARC #
@@ -406,13 +416,14 @@ target_compile_definitions(
 target_link_libraries(
   test-acccomplextomagphase
   ${OpenCL_LIBRARY}
+  ${CUDA_LIBRARIES}
   ${GNURADIO_RUNTIME_LIBRARIES}
   ${Boost_LIBRARIES}
   gnuradio-accenabled
 )
 
 install(TARGETS test-acccomplextomagphase DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" RUNTIME)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/openarc_kernel_clComplexToMagPhase.cl DESTINATION "${CMAKE_INSTALL_PREFIX}/bin") 
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/openarc_kernel_clComplexToMagPhase.${OUTPUTSUFFIX} DESTINATION "${CMAKE_INSTALL_PREFIX}/bin") 
 
 #################################################################
 # Generate ASPEN model for acccomplextomagphase module using OpenARC #
@@ -444,13 +455,14 @@ target_compile_definitions(
 target_link_libraries(
   test-accmagphasetocomplex
   ${OpenCL_LIBRARY}
+  ${CUDA_LIBRARIES}
   ${GNURADIO_RUNTIME_LIBRARIES}
   ${Boost_LIBRARIES}
   gnuradio-accenabled
 )
 
 install(TARGETS test-accmagphasetocomplex DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" RUNTIME)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/openarc_kernel_clMagPhaseToComplex.cl DESTINATION "${CMAKE_INSTALL_PREFIX}/bin") 
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/openarc_kernel_clMagPhaseToComplex.${OUTPUTSUFFIX} DESTINATION "${CMAKE_INSTALL_PREFIX}/bin") 
 
 #################################################################
 # Generate ASPEN model for accmagphasetocomplex module using OpenARC #

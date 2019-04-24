@@ -29,6 +29,12 @@ IF(OpenARC_INCLUDE_DIR)
   set (OpenARC_FIND_QUIETLY TRUE)
 ENDIF (OpenARC_INCLUDE_DIR)
 
+IF($ENV{OPENARC_ARCH} MATCHES 0)
+    set(OPENARCRUNTIME "openaccrt_cuda")
+ELSE ($ENV{OPENARC_ARCH} MATCHES 0)
+    set(OPENARCRUNTIME "openaccrt_opencl")
+ENDIF ($ENV{OPENARC_ARCH} MATCHES 0)
+
 FIND_PATH(_OpenARC_INCLUDE_DIR
     NAMES openacc.h
 	PATHS $ENV{openarc}/openarcrt
@@ -40,7 +46,7 @@ FIND_PATH(_OpenARC_BIN_DIR
     DOC "openarc Include directory")
 
 FIND_LIBRARY(_OpenARC_LIBRARY
-    NAMES openaccrt_opencl
+    NAMES ${OPENARCRUNTIME}
     PATHS $ENV{openarc}/openarcrt)
 
 SET(OpenARC_BIN_DIR ${_OpenARC_BIN_DIR})
