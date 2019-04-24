@@ -300,7 +300,7 @@ install(TARGETS test-acclog DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" RUNTIME)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/openarc_kernel_clLog.cl DESTINATION "${CMAKE_INSTALL_PREFIX}/bin") 
 
 ########################################################
-# Generate ASPNE model for acclog module using OpenARC #
+# Generate ASPEN model for acclog module using OpenARC #
 ########################################################
 add_custom_target(clLogAspenGen ALL
 	COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/clLog_aspengen.bash -f=${CMAKE_CURRENT_SOURCE_DIR}/clLog_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/aspen_output_clLog/clLog.aspen ${CMAKE_CURRENT_SOURCE_DIR} && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/aspen_output_clLog

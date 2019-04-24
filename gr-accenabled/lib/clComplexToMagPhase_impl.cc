@@ -75,7 +75,7 @@ namespace gr {
         // Note: for CPU's adjusting the workgroup size away from 1 seems to decrease performance.
         // For GPU's setting it to the preferred size seems to have the best performance.
 		try {
-			if (contextType != CL_DEVICE_TYPE_CPU) {
+			if (contextType != OCLTYPE_CPU) {
 				gr::block::set_output_multiple(preferredWorkGroupSizeMultiple);
 			}
 			else {
@@ -156,7 +156,7 @@ namespace gr {
 
 		unsigned int localWGSize=0;
 
-		if (contextType!=CL_DEVICE_TYPE_CPU) {
+		if (contextType!=OCLTYPE_CPU) {
 			if (noutput_items % preferredWorkGroupSizeMultiple == 0) {
 				// for some reason problems start to happen when we're no longer using constant memory
 				localWGSize=preferredWorkGroupSizeMultiple;

@@ -32,8 +32,6 @@ namespace gr {
     {
      private:
       // Nothing to declare in this block.
-		cl::Buffer *aBuffer=NULL;
-		cl::Buffer *cBuffer=NULL;
 		int curBufferSize=0;
 
 		gr_vector_int d_ninput_items;  // backward compatibility item moving from block to sync_block.

@@ -3,10 +3,12 @@
 
 #include "openacc.h"
 
-#define OCLTYPE_GPU 1
-#define OCLTYPE_ACCELERATOR 2
-#define OCLTYPE_CPU 3
-#define OCLTYPE_ANY 4
+#define OCLTYPE_DEFAULT (1 << 0)
+#define OCLTYPE_CPU (1 << 1)
+#define OCLTYPE_GPU (1 << 2)
+#define OCLTYPE_ACCELERATOR (1 << 3)
+#define OCLTYPE_CUSTOM (1 << 4)
+#define OCLTYPE_ANY 0xFFFFFFFF
 
 #define OCLDEVICESELECTOR_FIRST 1
 #define OCLDEVICESELECTOR_SPECIFIC 2

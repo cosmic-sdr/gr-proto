@@ -44,8 +44,8 @@
 //#include "window.h"
 
 bool verbose=true;
-int blockSizeUL=16;
-int largeBlockSize=16;
+int blockSizeUL=8192;
+int largeBlockSize=8192;
 int opencltype=OCLTYPE_ANY;
 int selectorType=OCLDEVICESELECTOR_FIRST;
 int platformId=0;
@@ -119,16 +119,16 @@ bool testComplexToMagPhase() {
 	elapsed_seconds = end-start;
 
 	switch(test->GetContextType()) {
-	case CL_DEVICE_TYPE_GPU:
+	case OCLTYPE_GPU:
 		std::cout << "OpenCL Context: GPU" << std::endl;
 	break;
-	case CL_DEVICE_TYPE_CPU:
+	case OCLTYPE_CPU:
 		std::cout << "OpenCL Context: CPU" << std::endl;
 	break;
-	case CL_DEVICE_TYPE_ACCELERATOR:
+	case OCLTYPE_ACCELERATOR:
 		std::cout << "OpenCL Context: Accelerator" << std::endl;
 	break;
-	case CL_DEVICE_TYPE_ALL:
+	case OCLTYPE_ANY:
 		std::cout << "OpenCL Context: ALL" << std::endl;
 	break;
 	}

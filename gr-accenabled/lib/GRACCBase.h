@@ -19,11 +19,11 @@
 // #define CL_USE_DEPRECATED_OPENCL_1_2_APIS
 #define CL_VERSION_1_2
 
-#if defined(__APPLE__) || defined(__MACOSX)
-#include <OpenCL/cl.hpp>
-#else
-#include <CL/cl.hpp>
-#endif
+//#if defined(__APPLE__) || defined(__MACOSX)
+//#include <OpenCL/cl.hpp>
+//#else
+//#include <CL/cl.hpp>
+//#endif
 
 #include "clSComplex.h"
 #include "../include/clenabled/api.h"
@@ -35,10 +35,12 @@
 #define DTYPE_FLOAT 2
 #define DTYPE_INT 3
 
-#define OCLTYPE_GPU 1
-#define OCLTYPE_ACCELERATOR 2
-#define OCLTYPE_CPU 3
-#define OCLTYPE_ANY 4
+#define OCLTYPE_DEFAULT (1 << 0)
+#define OCLTYPE_CPU (1 << 1)
+#define OCLTYPE_GPU (1 << 2)
+#define OCLTYPE_ACCELERATOR (1 << 3)
+#define OCLTYPE_CUSTOM (1 << 4)
+#define OCLTYPE_ANY 0xFFFFFFFF
 
 #define OCLDEVICESELECTOR_FIRST 1
 #define OCLDEVICESELECTOR_SPECIFIC 2
@@ -62,7 +64,7 @@ protected:
 	 int maxConstMemSize=0;
 	 bool hasSharedVirtualMemory;
 	 bool hasSVMFineGrained;
-	 int optimalBufferType = CL_MEM_USE_HOST_PTR;
+	 //int optimalBufferType = CL_MEM_USE_HOST_PTR;
 
 	 bool hasSingleFMASupport=false;  // Fused Multiply/Add
 	 bool hasDoubleFMASupport=false;  // Fused Multiply/Add
@@ -78,7 +80,8 @@ protected:
 
     virtual void cleanup();
 
-    cl_device_type contextType;
+    //cl_device_type contextType;
+    int contextType;
 
 	std::string platformName="";
 
@@ -105,7 +108,8 @@ public:
 	virtual ~GRACCBase();
     virtual bool stop();
 
-    cl_device_type GetContextType();
+    //cl_device_type GetContextType();
+    int GetContextType();
 
 };
 

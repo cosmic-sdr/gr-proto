@@ -139,7 +139,7 @@ namespace gr {
 
 		unsigned int localWGSize=0;
 
-		if (contextType!=CL_DEVICE_TYPE_CPU) {
+		if (contextType!=OCLTYPE_CPU) {
 			if (noutput_items % preferredWorkGroupSizeMultiple == 0) {
 				// for some reason problems start to happen when we're no longer using constant memory
 				localWGSize=preferredWorkGroupSizeMultiple;
