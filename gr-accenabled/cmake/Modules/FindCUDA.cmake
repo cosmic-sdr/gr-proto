@@ -3,7 +3,7 @@
 # This script defines the following variables:
 # CUDA_BIN_DIR        - Location of CUDA executable directory.
 # CUDA_INCLUDE_DIR     - Location of CUDA's include directory.
-# CUDA_LIBRARIES       - Location of CUDA's libraries
+# CUDA_LIBRARIES       - CUDA's libraries
 # CUDA_FOUND           - True if CUDA has been located
 #
 # You need to set CUDA_ROOT macro as an argument to the cmake command.

@@ -136,6 +136,7 @@ if(NOT OpenARC_FOUND)
 	message(FATAL_ERROR "OpenARC is required to compile gr-accenabled; to find OpenARC, environment variable, openarc should be set properly!")
 endif()
 
+IF($ENV{OPENARC_ARCH} MATCHES 0)
 ########################################################################
 # Find CUDA build dependencies
 ########################################################################
@@ -143,6 +144,7 @@ find_package(CUDA)
 if(NOT CUDA_FOUND)
 	message(FATAL_ERROR "CUDA is required to compile gr-accenabled; to find CUDA, CUDA_ROOT macro should be passed to the cmake command!")
 endif()
+ENDIF($ENV{OPENARC_ARCH} MATCHES 0)
 
 ########################################################################
 # Find gnuradio build dependencies

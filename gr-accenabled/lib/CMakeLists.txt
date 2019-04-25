@@ -39,7 +39,11 @@ ENDIF($ENV{OPENARC_ARCH} MATCHES 0)
 ########################################################################
 include(GrPlatform) #define LIB_SUFFIX
 
-include_directories(${Boost_INCLUDE_DIR} ${OpenCL_INCLUDE_DIRS} ${OpenARC_INCLUDE_DIR} ${CUDA_INCLUDE_DIR})
+include_directories(${Boost_INCLUDE_DIR} ${OpenCL_INCLUDE_DIRS} ${OpenARC_INCLUDE_DIR})
+IF($ENV{OPENARC_ARCH} MATCHES 0)
+include_directories(${CUDA_INCLUDE_DIR})
+ENDIF($ENV{OPENARC_ARCH} MATCHES 0)
+
 link_directories(${Boost_LIBRARY_DIRS})
 link_directories(${FFTW3F_LIBRARY_DIRS})
 
@@ -85,22 +89,25 @@ list(APPEND clenabled_sources
     fast_atan2f.cc
     clFFT_impl.cc
     clLog_impl.cc
-    #acc_helper_clLog.cpp
-    clLog_kernel.cpp
     clSNR_impl.cc
     clComplexToArg_impl.cc
-    #acc_helper_clComplexToArg.cpp
-    clComplexToArg_kernel.cpp
     clComplexToMagPhase_impl.cc
-    clComplexToMagPhase_kernel.cpp
     clMagPhaseToComplex_impl.cc
-    clMagPhaseToComplex_kernel.cpp
     clComplexToMag_impl.cc
-    clComplexToMag_kernel.cpp
     clKernel1To1_impl.cc
     clKernel2To1_impl.cc
     clSignalSource_impl.cc
     clCostasLoop_impl.cc
+)
+
+list(APPEND clenabled_sources
+    #acc_helper_clLog.cpp
+    clLog_kernel.cpp
+    #acc_helper_clComplexToArg.cpp
+    clComplexToArg_kernel.cpp
+    clComplexToMagPhase_kernel.cpp
+    clMagPhaseToComplex_kernel.cpp
+    clComplexToMag_kernel.cpp
 )
 
 set(clenabled_sources "${clenabled_sources}" PARENT_SCOPE)
@@ -110,7 +117,10 @@ if(NOT clenabled_sources)
 endif(NOT clenabled_sources)
 
 add_library(gnuradio-accenabled SHARED ${clenabled_sources})
-target_link_libraries(gnuradio-accenabled ${Boost_LIBRARIES} ${GNURADIO_ALL_LIBRARIES} ${OpenCL_LIBRARY} gnuradio-blocks gnuradio-filter ${VOLK_LIBRARIES} ${Boost_LIBRARIES} ${FFTW3F_LIBRARIES} ${CLFFT_LIBRARIES} ${OpenARC_LIBRARIES} ${CUDA_LIBRARIES})
+target_link_libraries(gnuradio-accenabled ${Boost_LIBRARIES} ${GNURADIO_ALL_LIBRARIES} ${OpenCL_LIBRARY} gnuradio-blocks gnuradio-filter ${VOLK_LIBRARIES} ${Boost_LIBRARIES} ${FFTW3F_LIBRARIES} ${CLFFT_LIBRARIES} ${OpenARC_LIBRARIES})
+IF($ENV{OPENARC_ARCH} MATCHES 0)
+target_link_libraries(gnuradio-accenabled ${CUDA_LIBRARIES})
+ENDIF($ENV{OPENARC_ARCH} MATCHES 0)
 set_target_properties(gnuradio-accenabled PROPERTIES DEFINE_SYMBOL "gnuradio_clenabled_EXPORTS")
 
 if(APPLE)
@@ -160,20 +170,23 @@ list(APPEND test_clenabled_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/clFFT_impl.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/window.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/clLog_impl.cc
-    #${CMAKE_CURRENT_BINARY_DIR}/acc_helper_clLog.cpp
-    ${CMAKE_CURRENT_BINARY_DIR}/clLog_kernel.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/clSNR_impl.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/clComplexToMag_impl.cc
-    ${CMAKE_CURRENT_BINARY_DIR}/clComplexToMag_kernel.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/clComplexToArg_impl.cc
-    #${CMAKE_CURRENT_BINARY_DIR}/acc_helper_clComplexToArg.cpp
-    ${CMAKE_CURRENT_BINARY_DIR}/clComplexToArg_kernel.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/clComplexToMagPhase_impl.cc
-    ${CMAKE_CURRENT_BINARY_DIR}/clComplexToMagPhase_kernel.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/clMagPhaseToComplex_impl.cc
-    ${CMAKE_CURRENT_BINARY_DIR}/clMagPhaseToComplex_kernel.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/clSignalSource_impl.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/clCostasLoop_impl.cc
+)
+
+list(APPEND test_clenabled_sources
+    #${CMAKE_CURRENT_BINARY_DIR}/acc_helper_clLog.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/clLog_kernel.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/clComplexToMag_kernel.cpp
+    #${CMAKE_CURRENT_BINARY_DIR}/acc_helper_clComplexToArg.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/clComplexToArg_kernel.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/clComplexToMagPhase_kernel.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/clMagPhaseToComplex_kernel.cpp
 )
 
 add_executable(test-accenabled ${test_clenabled_sources})
@@ -186,12 +199,17 @@ target_link_libraries(
   ${VOLK_LIBRARIES}
   ${FFTW3F_LIBRARIES}
   ${OpenCL_LIBRARY}
-  ${CUDA_LIBRARIES}
   gnuradio-accenabled
   ${CLFFT_LIBRARIES}
   gnuradio-blocks
   gnuradio-filter
 )
+IF($ENV{OPENARC_ARCH} MATCHES 0)
+target_link_libraries(
+  test-accenabled
+  ${CUDA_LIBRARIES}
+)
+ENDIF($ENV{OPENARC_ARCH} MATCHES 0)
 
 GR_ADD_TEST(test_clenabled test-accenabled)
 
@@ -297,12 +315,22 @@ target_compile_definitions(
 
 target_link_libraries(
   test-acclog
-  ${OpenCL_LIBRARY}
-  ${CUDA_LIBRARIES}
   ${GNURADIO_RUNTIME_LIBRARIES}
   ${Boost_LIBRARIES}
   gnuradio-accenabled
 )
+IF($ENV{OPENARC_ARCH} MATCHES 0)
+target_link_libraries(
+  test-acclog
+  ${CUDA_LIBRARIES}
+)
+ELSE($ENV{OPENARC_ARCH} MATCHES 0)
+target_link_libraries(
+  test-acclog
+  ${OpenCL_LIBRARY}
+)
+ENDIF($ENV{OPENARC_ARCH} MATCHES 0)
+
 
 install(TARGETS test-acclog DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" RUNTIME)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/openarc_kernel_clLog.${OUTPUTSUFFIX} DESTINATION "${CMAKE_INSTALL_PREFIX}/bin") 
@@ -336,12 +364,21 @@ target_compile_definitions(
 
 target_link_libraries(
   test-acccomplextoarg
-  ${OpenCL_LIBRARY}
-  ${CUDA_LIBRARIES}
   ${GNURADIO_RUNTIME_LIBRARIES}
   ${Boost_LIBRARIES}
   gnuradio-accenabled
 )
+IF($ENV{OPENARC_ARCH} MATCHES 0)
+target_link_libraries(
+  test-acccomplextoarg
+  ${CUDA_LIBRARIES}
+)
+ELSE($ENV{OPENARC_ARCH} MATCHES 0)
+target_link_libraries(
+  test-acccomplextoarg
+  ${OpenCL_LIBRARY}
+)
+ENDIF($ENV{OPENARC_ARCH} MATCHES 0)
 
 install(TARGETS test-acccomplextoarg DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" RUNTIME)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/openarc_kernel_clComplexToArg.${OUTPUTSUFFIX} DESTINATION "${CMAKE_INSTALL_PREFIX}/bin") 
@@ -375,12 +412,21 @@ target_compile_definitions(
 
 target_link_libraries(
   test-acccomplextomag
-  ${OpenCL_LIBRARY}
-  ${CUDA_LIBRARIES}
   ${GNURADIO_RUNTIME_LIBRARIES}
   ${Boost_LIBRARIES}
   gnuradio-accenabled
 )
+IF($ENV{OPENARC_ARCH} MATCHES 0)
+target_link_libraries(
+  test-acccomplextomag
+  ${CUDA_LIBRARIES}
+)
+ELSE($ENV{OPENARC_ARCH} MATCHES 0)
+target_link_libraries(
+  test-acccomplextomag
+  ${OpenCL_LIBRARY}
+)
+ENDIF($ENV{OPENARC_ARCH} MATCHES 0)
 
 install(TARGETS test-acccomplextomag DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" RUNTIME)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/openarc_kernel_clComplexToMag.${OUTPUTSUFFIX} DESTINATION "${CMAKE_INSTALL_PREFIX}/bin") 
@@ -415,12 +461,21 @@ target_compile_definitions(
 
 target_link_libraries(
   test-acccomplextomagphase
-  ${OpenCL_LIBRARY}
-  ${CUDA_LIBRARIES}
   ${GNURADIO_RUNTIME_LIBRARIES}
   ${Boost_LIBRARIES}
   gnuradio-accenabled
 )
+IF($ENV{OPENARC_ARCH} MATCHES 0)
+target_link_libraries(
+  test-acccomplextomagphase
+  ${CUDA_LIBRARIES}
+)
+ELSE($ENV{OPENARC_ARCH} MATCHES 0)
+target_link_libraries(
+  test-acccomplextomagphase
+  ${OpenCL_LIBRARY}
+)
+ENDIF($ENV{OPENARC_ARCH} MATCHES 0)
 
 install(TARGETS test-acccomplextomagphase DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" RUNTIME)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/openarc_kernel_clComplexToMagPhase.${OUTPUTSUFFIX} DESTINATION "${CMAKE_INSTALL_PREFIX}/bin") 
@@ -454,12 +509,21 @@ target_compile_definitions(
 
 target_link_libraries(
   test-accmagphasetocomplex
-  ${OpenCL_LIBRARY}
-  ${CUDA_LIBRARIES}
   ${GNURADIO_RUNTIME_LIBRARIES}
   ${Boost_LIBRARIES}
   gnuradio-accenabled
 )
+IF($ENV{OPENARC_ARCH} MATCHES 0)
+target_link_libraries(
+  test-accmagphasetocomplex
+  ${CUDA_LIBRARIES}
+)
+ELSE($ENV{OPENARC_ARCH} MATCHES 0)
+target_link_libraries(
+  test-accmagphasetocomplex
+  ${OpenCL_LIBRARY}
+)
+ENDIF($ENV{OPENARC_ARCH} MATCHES 0)
 
 install(TARGETS test-accmagphasetocomplex DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" RUNTIME)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/openarc_kernel_clMagPhaseToComplex.${OUTPUTSUFFIX} DESTINATION "${CMAKE_INSTALL_PREFIX}/bin") 

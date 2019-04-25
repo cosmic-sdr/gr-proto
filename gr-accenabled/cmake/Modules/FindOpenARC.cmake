@@ -3,7 +3,7 @@
 # This script defines the following variables:
 # OpenARC_BIN_DIR        - Location of OpenARC executable directory.
 # OpenARC_INCLUDE_DIR     - Location of OpenARC's include directory.
-# OpenARC_LIBRARIES       - Location of OpenARC's libraries
+# OpenARC_LIBRARIES       - OpenARC's libraries
 # OpenARC_FOUND           - True if OpenARC has been located
 #
 # You need to set the envioronment variable openarc to the root directory of 
