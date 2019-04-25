@@ -1,10 +1,12 @@
 #include "clLog_kernel.h"
 
 void clLog_init(acc_device_t deviceType, int devSelector, int devId) {
+#if !defined(TR_MODE) || TR_MODE == 0
     acc_init(deviceType);
     if( devSelector == OCLDEVICESELECTOR_SPECIFIC ) { 
         acc_set_device_num(devId, deviceType);
     }   
+#endif
 }
 
 

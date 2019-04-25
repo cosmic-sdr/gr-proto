@@ -2,6 +2,7 @@
 #define INCLUDED_CLENABLED_CLLOG_KERNEL_H
 
 #include "acc_helper.h"
+#include <math.h>
 
 void clLog_init (acc_device_t deviceType, int devSelector, int devId);
 

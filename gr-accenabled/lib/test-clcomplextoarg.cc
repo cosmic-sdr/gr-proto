@@ -133,7 +133,19 @@ bool testComplexToArg() {
     elapsed_time = elapsed_seconds.count()/(float)iterations;
     throughput = largeBlockSize / elapsed_time;
 
-    std::cout << "OpenCL Run Time:   " << std::fixed << std::setw(11)
+#if !defined(TR_MODE) || TR_MODE == 0
+#if !defined(OPENARC_ARCH) || OPENARC_ARCH == 0
+	std::cout << "OpenACC/CUDA Run Time:   " << std::fixed << std::setw(11)
+#else
+	std::cout << "OpenACC/OpenCL Run Time:   " << std::fixed << std::setw(11)
+#endif
+#elif TR_MODE == 1
+	std::cout << "OpenMP3 Run Time:   " << std::fixed << std::setw(11)
+#elif TR_MODE == 2
+	std::cout << "OpenMP4 Run Time:   " << std::fixed << std::setw(11)
+#else
+	std::cout << "MCL Run Time:   " << std::fixed << std::setw(11)
+#endif
     << std::setprecision(6) << elapsed_time << " s  (" << throughput << " sps)" << std::endl << std::endl;
 
     int j;
