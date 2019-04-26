@@ -43,7 +43,7 @@ FIND_PATH(_OpenARC_INCLUDE_DIR
 FIND_PATH(_OpenARC_BIN_DIR
     NAMES openarc
 	PATHS $ENV{openarc}/bin
-    DOC "openarc Include directory")
+    DOC "openarc Bin directory")
 
 FIND_LIBRARY(_OpenARC_LIBRARY
     NAMES ${OPENARCRUNTIME}

@@ -146,6 +146,16 @@ if(NOT CUDA_FOUND)
 endif()
 ENDIF($ENV{OPENARC_ARCH} MATCHES 0)
 
+IF(${TR_MODE} MATCHES 3)
+########################################################################
+# Find MCL build dependencies
+########################################################################
+find_package(MCL)
+if(NOT MCL_FOUND)
+	message(FATAL_ERROR "MCL is required to compile gr-accenabled; to find MCL, environment variable, mclinstallroot should be set properly!")
+endif()
+ENDIF(${TR_MODE} MATCHES 3)
+
 ########################################################################
 # Find gnuradio build dependencies
 ########################################################################

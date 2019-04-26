@@ -44,8 +44,8 @@
 //#include "window.h"
 
 bool verbose=true;
-int blockSizeUL=8192;
-int largeBlockSize=8192;
+int blockSizeUL=1048576;
+int largeBlockSize=16;
 int opencltype=OCLTYPE_ANY;
 int selectorType=OCLDEVICESELECTOR_FIRST;
 int platformId=0;
