@@ -5,11 +5,13 @@
 #endif
 
 void clComplexToMag_init(acc_device_t deviceType, int devSelector, int devId) {
-#if !defined(TR_MODE) || TR_MODE == 0
+#if !defined(TR_MODE) || TR_MODE == 0 || TR_MODE == 3
     acc_init(deviceType);
+#if !defined(TR_MODE) || TR_MODE == 0
     if( devSelector == OCLDEVICESELECTOR_SPECIFIC ) { 
         acc_set_device_num(devId, deviceType);
     }   
+#endif
 #endif
 }
 
