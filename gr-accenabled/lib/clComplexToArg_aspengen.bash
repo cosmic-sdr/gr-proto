@@ -28,6 +28,7 @@ entryFunction="${benchname}_kernel"
 runMode=3
 postprocessing=0
 genkernelmodel=0
+usefastmath=0
 
 function usage()
 {
@@ -38,6 +39,7 @@ function usage()
     echo -e "\t-p=name --program=name (default: ${benchname})"
     echo -e "\t-i=data --input=data (default: ${inputSize1})"
     echo -e "\t-f=inputfile --file=inputfile (default: ${inputSource})"
+	echo -e "\t-u --usefastmath (default: no)"
     echo ""
 }
 
@@ -61,6 +63,9 @@ while [ "$1" != "" ]; do
         -f | --file)
             inputSource=${VALUE}
             ;;
+        -u | --usefastmath)
+            usefastmath=1
+            ;;  
         *)
             echo "ERROR: unknown parameter \"$PARAM\""
             usage
@@ -80,7 +85,11 @@ if [ ! -f "${openarc}/bin/openarc" ]; then
     exit
 fi
 
-${openarc}/bin/openarc -addIncludePath=${openarc}/openarcrt -outdir=aspen_output_${benchname} -SetAccEntryFunction=${entryFunction} -ASPENModelGen=mode=${runMode}:modelname=${benchname}:postprocessing=${postprocessing}:entryfunction=${entryFunction} -macro=GEN_ASPEN,__INPUTSIZE1__=${inputSize1} ${inputSource}
+if [ $usefastmath -eq 0 ]; then
+	${openarc}/bin/openarc -addIncludePath=${openarc}/openarcrt -outdir=aspen_output_${benchname} -SetAccEntryFunction=${entryFunction} -ASPENModelGen=mode=${runMode}:modelname=${benchname}:postprocessing=${postprocessing}:entryfunction=${entryFunction} -macro=GEN_ASPEN,__INPUTSIZE1__=${inputSize1} ${inputSource}
+else
+	${openarc}/bin/openarc -addIncludePath=${openarc}/openarcrt -outdir=aspen_output_${benchname} -SetAccEntryFunction=${entryFunction} -ASPENModelGen=mode=${runMode}:modelname=${benchname}:postprocessing=${postprocessing}:entryfunction=${entryFunction} -macro=GEN_ASPEN,__INPUTSIZE1__=${inputSize1},USE_FAST_ATAN2 ${inputSource}
+fi
 
 if [ -f "./aspen_output_${benchname}/${benchname}.aspen" ]; then
     if [ $genkernelmodel -eq 1 ]; then

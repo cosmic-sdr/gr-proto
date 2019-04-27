@@ -142,7 +142,11 @@ bool testMagPhaseToComplex() {
 	throughput = largeBlockSize / elapsed_time;
 
 #if !defined(TR_MODE) || TR_MODE == 0
-	std::cout << "OpenACC Run Time:   " << std::fixed << std::setw(11)
+#if !defined(OPENARC_ARCH) || OPENARC_ARCH == 0
+    std::cout << "OpenACC/CUDA Run Time:   " << std::fixed << std::setw(11)
+#else
+    std::cout << "OpenACC/OpenCL Run Time:   " << std::fixed << std::setw(11)
+#endif
 #elif TR_MODE == 1
 	std::cout << "OpenMP3 Run Time:   " << std::fixed << std::setw(11)
 #elif TR_MODE == 2
