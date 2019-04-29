@@ -45,7 +45,8 @@
 
 bool verbose=true;
 int blockSizeUL=1048576;
-int largeBlockSize=1048576;
+//[FIXME] MCL fails if the size is smaller than 64.
+int largeBlockSize=64;
 int opencltype=OCLTYPE_ANY;
 int selectorType=OCLDEVICESELECTOR_FIRST;
 int platformId=0;

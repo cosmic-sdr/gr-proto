@@ -73,6 +73,8 @@ void GRACCBase::cleanup() {
 GRACCBase::~GRACCBase() {
 #if !defined(TR_MODE) || TR_MODE == 0
 	acc_shutdown(deviceType);
+#elif TR_MODE == 3
+	mcl_finit();
 #endif
 }
 

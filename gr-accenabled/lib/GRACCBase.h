@@ -49,6 +49,11 @@
 
 //#include "acc_helper.h"
 #include "openacc.h"
+#if TR_MODE == 3
+extern "C" {
+#include "minos.h"
+}
+#endif
 
 namespace gr {
 namespace clenabled {

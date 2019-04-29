@@ -45,7 +45,7 @@
 
 bool verbose=true;
 int blockSizeUL=1048576;
-int largeBlockSize=16;
+int largeBlockSize=64;
 int opencltype=OCLTYPE_ANY;
 int selectorType=OCLDEVICESELECTOR_FIRST;
 int platformId=0;
