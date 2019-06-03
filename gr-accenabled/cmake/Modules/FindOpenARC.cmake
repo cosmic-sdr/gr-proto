@@ -36,7 +36,7 @@ ELSE ($ENV{OPENARC_ARCH} MATCHES 0)
 ENDIF ($ENV{OPENARC_ARCH} MATCHES 0)
 
 FIND_PATH(_OpenARC_INCLUDE_DIR
-    NAMES openacc.h
+    NAMES openaccrt.h openacc.h
 	PATHS $ENV{openarc}/openarcrt
     DOC "openarc Include directory")
 
