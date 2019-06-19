@@ -1,11 +1,11 @@
 **Step 0 -- Dependencies**
 
-You need to have these packages on top of vanilla Centos 7 installation. They are already installed on Oswald01.
+For Centos 7:
 ```
 sudo yum install cmake boost cppunit python-mako clang swig numpy python-cheetah cppunit fftw fftw-devel qwt qwt-dvel pyqt4 doxygen zeromq scipy python-sphinx thrift uhd uhd-devel SDL libusb gsl gsl-devel wxPython zeromq3-devel python-txzmq SDL-devel pyusb
 ```
 
-For Ubuntu, you need to have these packages installed:
+For Ubuntu 16.04:
 
 ```
 sudo apt install cmake boost cppunit python-mako clang swig numpy python-cheetah fftw fftw-devel qwt qwt-dvel pyqt4 doxygen zeromq scipy python-sphinx thrift uhd uhd-devel SDL libusb gsl gsl-devel wxPython zeromq3-devel python-txzmq SDL-devel pyusb libcppunit-dev libboost-dev python-mako swig python-numpy python-cheetah fftw-dev python-qwt doxygen python-scipy sphinx-common thrift-compiler python-sdl2 libfftw3-dev python-lxml qt4-dev-tools libqwt-dev  python-qwt-qt5 libsdl-dev libzmq3-dev libcomedi-dev libgsl-dev
@@ -24,11 +24,10 @@ export PROJECT_DIR=$PWD
 
 # Setup environment variables (also add these to your ~/.bashrc)
 
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64 
-export LIBRARY_PATH=$LIBRARY_PATH:/usr/local/cuda/lib64
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(dirname $(locate libcuda.so | head -n 1)) 
+export LIBRARY_PATH=$LIBRARY_PATH:$CUDA_HOME/lib64
 export PATH=$PATH:~/usr/local/bin
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:~/usr/local/lib64
-export PYTHONPATH=~/usr/local/lib64/python2.7/site-packages/
+export PYTHONPATH=$PYTHONPATH:~/usr/local/lib64/python2.7/site-packages/::~/usr/local/lib/python2.7/dist-packages/
 ```
 
 **Step 2 -- clFFT**
