@@ -1,0 +1,51 @@
+Performing C SOURCE FILE Test CFLAG__qopenmp_simd failed with the following output:
+Change Dir: /home/fub/gnuradio-custom/simde/test/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_ddedb/fast"
+/usr/bin/make -f CMakeFiles/cmTC_ddedb.dir/build.make CMakeFiles/cmTC_ddedb.dir/build
+make[1]: Entering directory '/home/fub/gnuradio-custom/simde/test/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_ddedb.dir/src.c.o
+/usr/bin/cc   -DCFLAG__qopenmp_simd   -qopenmp-simd -o CMakeFiles/cmTC_ddedb.dir/src.c.o   -c /home/fub/gnuradio-custom/simde/test/CMakeFiles/CMakeTmp/src.c
+cc: error: unrecognized command line option '-qopenmp-simd'; did you mean '-Wopenmp-simd'?
+CMakeFiles/cmTC_ddedb.dir/build.make:65: recipe for target 'CMakeFiles/cmTC_ddedb.dir/src.c.o' failed
+make[1]: *** [CMakeFiles/cmTC_ddedb.dir/src.c.o] Error 1
+make[1]: Leaving directory '/home/fub/gnuradio-custom/simde/test/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_ddedb/fast' failed
+make: *** [cmTC_ddedb/fast] Error 2
+
+Source file was:
+int main(void) { return 0; }
+Performing C SOURCE FILE Test CFLAG__mfpu_neon failed with the following output:
+Change Dir: /home/fub/gnuradio-custom/simde/test/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_8fc30/fast"
+/usr/bin/make -f CMakeFiles/cmTC_8fc30.dir/build.make CMakeFiles/cmTC_8fc30.dir/build
+make[1]: Entering directory '/home/fub/gnuradio-custom/simde/test/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_8fc30.dir/src.c.o
+/usr/bin/cc   -DCFLAG__mfpu_neon   -mfpu=neon -o CMakeFiles/cmTC_8fc30.dir/src.c.o   -c /home/fub/gnuradio-custom/simde/test/CMakeFiles/CMakeTmp/src.c
+cc: error: unrecognized command line option '-mfpu=neon'
+CMakeFiles/cmTC_8fc30.dir/build.make:65: recipe for target 'CMakeFiles/cmTC_8fc30.dir/src.c.o' failed
+make[1]: *** [CMakeFiles/cmTC_8fc30.dir/src.c.o] Error 1
+make[1]: Leaving directory '/home/fub/gnuradio-custom/simde/test/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_8fc30/fast' failed
+make: *** [cmTC_8fc30/fast] Error 2
+
+Source file was:
+int main(void) { return 0; }
+Performing C SOURCE FILE Test CFLAG_WUnsafe_loop_optimizations failed with the following output:
+Change Dir: /home/fub/gnuradio-custom/simde/test/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_ca5aa/fast"
+/usr/bin/make -f CMakeFiles/cmTC_ca5aa.dir/build.make CMakeFiles/cmTC_ca5aa.dir/build
+make[1]: Entering directory '/home/fub/gnuradio-custom/simde/test/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_ca5aa.dir/src.c.o
+/usr/bin/cc   -march=native -fopenmp-simd -DSIMDE_ENABLE_OPENMP -DCFLAG_WUnsafe_loop_optimizations   -Wall -Wextra -Werror -WUnsafe-loop-optimizations -o CMakeFiles/cmTC_ca5aa.dir/src.c.o   -c /home/fub/gnuradio-custom/simde/test/CMakeFiles/CMakeTmp/src.c
+cc: error: unrecognized command line option '-WUnsafe-loop-optimizations'; did you mean '-Wunsafe-loop-optimizations'?
+CMakeFiles/cmTC_ca5aa.dir/build.make:65: recipe for target 'CMakeFiles/cmTC_ca5aa.dir/src.c.o' failed
+make[1]: *** [CMakeFiles/cmTC_ca5aa.dir/src.c.o] Error 1
+make[1]: Leaving directory '/home/fub/gnuradio-custom/simde/test/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_ca5aa/fast' failed
+make: *** [cmTC_ca5aa/fast] Error 2
+
+Source file was:
+int main(void) { return 0; }

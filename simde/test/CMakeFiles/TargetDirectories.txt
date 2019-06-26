@@ -1,0 +1,5 @@
+/home/fub/gnuradio-custom/simde/test/CMakeFiles/rebuild_cache.dir
+/home/fub/gnuradio-custom/simde/test/CMakeFiles/test.dir
+/home/fub/gnuradio-custom/simde/test/CMakeFiles/edit_cache.dir
+/home/fub/gnuradio-custom/simde/test/CMakeFiles/munit.dir
+/home/fub/gnuradio-custom/simde/test/CMakeFiles/run-tests.dir
