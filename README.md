@@ -25,12 +25,57 @@ export PROJECT_DIR=$PWD
 # Setup environment variables (also add these to your ~/.bashrc)
 
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(dirname $(locate libcuda.so | head -n 1)) 
-export LIBRARY_PATH=$LIBRARY_PATH:$CUDA_HOME/lib64
 export PATH=$PATH:~/usr/local/bin
 export PYTHONPATH=$PYTHONPATH:~/usr/local/lib64/python2.7/site-packages/::~/usr/local/lib/python2.7/dist-packages/
+export CUDA_HOME=/usr/local/cuda
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CUDA_HOME/lib64
 ```
 
-**Step 2 -- clFFT**
+**Step 2 -- GNU Radio**
+
+```
+# Build & (local) Install gnuradio (latest stable release)
+
+cd $PROJECT_DIR/gnuradio-3.7.13.4
+mkdir build
+cd build
+cmake -DBoost_USE_STATIC_LIBS=OFF -DBoost_USE_MULTITHREADED=ON -DCMAKE_INSTALL_PREFIX=~/usr/local -DCMAKE_PREFIX_PATH=~/usr/local ..
+make -j 8 install
+```
+
+**Step 3 -- USRP-antenna and IEEE-WIFI modules**
+```
+sudo cp -rf $PROJECT_DIR/simde/simde/ /usr/include/ 
+
+cd $PROJECT_DIR/gr-ieee802-11
+mkdir build
+cd build
+cmake -DCMAKE_INSTALL_PREFIX=~/usr/local -DCMAKE_PREFIX_PATH=~/usr/local ..
+make -j 8 install
+
+cd $PROJECT_DIR/gr-foo
+mkdir build
+cd build
+cmake -DCMAKE_INSTALL_PREFIX=~/usr/local -DCMAKE_PREFIX_PATH=~/usr/local ..
+make -j 8 install
+
+sudo su
+uhd_images_downloader # if the download doesn't proceed then make sure excl proxies are set properly in /root/.bashrc
+cp /usr/lib/uhd/utils/uhd-usrp.rules /etc/udev/rules.d
+udevadm control --reload-rules
+udevadm trigger
+exit
+
+
+```
+
+
+
+
+**Step 4 -- PoCL, clFFT and gr-clenabled**
+```
+# Build & (local) Install PoCL
+```
 
 ```
 # Build & (local) Install clFFT
@@ -39,22 +84,9 @@ cd $PROJECT_DIR/clFFT
 mkdir build
 cd build
 
-cmake3 -DOpenCL_INCLUDE_DIR=/usr/local/cuda-9.2/targets/x86_64-linux/include/CL/ -DOpenCL_LIBRARY=/usr/local/cuda/lib64/libOpenCL.so -DUSE_GPU=1 -DBoost_USE_STATIC_LIBS=OFF -DBoost_USE_MULTITHREADED=ON  -DCMAKE_INSTALL_PREFIX=~/usr/local -DCMAKE_PREFIX_PATH=~/usr/local -Wno-dev ../src/
+cmake -DOpenCL_INCLUDE_DIR=/usr/local/cuda/targets/x86_64-linux/include/CL/ -DOpenCL_LIBRARY=/usr/local/cuda/lib64/libOpenCL.so -DUSE_GPU=1 -DBoost_USE_STATIC_LIBS=OFF -DBoost_USE_MULTITHREADED=ON  -DCMAKE_INSTALL_PREFIX=~/usr/local -DCMAKE_PREFIX_PATH=~/usr/local -Wno-dev ../src/
 make -j install
 ```
-
-**Step 3 -- GNU Radio**
-
-```
-# Build & (local) Install gnuradio (latest stable release)
-
-cd $PROJECT_DIR/gnuradio-3.7.13.4
-mkdir build
-cd build
-cmake3 -DOpenCL_INCLUDE_DIR=/usr/local/cuda-9.2/targets/x86_64-linux/include/CL/ -DOpenCL_LIBRARY=/usr/local/cuda/lib64/libOpenCL.so -DUSE_GPU=1 -DBoost_USE_STATIC_LIBS=OFF -DBoost_USE_MULTITHREADED=ON -DCMAKE_INSTALL_PREFIX=~/usr/local -DCMAKE_PREFIX_PATH=~/usr/local ..
-make -j install
-```
-**Step 4 -- gr-clenabled**
 
 ```
 # Build & (local) Install gr-clenabled
@@ -62,7 +94,7 @@ make -j install
 cd $PROJECT_DIR/gr-clenabled
 mkdir build
 cd build
-cmake3 -DOpenCL_INCLUDE_DIR=/usr/local/cuda-9.2/targets/x86_64-linux/include/CL/ -DOpenCL_LIBRARY=/usr/local/cuda/lib64/libOpenCL.so -DUSE_GPU=1 -DBoost_USE_STATIC_LIBS=OFF -DBoost_USE_MULTITHREADED=ON  -DCMAKE_INSTALL_PREFIX=~/usr/local -DCMAKE_PREFIX_PATH=~/usr/local -DGnuradio_DIR=$PROJECT_DIR/gnuradio-3.7.13.4/cmake/Modules/ -Wno-dev ..
+cmake -DOpenCL_INCLUDE_DIR=/usr/local/cuda/targets/x86_64-linux/include/CL/ -DOpenCL_LIBRARY=/usr/local/cuda/lib64/libOpenCL.so -DUSE_GPU=1 -DBoost_USE_STATIC_LIBS=OFF -DBoost_USE_MULTITHREADED=ON  -DCMAKE_INSTALL_PREFIX=~/usr/local -DCMAKE_PREFIX_PATH=~/usr/local -DGnuradio_DIR=$PROJECT_DIR/gnuradio-3.7.13.4/cmake/Modules/ -Wno-dev ..
 make -j install
 
 # Run GR-Companion
