@@ -8,8 +8,9 @@ sudo yum install cmake boost cppunit python-mako clang swig numpy python-cheetah
 For Ubuntu 16.04:
 
 ```
-sudo apt install cmake boost cppunit python-mako clang swig numpy python-cheetah fftw fftw-devel qwt qwt-dvel pyqt4 doxygen zeromq scipy python-sphinx thrift uhd uhd-devel SDL libusb gsl gsl-devel wxPython zeromq3-devel python-txzmq SDL-devel pyusb libcppunit-dev libboost-dev python-mako swig python-numpy python-cheetah fftw-dev python-qwt doxygen python-scipy sphinx-common thrift-compiler python-sdl2 libfftw3-dev python-lxml qt4-dev-tools libqwt-dev  python-qwt-qt5 libsdl-dev libzmq3-dev libcomedi-dev libgsl-dev
+sudo apt install libuhd-dev libuhd003.010.003 uhd-host locate  git swig cmake doxygen build-essential libboost-all-dev libtool libusb-1.0-0 libusb-1.0-0-dev libudev-dev libncurses5-dev libfftw3-bin libfftw3-dev libfftw3-doc libcppunit-1.14-0 libcppunit-dev libcppunit-doc ncurses-bin cpufrequtils python-numpy python-numpy-doc python-numpy-dbg python-scipy python-docutils qt4-bin-dbg qt4-default qt4-doc libqt4-dev libqt4-dev-bin python-qt4 python-qt4-dbg python-qt4-dev python-qt4-doc python-qt4-doc libqwt6abi1 libfftw3-bin libfftw3-dev libfftw3-doc ncurses-bin libncurses5 libncurses5-dev libncurses5-dbg libfontconfig1-dev libxrender-dev libpulse-dev swig g++ automake autoconf libtool python-dev libfftw3-dev libcppunit-dev libboost-all-dev libusb-dev libusb-1.0-0-dev fort77 libsdl1.2-dev python-wxgtk3.0 git libqt4-dev python-numpy ccache python-opengl libgsl-dev python-cheetah python-mako python-lxml doxygen qt4-default qt4-dev-tools libusb-1.0-0-dev libqwtplot3d-qt5-dev pyqt4-dev-tools python-qwt5-qt4 cmake git wget libxi-dev gtk2-engines-pixbuf r-base-dev python-tk liborc-0.4-0 liborc-0.4-dev libasound2-dev python-gtk2 libzmq3-dev libzmq5 python-requests python-sphinx libcomedi-dev python-zmq libqwt-dev libqwt6abi1 python-six libgps-dev libgps23 gpsd gpsd-clients python-gps python-setuptools
 ```
+
 **Step 1 -- Source and Environment Variables**
 
 Clone and prepare for local installation of clFFT, gnuradio and gr-cleanbled into ~/usr/local
@@ -32,7 +33,6 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CUDA_HOME/lib64:~/usr/local/lib
 ```
 
 **Step 2 -- GNU Radio**
-
 ```
 # Build & (local) Install gnuradio (latest stable release)
 
@@ -65,12 +65,7 @@ cp /usr/lib/uhd/utils/uhd-usrp.rules /etc/udev/rules.d
 udevadm control --reload-rules
 udevadm trigger
 exit
-
-
 ```
-
-
-
 
 **Step 4 -- PoCL, clFFT and gr-clenabled**
 ```
