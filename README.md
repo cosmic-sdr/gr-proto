@@ -66,8 +66,16 @@ udevadm control --reload-rules
 udevadm trigger
 exit
 ```
+**Step 4 -- gr-cosmic**
+```
+cd $PROJECT_DIR/gr-cosmic
+mkdir build
+cd build
+cmake -DCMAKE_INSTALL_PREFIX=~/usr/local -DCMAKE_PREFIX_PATH=~/usr/local ..
+make -j 8 install
+```
 
-**Step 4 -- PoCL, clFFT and gr-clenabled**
+**Step 5 -- PoCL, clFFT and gr-clenabled**
 ```
 # Build & (local) Install PoCL
 ```
