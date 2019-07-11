@@ -135,7 +135,7 @@ endif(APPLE)
 ########################################################################
 find_package(OpenARC)
 if(NOT OpenARC_FOUND)
-    message(FATAL_ERROR "OpenARC is required to compile gr-openacc; to find OpenARC, environment variable, openarc should be set properly!")
+    message(FATAL_ERROR "OpenARC is required to compile gr-openacc; to find OpenARC, environment variable, openarcinstall should be set to the OpenARC install directory!")
 endif()
 
 IF($ENV{OPENARC_ARCH} MATCHES 0)
@@ -161,7 +161,7 @@ endif()
 ########################################################################
 find_package(MCL)
 if(NOT MCL_FOUND)
-    message(FATAL_ERROR "MCL is required to compile gr-openacc; to find MCL, environment variable, mclinstallroot should be set properly!")
+    message(FATAL_ERROR "MCL is required to compile gr-openacc; to find MCL, environment variable, mclinstallroot should be set properly, and libmclext.a, openacc.h, and mcl_accext.h files should be manually copied to the MCL installed directories!")
 endif()
 
 ELSEIF(${TR_MODE} MATCHES 0)

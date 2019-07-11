@@ -6,8 +6,8 @@
 # OpenARC_LIBRARIES       - OpenARC's libraries
 # OpenARC_FOUND           - True if OpenARC has been located
 #
-# You need to set the envioronment variable openarc to the root directory of 
-# the OpenARC repository prior to calling this script.
+# You need to set the envioronment variable openarcinstall to the OpenARC 
+# install directory prior to calling this script.
 #
 #=============================================================================
 #
@@ -37,17 +37,17 @@ ENDIF ($ENV{OPENARC_ARCH} MATCHES 0)
 
 FIND_PATH(_OpenARC_INCLUDE_DIR
     NAMES openaccrt.h openacc.h
-	PATHS $ENV{openarc}/openarcrt
+	PATHS $ENV{openarcinstall}/openarcrt
     DOC "openarc Include directory")
 
 FIND_PATH(_OpenARC_BIN_DIR
     NAMES openarc
-	PATHS $ENV{openarc}/bin
+	PATHS $ENV{openarcinstall}/bin
     DOC "openarc Bin directory")
 
 FIND_LIBRARY(_OpenARC_LIBRARY
     NAMES ${OPENARCRUNTIME}
-    PATHS $ENV{openarc}/openarcrt)
+    PATHS $ENV{openarcinstall}/openarcrt)
 
 SET(OpenARC_BIN_DIR ${_OpenARC_BIN_DIR})
 SET(OpenARC_INCLUDE_DIR ${_OpenARC_INCLUDE_DIR})

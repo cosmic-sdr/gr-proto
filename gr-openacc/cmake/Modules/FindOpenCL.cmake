@@ -166,13 +166,13 @@ find_path(CL_HPP
 # ------------------------------
 # MESSAGE(STATUS,"CL_HPP: ${CL_HPP}")
 
-if(NOT CL_HPP)
-	IF (APPLE)
-		MESSAGE(FATAL_ERROR "Unable to find OpenCL/cl.hpp in the OpenCL include path.  Check that you have it on your file system and create a symlink or copy it if necessary.")
-	ELSE()
-		MESSAGE(FATAL_ERROR "Unable to find CL/cl.hpp in the OpenCL include path.  Check that you have it on your file system and create a symlink or copy it if necessary.")
-	ENDIF()
+#if(NOT CL_HPP)
+#	IF (APPLE)
+#		MESSAGE(FATAL_ERROR "Unable to find OpenCL/cl.hpp in the OpenCL include path.  Check that you have it on your file system and create a symlink or copy it if necessary.")
+#	ELSE()
+#		MESSAGE(FATAL_ERROR "Unable to find CL/cl.hpp in the OpenCL include path.  Check that you have it on your file system and create a symlink or copy it if necessary.")
+#	ENDIF()
 # else()
 #	MESSAGE(STATUS,"Found cl.hpp")
-endif()
+#endif()
   
