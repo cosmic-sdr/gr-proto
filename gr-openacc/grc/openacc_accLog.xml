@@ -1,0 +1,35 @@
+<block>
+  <name>Acclog</name>
+  <key>openacc_accLog</key>
+  <category>[OPENACC]</category>
+  <import>import openacc</import>
+  <make>openacc.accLog($deviceType, $deviceId, $nValue, $kValue)</make>
+  <param>
+    <name>Devicetype</name>
+    <key>deviceType</key>
+    <type>int</type>
+  </param>
+  <param>
+    <name>Deviceid</name>
+    <key>deviceId</key>
+    <type>int</type>
+  </param>
+  <param>
+    <name>Nvalue</name>
+    <key>nValue</key>
+    <type>float</type>
+  </param>
+  <param>
+    <name>Kvalue</name>
+    <key>kValue</key>
+    <type>float</type>
+  </param>
+  <sink>
+    <name>in</name>
+    <type>float</type>
+  </sink>
+  <source>
+    <name>out</name>
+    <type>float</type>
+  </source>
+</block>
