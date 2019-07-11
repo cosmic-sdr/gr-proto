@@ -130,6 +130,8 @@ bool testMultiplyConst() {
 	case ACCTYPE_ANY:
 		std::cout << "OpenACC Context: Any" << std::endl;
 	break;
+	default:
+		std::cout << "OpenACC Context: Default" << std::endl;
 	}
 	elapsed_time = elapsed_seconds.count()/(float)iterations;
 	throughput = largeBlockSize / elapsed_time;

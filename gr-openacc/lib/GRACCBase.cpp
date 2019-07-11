@@ -24,6 +24,11 @@ void GRACCBase::InitOpenACC(int devType, int devId) {
 		deviceType = acc_device_host;
 		platformName = "CPU";
 		break;
+	case ACCTYPE_GPU:
+		contextType = ACCTYPE_GPU;
+		deviceType = acc_device_gpu;
+		platformName = "GPU";
+		break;
 	case ACCTYPE_ACCELERATOR:
 		contextType = ACCTYPE_ACCELERATOR;
 		deviceType = acc_device_not_host;
@@ -35,9 +40,9 @@ void GRACCBase::InitOpenACC(int devType, int devId) {
 		platformName = "DEFAULT DEVICE";
 		break;
 	default:
-		contextType = ACCTYPE_ACCELERATOR;
-		deviceType = acc_device_gpu;
-		platformName = "GPU";
+		contextType = ACCTYPE_DEFAULT;
+		deviceType = acc_device_default;
+		platformName = "DEFAULT DEVICE";
 	}
 }
 
