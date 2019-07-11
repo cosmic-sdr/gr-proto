@@ -139,8 +139,11 @@ You should now have a desktop on login. From here you may launch multiple termin
 ```
 ssh -Y xavier1
 ```
-
-Once connected via ssh, you may launch gnuradio-companion and the window will be displayed using the X server installed on login.excl.ornl.gov
+Once connected via ssh, you may launch gnuradio-companion and the window will be displayed using the X server installed on login.excl.ornl.gov. To launch wifi_rx/tx examples:
+```
+gnuradio-companion $PROJECT_DIR/gr-ieee802-11/examples/wifi_rx.grc 
+gnuradio-companion $PROJECT_DIR/gr-ieee802-11/examples/wifi_tx.grc
+```
 
 
 
