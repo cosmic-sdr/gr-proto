@@ -100,6 +100,30 @@ cd build
 cmake -DOpenCL_INCLUDE_DIR=/usr/local/cuda/targets/x86_64-linux/include/CL/ -DOpenCL_LIBRARY=/usr/local/cuda/lib64/libOpenCL.so -DUSE_GPU=1 -DBoost_USE_STATIC_LIBS=OFF -DBoost_USE_MULTITHREADED=ON  -DCMAKE_INSTALL_PREFIX=~/usr/local -DCMAKE_PREFIX_PATH=~/usr/local -DGnuradio_DIR=$PROJECT_DIR/gnuradio-3.7.13.4/cmake/Modules/ -Wno-dev ..
 make -j install
 
+# Build & (local) Install gr-openacc
+
+cd $PROJECT_DIR/gr-openacc
+mkdir build
+cd build
+# TR_MODE = 0 for OpenACC
+# TR_MODE = 1 for OpenMP3
+# TR_MODE = 2 for OpenMP4
+# TR_MODE = 3 for MCL 
+//On Oswald1
+cmake3 -DTR_MODE=0 -DCUDA_ROOT=/usr/local/cuda -DOpenCL_INCLUDE_DIR=/usr/local/cuda/targets/x86_64-linux/include/CL -DOpenCL_LIBRARY=/usr/local/cuda/lib64/libOpenCL.so -DBoost_USE_STATIC_LIBS=OFF -DBoost_USE_MULTITHREADED=ON  -DCMAKE_INSTALL_PREFIX=~/usr/local -DCMAKE_PREFIX_PATH=~/usr/local -DGnuradio_DIR=$PROJECT_DIR/gnuradio-3.7.13.4/cmake/Modules -Wno-dev ..
+//On Xavier2
+cmake -DTR_MODE=0 -DCUDA_ROOT=/usr/local/cuda -DOpenCL_INCLUDE_DIR=/usr/local/include -DOpenCL_LIBRARY=/usr/lib/aarch64-linux-gnu/libOpenCL.so -DBoost_USE_STATIC_LIBS=OFF -DBoost_USE_MULTITHREADED=ON  -DCMAKE_INSTALL_PREFIX=~/usr/local -DCMAKE_PREFIX_PATH=~/usr/local -DGnuradio_DIR=$PROJECT_DIR/gnuradio-3.7.13.4/cmake/Modules -Wno-dev .. 
+////////////////////////////////////////////////
+//To generate OpenMP3 code, use the following.//
+////////////////////////////////////////////////
+//On Oswald1
+cmake -DTR_MODE=1 -DCUDA_ROOT=/usr/local/cuda -DOpenCL_INCLUDE_DIR=/usr/local/cuda/targets/x86_64-linux/include/CL -DOpenCL_LIBRARY=/usr/local/cuda/lib64/libOpenCL.so -DBoost_USE_STATIC_LIBS=OFF -DBoost_USE_MULTITHREADED=ON  -DCMAKE_INSTALL_PREFIX=~/usr/local -DCMAKE_PREFIX_PATH=~/usr/local -DGnuradio_DIR=$PROJECT_DIR/gnuradio-3.7.13.4/cmake/Modules -Wno-dev ..
+//On Xavier2
+cmake -DTR_MODE=1 -DCUDA_ROOT=/usr/local/cuda -DOpenCL_INCLUDE_DIR=/usr/local/include -DOpenCL_LIBRARY=/usr/lib/aarch64-linux-gnu/libOpenCL.so -DBoost_USE_STATIC_LIBS=OFF -DBoost_USE_MULTITHREADED=ON  -DCMAKE_INSTALL_PREFIX=~/usr/local -DCMAKE_PREFIX_PATH=~/usr/local -DGnuradio_DIR=$PROJECT_DIR/gnuradio-3.7.13.4/cmake/Modules -Wno-dev .. 
+
+make -j install
+
+
 # Run GR-Companion
 gnuradio-companion
 ```
