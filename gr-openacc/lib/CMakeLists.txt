@@ -66,9 +66,9 @@ add_custom_command(OUTPUT accComplexToArg_kernel.cpp openarc_kernel_accComplexTo
     COMMAND ${OpenARC_BIN_DIR}/openarc -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_accComplexToArg.txt ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToArg_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToArg/accComplexToArg_kernel.cpp ${CMAKE_CURRENT_BINARY_DIR}/ && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToArg/openarc_kernel_accComplexToArg.${OUTPUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/ && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToArg
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToArg_kernel.c ${CMAKE_CURRENT_SOURCE_DIR}/fast_atan2f.c)
 
-#add_custom_command(OUTPUT accComplexToMag_kernel.cpp openarc_kernel_accComplexToMag.${OUTPUTSUFFIX}
-#    COMMAND ${OpenARC_BIN_DIR}/openarc -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_accComplexToMag.txt ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToMag_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMag/accComplexToMag_kernel.cpp ${CMAKE_CURRENT_BINARY_DIR}/ && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMag/openarc_kernel_accComplexToMag.${OUTPUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/ && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMag
-#    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToMag_kernel.c)
+add_custom_command(OUTPUT accComplexToMag_kernel.cpp openarc_kernel_accComplexToMag.${OUTPUTSUFFIX}
+    COMMAND ${OpenARC_BIN_DIR}/openarc -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_accComplexToMag.txt ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToMag_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMag/accComplexToMag_kernel.cpp ${CMAKE_CURRENT_BINARY_DIR}/ && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMag/openarc_kernel_accComplexToMag.${OUTPUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/ && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMag
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToMag_kernel.c)
 
 #add_custom_command(OUTPUT accComplexToMagPhase_kernel.cpp openarc_kernel_accComplexToMagPhase.${OUTPUTSUFFIX}
 #    COMMAND ${OpenARC_BIN_DIR}/openarc -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_accComplexToMagPhase.txt ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToMagPhase_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMagPhase/accComplexToMagPhase_kernel.cpp ${CMAKE_CURRENT_BINARY_DIR}/ && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMagPhase/openarc_kernel_accComplexToMagPhase.${OUTPUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/ && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMagPhase
@@ -89,9 +89,9 @@ add_custom_command(OUTPUT accComplexToArg_kernel.cpp
     COMMAND ${OpenARC_BIN_DIR}/openarc ${OPENARC_COMMANDS} -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_accComplexToArg.txt ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToArg_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToArg/accComplexToArg_kernel.${TROUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/accComplexToArg_kernel.cpp && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToArg/openarc_kernel_accComplexToArg.${OUTPUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/ && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToArg
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToArg_kernel.c ${CMAKE_CURRENT_SOURCE_DIR}/fast_atan2f.c)
 
-#add_custom_command(OUTPUT accComplexToMag_kernel.cpp 
-#    COMMAND ${OpenARC_BIN_DIR}/openarc ${OPENARC_COMMANDS} -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_accComplexToMag.txt ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToMag_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMag/accComplexToMag_kernel.${TROUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/accComplexToMag_kernel.cpp && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMag/openarc_kernel_accComplexToMag.${OUTPUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/ && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMag
-#    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToMag_kernel.c)
+add_custom_command(OUTPUT accComplexToMag_kernel.cpp 
+    COMMAND ${OpenARC_BIN_DIR}/openarc ${OPENARC_COMMANDS} -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_accComplexToMag.txt ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToMag_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMag/accComplexToMag_kernel.${TROUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/accComplexToMag_kernel.cpp && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMag/openarc_kernel_accComplexToMag.${OUTPUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/ && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMag
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToMag_kernel.c)
 
 #add_custom_command(OUTPUT accComplexToMagPhase_kernel.cpp 
 #    COMMAND ${OpenARC_BIN_DIR}/openarc ${OPENARC_COMMANDS} -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_accComplexToMagPhase.txt ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToMagPhase_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMagPhase/accComplexToMagPhase_kernel.${TROUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/accComplexToMagPhase_kernel.cpp && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMagPhase/openarc_kernel_accComplexToMagPhase.${OUTPUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/ && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMagPhase
@@ -119,9 +119,9 @@ add_custom_command(OUTPUT accComplexToArg_kernel.cpp
     COMMAND ${OpenARC_BIN_DIR}/openarc ${OPENARC_COMMANDS} -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_accComplexToArg.txt ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToArg_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToArg/accComplexToArg_kernel.${TROUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/accComplexToArg_kernel.cpp && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToArg
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToArg_kernel.c ${CMAKE_CURRENT_SOURCE_DIR}/fast_atan2f.c)
 
-#add_custom_command(OUTPUT accComplexToMag_kernel.cpp 
-#    COMMAND ${OpenARC_BIN_DIR}/openarc ${OPENARC_COMMANDS} -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_accComplexToMag.txt ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToMag_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMag/accComplexToMag_kernel.${TROUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/accComplexToMag_kernel.cpp && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMag
-#    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToMag_kernel.c)
+add_custom_command(OUTPUT accComplexToMag_kernel.cpp 
+    COMMAND ${OpenARC_BIN_DIR}/openarc ${OPENARC_COMMANDS} -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_accComplexToMag.txt ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToMag_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMag/accComplexToMag_kernel.${TROUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/accComplexToMag_kernel.cpp && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMag
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToMag_kernel.c)
 
 #add_custom_command(OUTPUT accComplexToMagPhase_kernel.cpp 
 #    COMMAND ${OpenARC_BIN_DIR}/openarc ${OPENARC_COMMANDS} -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_accComplexToMagPhase.txt ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToMagPhase_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMagPhase/accComplexToMagPhase_kernel.${TROUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/accComplexToMagPhase_kernel.cpp && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMagPhase
@@ -138,14 +138,15 @@ list(APPEND openacc_sources
     GRACCBase.cpp
 	fast_atan2f.cc
     accLog_impl.cc
-    accComplexToArg_impl.cc )
+    accComplexToArg_impl.cc
+    accComplexToMag_impl.cc )
 
 list(APPEND openacc_sources
     accLog_kernel.cpp
     accComplexToArg_kernel.cpp
+    accComplexToMag_kernel.cpp
     #accComplexToMagPhase_kernel.cpp
     #accMagPhaseToComplex_kernel.cpp
-    #accComplexToMag_kernel.cpp
 )
 
 set(openacc_sources "${openacc_sources}" PARENT_SCOPE)
@@ -210,6 +211,7 @@ list(APPEND test_openacc_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/test_openacc.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/fast_atan2f.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_openacc.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_accComplexToMag.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_accComplexToArg.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_accLog.cc
     )
@@ -217,7 +219,7 @@ list(APPEND test_openacc_sources
 list(APPEND test_openacc_sources
     ${CMAKE_CURRENT_BINARY_DIR}/accLog_kernel.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/accComplexToArg_kernel.cpp
-    #${CMAKE_CURRENT_BINARY_DIR}/accComplexToMag_kernel.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/accComplexToMag_kernel.cpp
     #${CMAKE_CURRENT_BINARY_DIR}/accComplexToMagPhase_kernel.cpp
     #${CMAKE_CURRENT_BINARY_DIR}/accMagPhaseToComplex_kernel.cpp
 )
@@ -416,6 +418,77 @@ ENDIF(NOT ${TR_MODE} OR ${TR_MODE} MATCHES 0 OR ${TR_MODE} MATCHES 3)
 
 #add_dependencies(accComplexToArgAspenGen accLogAspenGen)
 
+########################################################################
+# Build and register test-accComplexToMag
+########################################################################
+list(APPEND test_acccomplextomag_sources
+    ${CMAKE_CURRENT_SOURCE_DIR}/test-acccomplextomag.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToMag_impl.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/GRACCBase.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/fast_atan2f.cc
+    ${CMAKE_CURRENT_BINARY_DIR}/accComplexToMag_kernel.cpp
+)
+
+add_executable(test-acccomplextomag ${test_acccomplextomag_sources})
+
+target_compile_definitions(
+    test-acccomplextomag
+    PRIVATE -DGRACC_ONLY
+    PRIVATE -DTR_MODE=${TR_MODE}
+    PRIVATE -DOPENARC_ARCH=$ENV{OPENARC_ARCH}
+)
+
+target_link_libraries(
+  test-acccomplextomag
+  ${GNURADIO_RUNTIME_LIBRARIES}
+  ${Boost_LIBRARIES}
+  gnuradio-openacc
+)
+
+IF(NOT ${TR_MODE} OR ${TR_MODE} MATCHES 0)
+
+IF($ENV{OPENARC_ARCH} MATCHES 0)
+target_link_libraries(test-acccomplextomag ${CUDA_LIBRARIES})
+ELSEIF($ENV{OPENARC_ARCH} MATCHES 1)
+target_link_libraries(test-acccomplextomag ${OpenCL_LIBRARY})
+ENDIF($ENV{OPENARC_ARCH} MATCHES 0)
+
+ELSEIF(${TR_MODE} MATCHES 3)
+
+target_compile_options(
+  test-acccomplextomag
+  PRIVATE -Wall -D_OPENCL -DCL_USE_DEPRECATED_OPENCL_1_2_APIS
+)
+target_link_libraries(test-acccomplextomag ${MCL_LIBRARIES} ${MCL_MISC_LIBRARIES} ${OpenCL_LIBRARY} -Wl,-rpath -Wl,$ENV{mclinstallroot}/lib)
+
+ELSEIF(${TR_MODE} MATCHES 1)
+
+target_compile_options(
+  test-acccomplextomag
+  PRIVATE -fopenmp
+)
+target_link_libraries(
+  test-acccomplextomag
+  -lgomp
+)
+
+ENDIF(NOT ${TR_MODE} OR ${TR_MODE} MATCHES 0)
+
+install(TARGETS test-acccomplextomag DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" RUNTIME)
+IF(NOT ${TR_MODE} OR ${TR_MODE} MATCHES 0 OR ${TR_MODE} MATCHES 3)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/openarc_kernel_accComplexToMag.${OUTPUTSUFFIX} DESTINATION "${CMAKE_INSTALL_PREFIX}/bin")
+ENDIF(NOT ${TR_MODE} OR ${TR_MODE} MATCHES 0 OR ${TR_MODE} MATCHES 3)
+
+
+#################################################################
+# Generate ASPEN model for acccomplextomag module using OpenARC #
+#################################################################
+#add_custom_target(accComplexToMagAspenGen ALL
+#    COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToMag_aspengen.bash -f=${CMAKE_CURRENT_SOURCE_DIR}/accComplexToMag_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/aspen_output_accComplexToMag/accComplexToMag.aspen ${CMAKE_CURRENT_SOURCE_DIR} && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/aspen_output_accComplexToMag
+#    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToMag_aspengen.bash ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToMag_kernel.c)
+#install(FILES ${CMAKE_CURRENT_BINARY_DIR}/accComplexToMag.aspen DESTINATION "${CMAKE_INSTALL_PREFIX}/bin") 
+
+#add_dependencies(accComplexToMagAspenGen accComplexToArgAspenGen)
 
 ########################################################################
 # Print summary

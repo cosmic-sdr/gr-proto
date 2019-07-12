@@ -29,6 +29,7 @@
 #include "qa_openacc.h"
 #include "qa_accLog.h"
 #include "qa_accComplexToArg.h"
+#include "qa_accComplexToMag.h"
 
 CppUnit::TestSuite *
 qa_openacc::suite()
@@ -36,6 +37,7 @@ qa_openacc::suite()
   CppUnit::TestSuite *s = new CppUnit::TestSuite("openacc");
   s->addTest(gr::openacc::qa_accLog::suite());
   s->addTest(gr::openacc::qa_accComplexToArg::suite());
+  s->addTest(gr::openacc::qa_accComplexToMag::suite());
 
   return s;
 }

@@ -19,5 +19,6 @@
 # Boston, MA 02110-1301, USA.
 install(FILES
     openacc_accLog.xml
-    openacc_accComplexToArg.xml DESTINATION share/gnuradio/grc/blocks
+    openacc_accComplexToArg.xml
+    openacc_accComplexToMag.xml DESTINATION share/gnuradio/grc/blocks
 )
