@@ -9,7 +9,10 @@
 
 %{
 #include "openacc/accLog.h"
+#include "openacc/accComplexToArg.h"
 %}
 
 %include "openacc/accLog.h"
 GR_SWIG_BLOCK_MAGIC2(openacc, accLog);
+%include "openacc/accComplexToArg.h"
+GR_SWIG_BLOCK_MAGIC2(openacc, accComplexToArg);

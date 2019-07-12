@@ -23,5 +23,6 @@
 ########################################################################
 install(FILES
     api.h
-    accLog.h DESTINATION include/openacc
+    accLog.h
+    accComplexToArg.h DESTINATION include/openacc
 )

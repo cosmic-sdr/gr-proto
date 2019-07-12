@@ -19,38 +19,28 @@
  */
 
 
-#ifndef INCLUDED_OPENACC_ACCLOG_H
-#define INCLUDED_OPENACC_ACCLOG_H
+#ifndef _QA_ACCCOMPLEXTOARG_H_
+#define _QA_ACCCOMPLEXTOARG_H_
 
-#include <openacc/api.h>
-#include <gnuradio/sync_block.h>
+#include <cppunit/extensions/HelperMacros.h>
+#include <cppunit/TestCase.h>
 
 namespace gr {
   namespace openacc {
 
-    /*!
-     * \brief <+description of block+>
-     * \ingroup openacc
-     *
-     */
-    class OPENACC_API accLog : virtual public gr::sync_block
+    class qa_accComplexToArg : public CppUnit::TestCase
     {
-     public:
-      typedef boost::shared_ptr<accLog> sptr;
+    public:
+      CPPUNIT_TEST_SUITE(qa_accComplexToArg);
+      CPPUNIT_TEST(t1);
+      CPPUNIT_TEST_SUITE_END();
 
-      /*!
-       * \brief Return a shared_ptr to a new instance of openacc::accLog.
-       *
-       * To avoid accidental use of raw pointers, openacc::accLog's
-       * constructor is in a private implementation
-       * class. openacc::accLog::make is the public interface for
-       * creating new instances.
-       */
-      static sptr make(int contextType, int deviceId, float nValue, float kValue);
+    private:
+      void t1();
     };
 
-  } // namespace openacc
-} // namespace gr
+  } /* namespace openacc */
+} /* namespace gr */
 
-#endif /* INCLUDED_OPENACC_ACCLOG_H */
+#endif /* _QA_ACCCOMPLEXTOARG_H_ */
 

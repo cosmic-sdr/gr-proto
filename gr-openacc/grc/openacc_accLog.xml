@@ -3,10 +3,10 @@
   <key>openacc_accLog</key>
   <category>[OPENACC]</category>
   <import>import openacc</import>
-  <make>openacc.accLog($deviceType, $deviceId, $nValue, $kValue)</make>
+  <make>openacc.accLog($contextType, $deviceId, $nValue, $kValue)</make>
   <param>
-    <name>Devicetype</name>
-    <key>deviceType</key>
+    <name>Contexttype</name>
+    <key>contextType</key>
     <type>int</type>
   </param>
   <param>

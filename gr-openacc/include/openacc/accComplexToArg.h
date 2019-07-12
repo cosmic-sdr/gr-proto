@@ -19,8 +19,8 @@
  */
 
 
-#ifndef INCLUDED_OPENACC_ACCLOG_H
-#define INCLUDED_OPENACC_ACCLOG_H
+#ifndef INCLUDED_OPENACC_ACCCOMPLEXTOARG_H
+#define INCLUDED_OPENACC_ACCCOMPLEXTOARG_H
 
 #include <openacc/api.h>
 #include <gnuradio/sync_block.h>
@@ -33,24 +33,24 @@ namespace gr {
      * \ingroup openacc
      *
      */
-    class OPENACC_API accLog : virtual public gr::sync_block
+    class OPENACC_API accComplexToArg : virtual public gr::sync_block
     {
      public:
-      typedef boost::shared_ptr<accLog> sptr;
+      typedef boost::shared_ptr<accComplexToArg> sptr;
 
       /*!
-       * \brief Return a shared_ptr to a new instance of openacc::accLog.
+       * \brief Return a shared_ptr to a new instance of openacc::accComplexToArg.
        *
-       * To avoid accidental use of raw pointers, openacc::accLog's
+       * To avoid accidental use of raw pointers, openacc::accComplexToArg's
        * constructor is in a private implementation
-       * class. openacc::accLog::make is the public interface for
+       * class. openacc::accComplexToArg::make is the public interface for
        * creating new instances.
        */
-      static sptr make(int contextType, int deviceId, float nValue, float kValue);
+      static sptr make(int contextType, int deviceId);
     };
 
   } // namespace openacc
 } // namespace gr
 
-#endif /* INCLUDED_OPENACC_ACCLOG_H */
+#endif /* INCLUDED_OPENACC_ACCCOMPLEXTOARG_H */
 
