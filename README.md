@@ -127,3 +127,23 @@ make -j install
 # Run GR-Companion
 gnuradio-companion
 ```
+
+** \[Optional\] Setting ThinLinc workspace **
+ThinLinc provides a virtual desktop environmet that is accessible via an HTML5 browser or native client. To use thinlinc for GNR devlopment on Xaviers:
+- (Optional) Install thinlinc client from https://www.cendio.com/thinlinc/download 
+- Either browse to https://login.excl.ornl.gov:300 or connect to host login.excl.ornl.gov on native client.
+- Enter your UCams/XCams credentials.
+- Thinlinc will start a new session or resume the existing one if there is any.
+
+You should now have a desktop on login. From here you may launch multiple terminal windows to ssh into Xavier[1-3]s with X forwarding enabled, using the following:
+```
+ssh -Y xavier1
+```
+Once connected via ssh, you may launch gnuradio-companion and the window will be displayed using the X server installed on login.excl.ornl.gov. To launch wifi_rx/tx examples:
+```
+gnuradio-companion $PROJECT_DIR/gr-ieee802-11/examples/wifi_rx.grc 
+gnuradio-companion $PROJECT_DIR/gr-ieee802-11/examples/wifi_tx.grc
+```
+
+
+
