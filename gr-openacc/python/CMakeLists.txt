@@ -46,3 +46,4 @@ GR_ADD_TEST(qa_accLog ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_accLog
 GR_ADD_TEST(qa_accComplexToArg ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_accComplexToArg.py)
 GR_ADD_TEST(qa_accComplexToMag ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_accComplexToMag.py)
 GR_ADD_TEST(qa_accComplexToMagPhase ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_accComplexToMagPhase.py)
+GR_ADD_TEST(qa_accMagPhaseToComplex ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_accMagPhaseToComplex.py)
