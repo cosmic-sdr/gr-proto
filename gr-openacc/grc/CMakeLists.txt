@@ -20,5 +20,6 @@
 install(FILES
     openacc_accLog.xml
     openacc_accComplexToArg.xml
-    openacc_accComplexToMag.xml DESTINATION share/gnuradio/grc/blocks
+    openacc_accComplexToMag.xml
+    openacc_accComplexToMagPhase.xml DESTINATION share/gnuradio/grc/blocks
 )

@@ -25,5 +25,6 @@ install(FILES
     api.h
     accLog.h
     accComplexToArg.h
-    accComplexToMag.h DESTINATION include/openacc
+    accComplexToMag.h
+    accComplexToMagPhase.h DESTINATION include/openacc
 )
