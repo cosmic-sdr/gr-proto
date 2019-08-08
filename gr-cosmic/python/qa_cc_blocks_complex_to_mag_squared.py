@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # 
-# Copyright 2019 Oak Ridge National Laboratory.
+# Copyright 2019 <+YOU OR YOUR COMPANY+>.
 # 
 # This is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -33,16 +33,7 @@ class qa_cc_blocks_complex_to_mag_squared (gr_unittest.TestCase):
 
     def test_001_t (self):
         # set up fg
-        src_data = (-3, 4, -5.5, 2, 3)
-        expected_result = (9, 16, 30.25, 4, 9)
-        src = blocks.vector_source_f(src_data)
-        sqr = cosmic.cc_blocks_complex_to_mag_squared()
-        dst = blocks.vector_sink_f()
-        self.tb.connect(src, sqr)
-        self.tb.connect(sqr, dst)
-        self.tb.run()
-        result_data = dst.data()
-        self.assertFloatTuplesAlmostEqual(expected_result, result_data, 6)
+        self.tb.run ()
         # check data
 
 

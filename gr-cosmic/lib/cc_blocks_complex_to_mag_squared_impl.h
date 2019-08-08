@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2019 Oak Ridge National Laboratory.
+ * Copyright 2019 <+YOU OR YOUR COMPANY+>.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,18 +29,16 @@ namespace gr {
     class cc_blocks_complex_to_mag_squared_impl : public cc_blocks_complex_to_mag_squared
     {
      private:
-	size_t d_vlen;	
+      size_t d_vlen;
+
      public:
       cc_blocks_complex_to_mag_squared_impl(size_t vlen);
       ~cc_blocks_complex_to_mag_squared_impl();
 
       // Where all the action really happens
-      void forecast (int noutput_items, gr_vector_int &ninput_items_required);
-
-      int general_work(int noutput_items,
-           gr_vector_int &ninput_items,
-           gr_vector_const_void_star &input_items,
-           gr_vector_void_star &output_items);
+      int work(int noutput_items,
+         gr_vector_const_void_star &input_items,
+         gr_vector_void_star &output_items);
     };
 
   } // namespace cosmic

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2019 Oak Ridge National Laboratory.
+ * Copyright 2019 <+YOU OR YOUR COMPANY+>.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
 #define INCLUDED_COSMIC_CC_BLOCKS_COMPLEX_TO_MAG_SQUARED_H
 
 #include <cosmic/api.h>
-#include <gnuradio/block.h>
+#include <gnuradio/sync_block.h>
 
 namespace gr {
   namespace cosmic {
@@ -33,7 +33,7 @@ namespace gr {
      * \ingroup cosmic
      *
      */
-    class COSMIC_API cc_blocks_complex_to_mag_squared : virtual public gr::block
+    class COSMIC_API cc_blocks_complex_to_mag_squared : virtual public gr::sync_block
     {
      public:
       typedef boost::shared_ptr<cc_blocks_complex_to_mag_squared> sptr;
@@ -46,7 +46,7 @@ namespace gr {
        * class. cosmic::cc_blocks_complex_to_mag_squared::make is the public interface for
        * creating new instances.
        */
-      static sptr make(size_t vlen=1);
+      static sptr make(size_t vlen);
     };
 
   } // namespace cosmic

@@ -25,10 +25,8 @@ include(GrPlatform) #define LIB_SUFFIX
 
 include_directories(${Boost_INCLUDE_DIR})
 link_directories(${Boost_LIBRARY_DIRS})
-
 list(APPEND cosmic_sources
-    cc_blocks_complex_to_mag_squared_impl.cc
-)
+    cc_blocks_complex_to_mag_squared_impl.cc )
 
 set(cosmic_sources "${cosmic_sources}" PARENT_SCOPE)
 if(NOT cosmic_sources)
@@ -58,12 +56,11 @@ GR_LIBRARY_FOO(gnuradio-cosmic RUNTIME_COMPONENT "cosmic_runtime" DEVEL_COMPONEN
 include(GrTest)
 
 include_directories(${CPPUNIT_INCLUDE_DIRS})
-
 list(APPEND test_cosmic_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/test_cosmic.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_cosmic.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_cc_blocks_complex_to_mag_squared.cc
-)
+    )
 
 add_executable(test-cosmic ${test_cosmic_sources})
 

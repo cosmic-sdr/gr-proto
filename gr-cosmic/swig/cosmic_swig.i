@@ -11,6 +11,5 @@
 #include "cosmic/cc_blocks_complex_to_mag_squared.h"
 %}
 
-
 %include "cosmic/cc_blocks_complex_to_mag_squared.h"
 GR_SWIG_BLOCK_MAGIC2(cosmic, cc_blocks_complex_to_mag_squared);

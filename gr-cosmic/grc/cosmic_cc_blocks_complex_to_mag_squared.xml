@@ -1,25 +1,24 @@
 <block>
-	<name>CC -- Complex to Mag^2</name>
-	<key>cc_blocks_complex_to_mag_squared</key>
-	<category>[COSMIC]</category>
-	<import>import cosmic</import>
-	<make>cosmic.cc_blocks_complex_to_mag_squared($vlen)</make>
-
-	<param>
-		<name>Vec Length</name>
-		<key>vlen</key>
-		<value>1</value>
-		<type>int</type>
-	</param>
-	<check>$vlen &gt; 0</check>
-	<sink>
-		<name>in</name>
-		<type>complex</type>
-		<vlen>$vlen</vlen>
-	</sink>
-	<source>
-		<name>out</name>
-		<type>float</type>
-		<vlen>$vlen</vlen>
-	</source>
+  <name>Cc blocks complex to mag squared</name>
+  <key>cosmic_cc_blocks_complex_to_mag_squared</key>
+  <category>[COSMIC]</category>
+  <import>import cosmic</import>
+  <make>cosmic.cc_blocks_complex_to_mag_squared($vlen)</make>
+  <param>
+    <name>Vec Length</name>
+    <key>vlen</key>
+    <value>1</value>
+    <type>int</type>
+  </param>
+  <check>$vlen &gt; 0</check>
+  <sink>
+    <name>in</name>
+    <type>complex</type>
+    <vlen>$vlen</vlen>
+  </sink>
+  <source>
+    <name>out</name>
+    <type>float</type>
+    <vlen>$vlen</vlen>
+  </source>
 </block>

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2019 Oak Ridge National Laboratory.
+ * Copyright 2019 <+YOU OR YOUR COMPANY+>.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,14 +40,13 @@ namespace gr {
      * The private constructor
      */
     cc_blocks_complex_to_mag_squared_impl::cc_blocks_complex_to_mag_squared_impl(size_t vlen)
-      : gr::block("cc_blocks_complex_to_mag_squared",
+      : gr::sync_block("cc_blocks_complex_to_mag_squared",
               gr::io_signature::make(1, 1, sizeof(gr_complex)*vlen),
-              gr::io_signature::make(1, 1, sizeof(float)*vlen)),
-	d_vlen(vlen)
+              gr::io_signature::make(1, 1, sizeof(float)*vlen)), d_vlen(vlen)
     {
-	const int alignment_multiple = volk_get_alignment() / sizeof(float);
-	set_alignment(std::max(1,alignment_multiple));
-    
+      const int alignment_multiple =
+      volk_get_alignment() / sizeof(float);
+      set_alignment(std::max(1,alignment_multiple));
     }
 
     /*
@@ -57,17 +56,10 @@ namespace gr {
     {
     }
 
-    void
-    cc_blocks_complex_to_mag_squared_impl::forecast (int noutput_items, gr_vector_int &ninput_items_required)
-    {
-      ninput_items_required[0] = noutput_items;
-    }
-
     int
-    cc_blocks_complex_to_mag_squared_impl::general_work (int noutput_items,
-                       gr_vector_int &ninput_items,
-                       gr_vector_const_void_star &input_items,
-                       gr_vector_void_star &output_items)
+    cc_blocks_complex_to_mag_squared_impl::work(int noutput_items,
+        gr_vector_const_void_star &input_items,
+        gr_vector_void_star &output_items)
     {
       const gr_complex *in = (const gr_complex *) input_items[0];
       float *out = (float *) output_items[0];
@@ -75,6 +67,7 @@ namespace gr {
 
       volk_32fc_magnitude_squared_32f(out, in, noi);
 
+      // Tell runtime system how many output items we produced.
       return noutput_items;
     }
 
