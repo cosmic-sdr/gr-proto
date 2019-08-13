@@ -23,7 +23,7 @@
 
 #include <openacc/accComplexToMagSquared.h>
 #include "GRACCBase.h"
-#include "accComplexToMag_kernel.h"
+#include "accComplexToMagSquared_kernel.h"
 
 namespace gr {
   namespace openacc {
