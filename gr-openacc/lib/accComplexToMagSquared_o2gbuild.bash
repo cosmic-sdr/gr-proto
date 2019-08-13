@@ -1,7 +1,8 @@
 #! /bin/bash
 
 inputSize1=8192
-benchname="accLog"
+benchname="accComplexToMagSquared"
+#inputSource="${benchname}_kernel.c fast_atan2f.c"
 inputSource="${benchname}_kernel.c"
 entryFunction="${benchname}_kernel"
 

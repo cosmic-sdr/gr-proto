@@ -32,6 +32,7 @@
 #include "qa_accComplexToMag.h"
 #include "qa_accComplexToMagPhase.h"
 #include "qa_accMagPhaseToComplex.h"
+#include "qa_accComplexToMagSquared.h"
 
 CppUnit::TestSuite *
 qa_openacc::suite()
@@ -42,6 +43,7 @@ qa_openacc::suite()
   s->addTest(gr::openacc::qa_accComplexToMag::suite());
   s->addTest(gr::openacc::qa_accComplexToMagPhase::suite());
   s->addTest(gr::openacc::qa_accMagPhaseToComplex::suite());
+  s->addTest(gr::openacc::qa_accComplexToMagSquared::suite());
 
   return s;
 }

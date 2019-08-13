@@ -78,6 +78,10 @@ add_custom_command(OUTPUT accMagPhaseToComplex_kernel.cpp openarc_kernel_accMagP
     COMMAND ${OpenARC_BIN_DIR}/openarc -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_accMagPhaseToComplex.txt ${CMAKE_CURRENT_SOURCE_DIR}/accMagPhaseToComplex_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accMagPhaseToComplex/accMagPhaseToComplex_kernel.cpp ${CMAKE_CURRENT_BINARY_DIR}/ && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accMagPhaseToComplex/openarc_kernel_accMagPhaseToComplex.${OUTPUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/ && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accMagPhaseToComplex
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/accMagPhaseToComplex_kernel.c)
 
+add_custom_command(OUTPUT accComplexToMagSquared_kernel.cpp openarc_kernel_accComplexToMagSquared.${OUTPUTSUFFIX}
+    COMMAND ${OpenARC_BIN_DIR}/openarc -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_accComplexToMagSquared.txt ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToMagSquared_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMagSquared/accComplexToMagSquared_kernel.cpp ${CMAKE_CURRENT_BINARY_DIR}/ && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMagSquared/openarc_kernel_accComplexToMagSquared.${OUTPUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/ && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMagSquared
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToMagSquared_kernel.c)
+
 ELSEIF(${TR_MODE} MATCHES 3)
     set(OPENARC_COMMANDS "-macro=TR_MODE=3 -targetArch=4")
     set(TROUTSUFFIX "cpp")
@@ -100,6 +104,10 @@ add_custom_command(OUTPUT accComplexToMagPhase_kernel.cpp
 add_custom_command(OUTPUT accMagPhaseToComplex_kernel.cpp 
     COMMAND ${OpenARC_BIN_DIR}/openarc ${OPENARC_COMMANDS} -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_accMagPhaseToComplex.txt ${CMAKE_CURRENT_SOURCE_DIR}/accMagPhaseToComplex_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accMagPhaseToComplex/accMagPhaseToComplex_kernel.${TROUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/accMagPhaseToComplex_kernel.cpp && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accMagPhaseToComplex/openarc_kernel_accMagPhaseToComplex.${OUTPUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/ && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accMagPhaseToComplex
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/accMagPhaseToComplex_kernel.c)
+
+add_custom_command(OUTPUT accComplexToMagSquared_kernel.cpp 
+    COMMAND ${OpenARC_BIN_DIR}/openarc ${OPENARC_COMMANDS} -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_accComplexToMagSquared.txt ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToMagSquared_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMagSquared/accComplexToMagSquared_kernel.${TROUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/accComplexToMagSquared_kernel.cpp && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMagSquared/openarc_kernel_accComplexToMagSquared.${OUTPUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/ && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMagSquared
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToMagSquared_kernel.c)
 
 ELSE(NOT ${TR_MODE} OR ${TR_MODE} MATCHES 0)
 
@@ -131,6 +139,10 @@ add_custom_command(OUTPUT accMagPhaseToComplex_kernel.cpp
     COMMAND ${OpenARC_BIN_DIR}/openarc ${OPENARC_COMMANDS} -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_accMagPhaseToComplex.txt ${CMAKE_CURRENT_SOURCE_DIR}/accMagPhaseToComplex_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accMagPhaseToComplex/accMagPhaseToComplex_kernel.${TROUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/accMagPhaseToComplex_kernel.cpp && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accMagPhaseToComplex
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/accMagPhaseToComplex_kernel.c)
 
+add_custom_command(OUTPUT accComplexToMagSquared_kernel.cpp 
+    COMMAND ${OpenARC_BIN_DIR}/openarc ${OPENARC_COMMANDS} -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_accComplexToMagSquared.txt ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToMagSquared_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMagSquared/accComplexToMagSquared_kernel.${TROUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/accComplexToMagSquared_kernel.cpp && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMagSquared
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToMagSquared_kernel.c)
+
 ENDIF(NOT ${TR_MODE} OR ${TR_MODE} MATCHES 0)
 
 
@@ -141,7 +153,8 @@ list(APPEND openacc_sources
     accComplexToArg_impl.cc
     accComplexToMag_impl.cc
     accComplexToMagPhase_impl.cc
-    accMagPhaseToComplex_impl.cc )
+    accMagPhaseToComplex_impl.cc
+    accComplexToMagSquared_impl.cc )
 
 list(APPEND openacc_sources
     accLog_kernel.cpp
@@ -149,6 +162,7 @@ list(APPEND openacc_sources
     accComplexToMag_kernel.cpp
     accComplexToMagPhase_kernel.cpp
     accMagPhaseToComplex_kernel.cpp
+    accComplexToMagSquared_kernel.cpp
 )
 
 set(openacc_sources "${openacc_sources}" PARENT_SCOPE)
@@ -213,6 +227,7 @@ list(APPEND test_openacc_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/test_openacc.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/fast_atan2f.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_openacc.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_accComplexToMagSquared.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_accMagPhaseToComplex.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_accComplexToMagPhase.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/qa_accComplexToMag.cc
@@ -226,6 +241,7 @@ list(APPEND test_openacc_sources
     ${CMAKE_CURRENT_BINARY_DIR}/accComplexToMag_kernel.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/accComplexToMagPhase_kernel.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/accMagPhaseToComplex_kernel.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/accComplexToMagSquared_kernel.cpp
 )
 
 
@@ -573,7 +589,6 @@ list(APPEND test_accmagphasetocomplex_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/test-accmagphasetocomplex.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/accMagPhaseToComplex_impl.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/GRACCBase.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/fast_atan2f.cc
     ${CMAKE_CURRENT_BINARY_DIR}/accMagPhaseToComplex_kernel.cpp
 )
 
@@ -637,6 +652,77 @@ ENDIF(NOT ${TR_MODE} OR ${TR_MODE} MATCHES 0 OR ${TR_MODE} MATCHES 3)
 #install(FILES ${CMAKE_CURRENT_BINARY_DIR}/accMagPhaseToComplex.aspen DESTINATION "${CMAKE_INSTALL_PREFIX}/bin") 
 
 #add_dependencies(accMagPhaseToComplexAspenGen accComplexToMagAspenGen)
+
+########################################################################
+# Build and register test-accComplexToMagSquared
+########################################################################
+list(APPEND test_acccomplextomagsquared_sources
+    ${CMAKE_CURRENT_SOURCE_DIR}/test-acccomplextomagsquared.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToMagSquared_impl.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/GRACCBase.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/accComplexToMagSquared_kernel.cpp
+)
+
+add_executable(test-acccomplextomagsquared ${test_acccomplextomagsquared_sources})
+
+target_compile_definitions(
+    test-acccomplextomagsquared
+    PRIVATE -DGRACC_ONLY
+    PRIVATE -DTR_MODE=${TR_MODE}
+    PRIVATE -DOPENARC_ARCH=$ENV{OPENARC_ARCH}
+)
+
+target_link_libraries(
+  test-acccomplextomagsquared
+  ${GNURADIO_RUNTIME_LIBRARIES}
+  ${Boost_LIBRARIES}
+  gnuradio-openacc
+)
+
+IF(NOT ${TR_MODE} OR ${TR_MODE} MATCHES 0)
+
+IF($ENV{OPENARC_ARCH} MATCHES 0)
+target_link_libraries(test-acccomplextomagsquared ${CUDA_LIBRARIES})
+ELSEIF($ENV{OPENARC_ARCH} MATCHES 1)
+target_link_libraries(test-acccomplextomagsquared ${OpenCL_LIBRARY})
+ENDIF($ENV{OPENARC_ARCH} MATCHES 0)
+
+ELSEIF(${TR_MODE} MATCHES 3)
+
+target_compile_options(
+  test-acccomplextomagsquared
+  PRIVATE -Wall -D_OPENCL -DCL_USE_DEPRECATED_OPENCL_1_2_APIS
+)
+target_link_libraries(test-acccomplextomagsquared ${MCL_LIBRARIES} ${MCL_MISC_LIBRARIES} ${OpenCL_LIBRARY} -Wl,-rpath -Wl,$ENV{mclinstallroot}/lib)
+
+ELSEIF(${TR_MODE} MATCHES 1)
+
+target_compile_options(
+  test-acccomplextomagsquared
+  PRIVATE -fopenmp
+)
+target_link_libraries(
+  test-acccomplextomagsquared
+  -lgomp
+)
+
+ENDIF(NOT ${TR_MODE} OR ${TR_MODE} MATCHES 0)
+
+install(TARGETS test-acccomplextomagsquared DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" RUNTIME)
+IF(NOT ${TR_MODE} OR ${TR_MODE} MATCHES 0 OR ${TR_MODE} MATCHES 3)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/openarc_kernel_accComplexToMagSquared.${OUTPUTSUFFIX} DESTINATION "${CMAKE_INSTALL_PREFIX}/bin")
+ENDIF(NOT ${TR_MODE} OR ${TR_MODE} MATCHES 0 OR ${TR_MODE} MATCHES 3)
+
+
+########################################################################
+# Generate ASPEN model for acccomplextomagsquared module using OpenARC #
+########################################################################
+#add_custom_target(accComplexToMagSquaredAspenGen ALL
+#    COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToMagSquared_aspengen.bash -f=${CMAKE_CURRENT_SOURCE_DIR}/accComplexToMagSquared_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/aspen_output_accComplexToMagSquared/accComplexToMagSquared.aspen ${CMAKE_CURRENT_SOURCE_DIR} && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/aspen_output_accComplexToMagSquared
+#    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToMagSquared_aspengen.bash ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToMagSquared_kernel.c)
+#install(FILES ${CMAKE_CURRENT_BINARY_DIR}/accComplexToMagSquared.aspen DESTINATION "${CMAKE_INSTALL_PREFIX}/bin") 
+
+#add_dependencies(accComplexToMagSquaredAspenGen accComplexToArgAspenGen)
 
 ########################################################################
 # Print summary

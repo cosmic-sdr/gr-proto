@@ -27,5 +27,6 @@ install(FILES
     accComplexToArg.h
     accComplexToMag.h
     accComplexToMagPhase.h
-    accMagPhaseToComplex.h DESTINATION include/openacc
+    accMagPhaseToComplex.h
+    accComplexToMagSquared.h DESTINATION include/openacc
 )

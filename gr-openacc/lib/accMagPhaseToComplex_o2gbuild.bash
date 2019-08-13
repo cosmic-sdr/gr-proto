@@ -5,7 +5,6 @@ benchname="accMagPhaseToComplex"
 #inputSource="${benchname}_kernel.c fast_atan2f.c"
 inputSource="${benchname}_kernel.c"
 entryFunction="${benchname}_kernel"
-usefastmath=0
 buildprogram=0
 
 function usage()
@@ -16,7 +15,6 @@ function usage()
     echo -e "\t-p=name --program=name (default: ${benchname})"
     echo -e "\t-i=data --input=data (default: ${inputSize1})"
     echo -e "\t-f=inputfile --file=inputfile (default: ${inputSource})"
-    echo -e "\t-u --usefastmath (default: no)"
     echo -e "\t-b --buildprogram (default: no)"
     echo ""
 }
@@ -38,9 +36,6 @@ while [ "$1" != "" ]; do
         -f | --file)
             inputSource=${VALUE}
             ;;
-        -u | --usefastmath)
-			usefastmath=1
-            ;;
         -b | --buildprogram)
 			buildprogram=1
             ;;
@@ -53,18 +48,14 @@ while [ "$1" != "" ]; do
     shift
 done
 
-if [ "$openarc" = "" ] || [ ! -d "${openarc}" ]; then
-    echo "Environment variable, openarc, should be set to the OpenARC home directory to use this script; exit"
+if [ "$openarcinstall" = "" ] || [ ! -d "${openarcinstall}" ]; then
+    echo "Environment variable, openarcinstall, should be set to the OpenARC install directory to use this script; exit"
     exit
 fi
 
-if [ ! -f "${openarc}/bin/openarc" ]; then
-    echo "OpenARC executable, ${openarc}/bin/openarc, does not exist; run \"build.sh bin\" in the OpenARC root directory to build the executable; exit"
+if [ ! -f "${openarcinstall}/bin/openarc" ]; then
+    echo "OpenARC executable, ${openarcinstall}/bin/openarc, does not exist; run \"build.sh bin\" in the OpenARC root directory to build the executable; exit"
     exit
 fi
 
-if [ $usefastmath -eq 0 ]; then
-	${openarc}/bin/openarc -addIncludePath=${openarc}/openarcrt -macro=__INPUTSIZE1__=${inputSize1} -gpuConfFile=openarcConf_${benchname}.txt ${inputSource}
-else
-	${openarc}/bin/openarc -addIncludePath=${openarc}/openarcrt -macro=__INPUTSIZE1__=${inputSize1},USE_FAST_ATAN2 -gpuConfFile=openarcConf_${benchname}.txt ${inputSource}
-fi
+${openarcinstall}/bin/openarc -addIncludePath=${openarcinstall}/openarcrt -macro=__INPUTSIZE1__=${inputSize1} -gpuConfFile=openarcConf_${benchname}.txt ${inputSource}

@@ -48,18 +48,18 @@ while [ "$1" != "" ]; do
     shift
 done
 
-if [ "$openarc" = "" ] || [ ! -d "${openarc}" ]; then
-    echo "Environment variable, openarc, should be set to the OpenARC home directory to use this script; exit"
+if [ "$openarcinstall" = "" ] || [ ! -d "${openarcinstall}" ]; then
+    echo "Environment variable, openarcinstall, should be set to the OpenARC install directory to use this script; exit"
     exit
 fi
 
-if [ ! -f "${openarc}/bin/openarc" ]; then
-    echo "OpenARC executable, ${openarc}/bin/openarc, does not exist; run \"build.sh bin\" in the OpenARC root directory to build the executable; exit"
+if [ ! -f "${openarcinstall}/bin/openarc" ]; then
+    echo "OpenARC executable, ${openarcinstall}/bin/openarc, does not exist; run \"build.sh bin\" in the OpenARC root directory to build the executable; exit"
     exit
 fi
 
 if [ $usefastmath -eq 0 ]; then
-	${openarc}/bin/openarc -addIncludePath=${openarc}/openarcrt -macro=__INPUTSIZE1__=${inputSize1} -gpuConfFile=openarcConf_${benchname}.txt ${inputSource}
+	${openarcinstall}/bin/openarc -addIncludePath=${openarcinstall}/openarcrt -macro=__INPUTSIZE1__=${inputSize1} -gpuConfFile=openarcConf_${benchname}.txt ${inputSource}
 else
-	${openarc}/bin/openarc -addIncludePath=${openarc}/openarcrt -macro=__INPUTSIZE1__=${inputSize1},USE_FAST_ATAN2 -gpuConfFile=openarcConf_${benchname}.txt ${inputSource}
+	${openarcinstall}/bin/openarc -addIncludePath=${openarcinstall}/openarcrt -macro=__INPUTSIZE1__=${inputSize1},USE_FAST_ATAN2 -gpuConfFile=openarcConf_${benchname}.txt ${inputSource}
 fi

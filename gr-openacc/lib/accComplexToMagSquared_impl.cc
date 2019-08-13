@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /* 
- * Copyright 2019 Seyong Lee.
+ * Copyright 2019 <+YOU OR YOUR COMPANY+>.
  * 
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,66 +23,67 @@
 #endif
 
 #include <gnuradio/io_signature.h>
-#include "accComplexToMag_impl.h"
+#include "accComplexToMagSquared_impl.h"
 #include <volk/volk.h>
 
 namespace gr {
   namespace openacc {
 
-    accComplexToMag::sptr
-    accComplexToMag::make(int contextType, int deviceId)
+    accComplexToMagSquared::sptr
+    accComplexToMagSquared::make(int contextType, int deviceId, size_t vlen)
     {
       return gnuradio::get_initial_sptr
-        (new accComplexToMag_impl(contextType, deviceId));
+        (new accComplexToMagSquared_impl(contextType, deviceId, vlen));
     }
 
     /*
      * The private constructor
      */
-    accComplexToMag_impl::accComplexToMag_impl(int contextType, int deviceId)
-      : gr::sync_block("accComplexToMag",
-              gr::io_signature::make(1, 1, sizeof(gr_complex)),
-              gr::io_signature::make(1, 1, sizeof(float))),
+    accComplexToMagSquared_impl::accComplexToMagSquared_impl(int contextType, int deviceId, size_t vlen)
+      : gr::sync_block("accComplexToMagSquared",
+              gr::io_signature::make(1, 1, sizeof(gr_complex)*vlen),
+              gr::io_signature::make(1, 1, sizeof(float)*vlen)), d_vlen(vlen),
         GRACCBase(contextType, deviceId)
     {
         const int alignment_multiple =
         volk_get_alignment() / sizeof(float);
         set_alignment(std::max(1,alignment_multiple));
-        accComplexToMag_init(deviceType, deviceId);
+        accComplexToMagSquared_init(deviceType, deviceId);
     }
 
     /*
      * Our virtual destructor.
      */
-    accComplexToMag_impl::~accComplexToMag_impl()
+    accComplexToMagSquared_impl::~accComplexToMagSquared_impl()
     {
     }
 
-    int accComplexToMag_impl::testCPU(int noutput_items,
+    int accComplexToMagSquared_impl::testCPU(int noutput_items,
             gr_vector_int &ninput_items,
             gr_vector_const_void_star &input_items,
             gr_vector_void_star &output_items)
         {   
         const gr_complex *in = (const gr_complex*)input_items[0];
         float *out = (float*)output_items[0];
+        int noi = noutput_items * d_vlen;
 /*
- *         for(int i = 0; i < noutput_items; i++) {
- *                     out[i] = sqrt(in[i].imag()*in[i].imag()+in[i].real()*in[i].real());
+ *         for(int i = 0; i < noi; i++) {
+ *                     out[i] = in[i].imag()*in[i].imag()+in[i].real()*in[i].real();
  *                             }
  *                             */
-        volk_32fc_magnitude_32f_u(out, in, noutput_items);
+        volk_32fc_magnitude_squared_32f(out, in, noi);
 
         return noutput_items;
-    }   
+    }
 
-    int accComplexToMag_impl::testOpenACC(int noutput_items,
+    int accComplexToMagSquared_impl::testOpenACC(int noutput_items,
             gr_vector_int &ninput_items,
             gr_vector_const_void_star &input_items,
             gr_vector_void_star &output_items) {
         return processOpenACC(noutput_items,ninput_items,input_items, output_items);
-    }   
+    }
 
-    int accComplexToMag_impl::processOpenACC(int noutput_items,
+    int accComplexToMagSquared_impl::processOpenACC(int noutput_items,
             gr_vector_int &ninput_items,
             gr_vector_const_void_star &input_items,
             gr_vector_void_star &output_items)
@@ -91,16 +92,16 @@ namespace gr {
         gr::thread::scoped_lock guard(d_mutex);
 
         // Do the work
-        accComplexToMag_kernel(noutput_items, (const FComplex *)input_items[0], (float *)output_items[0]);
+        accComplexToMagSquared_kernel(noutput_items*d_vlen, (const FComplex *)input_items[0], (float *)output_items[0]);
 
       // Tell runtime system how many output items we produced.
       return noutput_items;
-    }
+	}
 
     int
-    accComplexToMag_impl::work (int noutput_items,
-                       gr_vector_const_void_star &input_items,
-                       gr_vector_void_star &output_items)
+    accComplexToMagSquared_impl::work(int noutput_items,
+        gr_vector_const_void_star &input_items,
+        gr_vector_void_star &output_items)
     {
         int retVal = processOpenACC(noutput_items,d_ninput_items,input_items,output_items);
 

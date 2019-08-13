@@ -13,6 +13,7 @@
 #include "openacc/accComplexToMag.h"
 #include "openacc/accComplexToMagPhase.h"
 #include "openacc/accMagPhaseToComplex.h"
+#include "openacc/accComplexToMagSquared.h"
 %}
 
 %include "openacc/accLog.h"
@@ -25,3 +26,5 @@ GR_SWIG_BLOCK_MAGIC2(openacc, accComplexToMag);
 GR_SWIG_BLOCK_MAGIC2(openacc, accComplexToMagPhase);
 %include "openacc/accMagPhaseToComplex.h"
 GR_SWIG_BLOCK_MAGIC2(openacc, accMagPhaseToComplex);
+%include "openacc/accComplexToMagSquared.h"
+GR_SWIG_BLOCK_MAGIC2(openacc, accComplexToMagSquared);
