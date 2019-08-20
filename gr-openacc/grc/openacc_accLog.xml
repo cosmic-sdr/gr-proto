@@ -7,11 +7,13 @@
   <param>
     <name>Contexttype</name>
     <key>contextType</key>
+    <value>2</value>
     <type>int</type>
   </param>
   <param>
     <name>Deviceid</name>
     <key>deviceId</key>
+    <value>0</value>
     <type>int</type>
   </param>
   <param>
