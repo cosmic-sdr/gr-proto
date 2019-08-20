@@ -46,7 +46,7 @@
 bool verbose=true;
 int blockSizeUL=1048576;
 int largeBlockSize=64;
-int deviceType=ACCTYPE_ANY;
+int deviceType=ACCTYPE_DEFAULT;
 int platformId=0;
 int devId=0;
 int d_vlen = 1;
@@ -139,6 +139,9 @@ bool testComplexToMagSquared() {
 	break;
 	case ACCTYPE_ANY:
 		std::cout << "OpenACC Context: ALL" << std::endl;
+	break;
+	case ACCTYPE_DEFAULT:
+		std::cout << "OpenACC Context: Default" << std::endl;
 	break;
 	}
 
