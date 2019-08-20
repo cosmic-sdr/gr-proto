@@ -59,7 +59,7 @@ bool testComplexToArg() {
 
     gr::openacc::accComplexToArg_impl *test=NULL;
     try {
-        test = new gr::openacc::accComplexToArg_impl(deviceType,devId);
+        test = new gr::openacc::accComplexToArg_impl(deviceType,devId, d_vlen);
     }
     catch (...) {
         std::cout << "ERROR: error setting up OpenACC environment." << std::endl;

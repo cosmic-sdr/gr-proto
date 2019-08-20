@@ -29,19 +29,19 @@ namespace gr {
   namespace openacc {
 
     accLog::sptr
-    accLog::make(int contextType, int deviceId, float nValue, float kValue)
+    accLog::make(int contextType, int deviceId, float nValue, float kValue, size_t vlen)
     {
       return gnuradio::get_initial_sptr
-        (new accLog_impl(contextType, deviceId, nValue, kValue));
+        (new accLog_impl(contextType, deviceId, nValue, kValue, vlen));
     }
 
     /*
      * The private constructor
      */
-    accLog_impl::accLog_impl(int contextType, int deviceId, float nValue, float kValue)
+    accLog_impl::accLog_impl(int contextType, int deviceId, float nValue, float kValue, size_t vlen)
       : gr::sync_block("accLog",
-              gr::io_signature::make(1, 1, sizeof(float)),
-              gr::io_signature::make(1, 1, sizeof(float))),
+              gr::io_signature::make(1, 1, sizeof(float)*vlen),
+              gr::io_signature::make(1, 1, sizeof(float)*vlen)), d_vlen(vlen),
         GRACCBase(contextType, deviceId)
     {
         accLog_init(deviceType, deviceId);
@@ -64,8 +64,9 @@ namespace gr {
 
         const float *in1 = (const float *) input_items[0];
         float *out = (float *) output_items[0];
+        int noi = noutput_items * d_vlen;
 
-        for (int i=0;i<noutput_items;i++) {
+        for (int i=0;i<noi;i++) {
             out[i] = n_val * log10(in1[i]) + k_val;
         }
 
@@ -88,7 +89,7 @@ namespace gr {
         gr::thread::scoped_lock guard(d_mutex);
 
         // Do the work
-        accLog_kernel(noutput_items, n_val, k_val, (const float *)input_items[0], (float *)output_items[0]);
+        accLog_kernel(noutput_items*d_vlen, n_val, k_val, (const float *)input_items[0], (float *)output_items[0]);
 
       // Tell runtime system how many output items we produced.
       return noutput_items;

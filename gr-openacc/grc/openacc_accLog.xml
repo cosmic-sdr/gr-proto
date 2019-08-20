@@ -26,6 +26,13 @@
     <key>kValue</key>
     <type>float</type>
   </param>
+  <param>
+    <name>Vector length</name>
+    <key>vlen</key>
+    <value>1</value>
+    <type>int</type>
+  </param>
+  <check>$vlen &gt; 0</check>
   <sink>
     <name>in</name>
     <type>float</type>

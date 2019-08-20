@@ -101,7 +101,7 @@ bool testMultiplyConst() {
 	std::cout << "----------------------------------------------------------" << std::endl;
 
 	gr::openacc::accLog_impl *testLog=NULL;
-	testLog = new gr::openacc::accLog_impl(deviceType,deviceId,20.0,0);
+	testLog = new gr::openacc::accLog_impl(deviceType,deviceId,20.0,0, d_vlen);
 
 	numItems = largeBlockSize;
 

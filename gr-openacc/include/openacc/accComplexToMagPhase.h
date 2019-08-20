@@ -46,7 +46,7 @@ namespace gr {
        * class. openacc::accComplexToMagPhase::make is the public interface for
        * creating new instances.
        */
-      static sptr make(int contextType, int deviceId);
+      static sptr make(int contextType, int deviceId, size_t vlen);
     };
 
   } // namespace openacc

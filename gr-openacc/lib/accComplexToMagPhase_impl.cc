@@ -31,19 +31,19 @@ namespace gr {
   namespace openacc {
 
     accComplexToMagPhase::sptr
-    accComplexToMagPhase::make(int contextType, int deviceId)
+    accComplexToMagPhase::make(int contextType, int deviceId, size_t vlen)
     {
       return gnuradio::get_initial_sptr
-        (new accComplexToMagPhase_impl(contextType, deviceId));
+        (new accComplexToMagPhase_impl(contextType, deviceId, vlen));
     }
 
     /*
      * The private constructor
      */
-    accComplexToMagPhase_impl::accComplexToMagPhase_impl(int contextType, int deviceId)
+    accComplexToMagPhase_impl::accComplexToMagPhase_impl(int contextType, int deviceId, size_t vlen)
       : gr::sync_block("accComplexToMagPhase",
-              gr::io_signature::make(1, 1, sizeof(gr_complex)),
-              gr::io_signature::make(2, 2, sizeof(float))),
+              gr::io_signature::make(1, 1, sizeof(gr_complex)*vlen),
+              gr::io_signature::make(2, 2, sizeof(float)*vlen)), d_vlen(vlen),
         GRACCBase(contextType, deviceId)
     {
         accComplexToMagPhase_init(deviceType, deviceId);
@@ -64,7 +64,6 @@ namespace gr {
         const gr_complex *in = (const gr_complex *) input_items[0];
         float *out0 = (float *) output_items[0];
         float* out1 = (float *) output_items[1];
-        int d_vlen = 1;
         int noi = noutput_items * d_vlen;
 
         volk_32fc_magnitude_32f_u(out0, in, noi);
@@ -94,7 +93,7 @@ namespace gr {
         gr::thread::scoped_lock guard(d_mutex);
 
         // Do the work
-        accComplexToMagPhase_kernel(noutput_items, (const FComplex *)input_items[0], (float *)output_items[0], (float *)output_items[1]);
+        accComplexToMagPhase_kernel(noutput_items*d_vlen, (const FComplex *)input_items[0], (float *)output_items[0], (float *)output_items[1]);
 
       // Tell runtime system how many output items we produced.
       return noutput_items;

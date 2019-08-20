@@ -30,19 +30,19 @@ namespace gr {
   namespace openacc {
 
     accComplexToMag::sptr
-    accComplexToMag::make(int contextType, int deviceId)
+    accComplexToMag::make(int contextType, int deviceId, size_t vlen)
     {
       return gnuradio::get_initial_sptr
-        (new accComplexToMag_impl(contextType, deviceId));
+        (new accComplexToMag_impl(contextType, deviceId, vlen));
     }
 
     /*
      * The private constructor
      */
-    accComplexToMag_impl::accComplexToMag_impl(int contextType, int deviceId)
+    accComplexToMag_impl::accComplexToMag_impl(int contextType, int deviceId, size_t vlen)
       : gr::sync_block("accComplexToMag",
-              gr::io_signature::make(1, 1, sizeof(gr_complex)),
-              gr::io_signature::make(1, 1, sizeof(float))),
+              gr::io_signature::make(1, 1, sizeof(gr_complex)*vlen),
+              gr::io_signature::make(1, 1, sizeof(float)*vlen)), d_vlen(vlen),
         GRACCBase(contextType, deviceId)
     {
         const int alignment_multiple =
@@ -65,12 +65,13 @@ namespace gr {
         {   
         const gr_complex *in = (const gr_complex*)input_items[0];
         float *out = (float*)output_items[0];
+        int noi = noutput_items * d_vlen;
 /*
- *         for(int i = 0; i < noutput_items; i++) {
+ *         for(int i = 0; i < noi; i++) {
  *                     out[i] = sqrt(in[i].imag()*in[i].imag()+in[i].real()*in[i].real());
  *                             }
  *                             */
-        volk_32fc_magnitude_32f_u(out, in, noutput_items);
+        volk_32fc_magnitude_32f_u(out, in, noi);
 
         return noutput_items;
     }   
@@ -91,7 +92,7 @@ namespace gr {
         gr::thread::scoped_lock guard(d_mutex);
 
         // Do the work
-        accComplexToMag_kernel(noutput_items, (const FComplex *)input_items[0], (float *)output_items[0]);
+        accComplexToMag_kernel(noutput_items*d_vlen, (const FComplex *)input_items[0], (float *)output_items[0]);
 
       // Tell runtime system how many output items we produced.
       return noutput_items;

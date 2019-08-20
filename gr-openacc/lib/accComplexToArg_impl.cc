@@ -29,19 +29,19 @@ namespace gr {
   namespace openacc {
 
     accComplexToArg::sptr
-    accComplexToArg::make(int contextType, int deviceId)
+    accComplexToArg::make(int contextType, int deviceId, size_t vlen)
     {
       return gnuradio::get_initial_sptr
-        (new accComplexToArg_impl(contextType, deviceId));
+        (new accComplexToArg_impl(contextType, deviceId, vlen));
     }
 
     /*
      * The private constructor
      */
-    accComplexToArg_impl::accComplexToArg_impl(int contextType, int deviceId)
+    accComplexToArg_impl::accComplexToArg_impl(int contextType, int deviceId, size_t vlen)
       : gr::sync_block("accComplexToArg",
-              gr::io_signature::make(1, 1, sizeof(gr_complex)),
-              gr::io_signature::make(1, 1, sizeof(float))),
+              gr::io_signature::make(1, 1, sizeof(gr_complex)*vlen),
+              gr::io_signature::make(1, 1, sizeof(float)*vlen)), d_vlen(vlen),
         GRACCBase(contextType, deviceId)
     {
         accComplexToArg_init(deviceType, deviceId);
@@ -61,8 +61,9 @@ namespace gr {
         {   
         gr_complex *in = (gr_complex*)input_items[0];
         float *out = (float*)output_items[0];
+		int noi = noutput_items * d_vlen;
 
-        for(int i = 0; i < noutput_items; i++) {
+        for(int i = 0; i < noi; i++) {
             out[i] = fast_atan2f(in[i].imag(),in[i].real());
         }   
 
@@ -73,7 +74,7 @@ namespace gr {
             gr_vector_int &ninput_items,
             gr_vector_const_void_star &input_items,
             gr_vector_void_star &output_items) {
-        return processOpenACC(noutput_items,ninput_items,input_items, output_items);
+        return processOpenACC(noutput_items*d_vlen,ninput_items,input_items, output_items);
     }   
 
     int accComplexToArg_impl::processOpenACC(int noutput_items,

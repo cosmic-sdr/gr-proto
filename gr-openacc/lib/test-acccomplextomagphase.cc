@@ -59,7 +59,7 @@ bool testComplexToMagPhase() {
 
 	gr::openacc::accComplexToMagPhase_impl *test=NULL;
 	try {
-		test = new gr::openacc::accComplexToMagPhase_impl(deviceType,devId);
+		test = new gr::openacc::accComplexToMagPhase_impl(deviceType,devId, d_vlen);
 	}
 	catch (...) {
 		std::cout << "ERROR: error setting up OpenACC environment." << std::endl;

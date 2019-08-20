@@ -46,7 +46,7 @@ namespace gr {
        * class. openacc::accLog::make is the public interface for
        * creating new instances.
        */
-      static sptr make(int contextType, int deviceId, float nValue, float kValue);
+      static sptr make(int contextType, int deviceId, float nValue, float kValue, size_t vlen);
     };
 
   } // namespace openacc

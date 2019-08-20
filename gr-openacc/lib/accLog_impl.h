@@ -35,9 +35,10 @@ namespace gr {
       float n_val;
       float k_val;
       gr_vector_int d_ninput_items;
+      size_t d_vlen;
 
      public:
-      accLog_impl(int contextType, int deviceId, float nValue, float kValue);
+      accLog_impl(int contextType, int deviceId, float nValue, float kValue, size_t vlen);
       ~accLog_impl();
 
       int testCPU(int noutput_items,

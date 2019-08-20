@@ -33,9 +33,10 @@ namespace gr {
      private:
       // Nothing to declare in this block.
       gr_vector_int d_ninput_items;
+      size_t d_vlen;
 
      public:
-      accComplexToMag_impl(int contextType, int deviceId);
+      accComplexToMag_impl(int contextType, int deviceId, size_t vlen);
       ~accComplexToMag_impl();
 
       int testCPU(int noutput_items,

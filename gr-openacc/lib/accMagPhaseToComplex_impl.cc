@@ -29,19 +29,19 @@ namespace gr {
   namespace openacc {
 
     accMagPhaseToComplex::sptr
-    accMagPhaseToComplex::make(int contextType, int deviceId)
+    accMagPhaseToComplex::make(int contextType, int deviceId, size_t vlen)
     {
       return gnuradio::get_initial_sptr
-        (new accMagPhaseToComplex_impl(contextType, deviceId));
+        (new accMagPhaseToComplex_impl(contextType, deviceId, vlen));
     }
 
     /*
      * The private constructor
      */
-    accMagPhaseToComplex_impl::accMagPhaseToComplex_impl(int contextType, int deviceId)
+    accMagPhaseToComplex_impl::accMagPhaseToComplex_impl(int contextType, int deviceId, size_t vlen)
       : gr::sync_block("accMagPhaseToComplex",
-              gr::io_signature::make(2, 2, sizeof(float)),
-              gr::io_signature::make(1, 1, sizeof(gr_complex))),
+              gr::io_signature::make(2, 2, sizeof(float)*vlen),
+              gr::io_signature::make(1, 1, sizeof(gr_complex)*vlen)), d_vlen(vlen),
         GRACCBase(contextType, deviceId)
     {
         accMagPhaseToComplex_init(deviceType, deviceId);
@@ -62,10 +62,9 @@ namespace gr {
         float        *mag = (float *)input_items[0];
         float        *phase = (float *)input_items[1];
         gr_complex *out = (gr_complex *) output_items[0];
+        int noi = noutput_items * d_vlen;
 
-        int d_vlen = 1;
-
-        for (size_t j = 0; j < noutput_items*d_vlen; j++)
+        for (size_t j = 0; j < noi; j++)
           out[j] = gr_complex (mag[j]*cos(phase[j]),mag[j]*sin(phase[j]));
 
         return noutput_items;
@@ -86,7 +85,7 @@ namespace gr {
         // Protect context from switching
         gr::thread::scoped_lock guard(d_mutex);
 
-        accMagPhaseToComplex_kernel(noutput_items, (const float *)input_items[0], (const float *)input_items[1], (FComplex *)output_items[0]);
+        accMagPhaseToComplex_kernel(noutput_items*d_vlen, (const float *)input_items[0], (const float *)input_items[1], (FComplex *)output_items[0]);
         // Do the work
 
       // Tell runtime system how many output items we produced.
