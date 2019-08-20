@@ -3,11 +3,11 @@
   <key>openacc_accComplexToMag</key>
   <category>[OPENACC]</category>
   <import>import openacc</import>
-  <make>openacc.accComplexToMag($contextType, $deviceId)</make>
+  <make>openacc.accComplexToMag($contextType, $deviceId, $vlen)</make>
   <param>
     <name>Contexttype</name>
     <key>contextType</key>
-    <value>2</value>
+    <value>1</value>
     <type>int</type>
   </param>
   <param>
