@@ -36,9 +36,11 @@
   <sink>
     <name>in</name>
     <type>float</type>
+	<vlen>$vlen</vlen>
   </sink>
   <source>
     <name>out</name>
     <type>float</type>
+	<vlen>$vlen</vlen>
   </source>
 </block>

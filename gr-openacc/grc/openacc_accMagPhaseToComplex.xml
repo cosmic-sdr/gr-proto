@@ -26,10 +26,12 @@
   <sink>
     <name>in</name>
     <type>float</type>
+	<vlen>$vlen</vlen>
     <nports>2</nports>
   </sink>
   <source>
     <name>out</name>
     <type>complex</type>
+	<vlen>$vlen</vlen>
   </source>
 </block>
