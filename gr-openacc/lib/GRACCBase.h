@@ -44,11 +44,14 @@ namespace gr {
 namespace openacc {
 
 extern bool CLPRINT_NITEMS;  // Enable this in GRACCBase.cpp to print the number of items passed to the work functions if debug is enabled for the module
+extern int gracc_counter;
 
 class OPENACC_API GRACCBase {
 protected:
+	int threadID;
      int dataType;
 	 size_t dataSize;
+	int acc_init_done;
 
     int contextType;
     std::string platformName="";
@@ -56,10 +59,12 @@ protected:
     boost::mutex d_mutex;
 
 	acc_device_t deviceType;
+	int deviceId;
 
 	virtual void InitOpenACC(int devType, int devId);
 
 public:
+	//static int gracc_counter;
 	GRACCBase(int devType); // selects First of specified type
 	GRACCBase(int devType, int devId);
 	GRACCBase(int idataType, size_t dsize, int devType, int devId);

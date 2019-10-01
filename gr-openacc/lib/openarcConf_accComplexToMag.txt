@@ -822,7 +822,7 @@
 showInternalAnnotations=0
 #skipKernelLoopBoundChecking
 SetAccEntryFunction=accComplexToMag_kernel
-SetOutputKernelFileNameBase=openarc_kernel_accComplexToMag
+#SetOutputKernelFileNameBase=openarc_kernel_accComplexToMag
 #addIncludePath=__openarcrt__
 #macro=_N_=__inputSize__
 defaultNumWorkers=64

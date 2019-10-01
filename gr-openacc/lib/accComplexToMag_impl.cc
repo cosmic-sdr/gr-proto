@@ -48,7 +48,10 @@ namespace gr {
         const int alignment_multiple =
         volk_get_alignment() / sizeof(float);
         set_alignment(std::max(1,alignment_multiple));
-        accComplexToMag_init(deviceType, deviceId);
+		//if( gracc_counter <= 1 ) {
+        	accComplexToMag_init(deviceType, deviceId);
+		//}
+		acc_init_done = 1;
     }
 
     /*
@@ -90,6 +93,10 @@ namespace gr {
     {
         // Protect context from switching
         gr::thread::scoped_lock guard(d_mutex);
+		if( acc_init_done == 0 ) {
+        	accComplexToMag_init(deviceType, deviceId);
+			acc_init_done = 1;
+		}
 
         // Do the work
         accComplexToMag_kernel(noutput_items*d_vlen, (const FComplex *)input_items[0], (float *)output_items[0]);

@@ -46,7 +46,10 @@ namespace gr {
               gr::io_signature::make(2, 2, sizeof(float)*vlen)), d_vlen(vlen),
         GRACCBase(contextType, deviceId)
     {
-        accComplexToMagPhase_init(deviceType, deviceId);
+		//if( gracc_counter <= 1 ) {
+        	accComplexToMagPhase_init(deviceType, deviceId);
+		//}
+		acc_init_done = 1;
     }
 
     /*
@@ -91,6 +94,10 @@ namespace gr {
     {
         // Protect context from switching
         gr::thread::scoped_lock guard(d_mutex);
+		if( acc_init_done == 0 ) {
+        	accComplexToMagPhase_init(deviceType, deviceId);
+			acc_init_done = 1;
+		}
 
         // Do the work
         accComplexToMagPhase_kernel(noutput_items*d_vlen, (const FComplex *)input_items[0], (float *)output_items[0], (float *)output_items[1]);
