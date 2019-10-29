@@ -3,8 +3,8 @@
 
 #include "acc_helper.h"
 
-void accComplexToMagPhase_init(acc_device_t deviceType, int devId);
+void accComplexToMagPhase_init(acc_device_t deviceType, int devId, int threadID);
 
-void accComplexToMagPhase_kernel(int noutput_items, const FComplex *in, float *out0, float *out1);
+void accComplexToMagPhase_kernel(int noutput_items, const FComplex *in, float *out0, float *out1, int threadID);
 
 #endif

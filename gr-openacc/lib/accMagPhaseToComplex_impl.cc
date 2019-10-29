@@ -45,7 +45,7 @@ namespace gr {
         GRACCBase(contextType, deviceId)
     {
 		//if( gracc_counter <= 1 ) {
-        	accMagPhaseToComplex_init(deviceType, deviceId);
+        	accMagPhaseToComplex_init(deviceType, deviceId, threadID);
 		//}
 		acc_init_done = 1;
     }
@@ -88,11 +88,11 @@ namespace gr {
         // Protect context from switching
         gr::thread::scoped_lock guard(d_mutex);
 		if( acc_init_done == 0 ) {
-        	accMagPhaseToComplex_init(deviceType, deviceId);
+        	accMagPhaseToComplex_init(deviceType, deviceId, threadID);
 			acc_init_done = 1;
 		}
 
-        accMagPhaseToComplex_kernel(noutput_items*d_vlen, (const float *)input_items[0], (const float *)input_items[1], (FComplex *)output_items[0]);
+        accMagPhaseToComplex_kernel(noutput_items*d_vlen, (const float *)input_items[0], (const float *)input_items[1], (FComplex *)output_items[0], threadID);
         // Do the work
 
       // Tell runtime system how many output items we produced.

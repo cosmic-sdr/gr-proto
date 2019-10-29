@@ -45,7 +45,7 @@ namespace gr {
         GRACCBase(contextType, deviceId)
     {
 		//if( gracc_counter <= 1 ) {
-        	accLog_init(deviceType, deviceId);
+        	accLog_init(deviceType, deviceId, threadID);
 		//}
 		acc_init_done = 1;
         n_val = nValue;
@@ -91,12 +91,12 @@ namespace gr {
         // Protect context from switching
         gr::thread::scoped_lock guard(d_mutex);
 		if( acc_init_done == 0 ) {
-        	accLog_init(deviceType, deviceId);
+        	accLog_init(deviceType, deviceId, threadID);
 			acc_init_done = 1;
 		}
 
         // Do the work
-        accLog_kernel(noutput_items*d_vlen, n_val, k_val, (const float *)input_items[0], (float *)output_items[0]);
+        accLog_kernel(noutput_items*d_vlen, n_val, k_val, (const float *)input_items[0], (float *)output_items[0], threadID);
 
       // Tell runtime system how many output items we produced.
       return noutput_items;

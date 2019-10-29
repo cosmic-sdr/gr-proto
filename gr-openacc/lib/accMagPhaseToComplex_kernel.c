@@ -2,14 +2,14 @@
 
 #include "math.h"
 
-void accMagPhaseToComplex_init(acc_device_t deviceType, int devId) {
+void accMagPhaseToComplex_init(acc_device_t deviceType, int devId, int threadID) {
 #if !defined(TR_MODE) || TR_MODE == 0 || TR_MODE == 3
     acc_init(deviceType);
 #endif
 }
 
 
-void accMagPhaseToComplex_kernel(int noutput_items, const float *a, const float *b, FComplex *c) {
+void accMagPhaseToComplex_kernel(int noutput_items, const float *a, const float *b, FComplex *c, int threadID) {
 	int i;
 #ifdef GEN_ASPEN
 #pragma aspen  declare param(noutput_items:__INPUTSIZE1__)

@@ -3,8 +3,8 @@
 
 #include "acc_helper.h"
 
-void accComplexToMag_init(acc_device_t deviceType, int devId);
+void accComplexToMag_init(acc_device_t deviceType, int devId, int threadID);
 
-void accComplexToMag_kernel(int noutput_items, const FComplex *in, float *out);
+void accComplexToMag_kernel(int noutput_items, const FComplex *in, float *out, int threadID);
 
 #endif

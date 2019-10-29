@@ -822,6 +822,7 @@
 showInternalAnnotations=0
 #skipKernelLoopBoundChecking
 SetAccEntryFunction=accLog_kernel
+SetLogicalThreadID=threadID
 #SetOutputKernelFileNameBase=openarc_kernel_accLog
 #addIncludePath=__openarcrt__
 #macro=_N_=__inputSize__

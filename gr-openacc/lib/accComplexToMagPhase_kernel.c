@@ -5,13 +5,13 @@
 #include "fast_atan2f.c"
 #endif
 
-void accComplexToMagPhase_init(acc_device_t deviceType, int devId) {
+void accComplexToMagPhase_init(acc_device_t deviceType, int devId, int threadID) {
 #if !defined(TR_MODE) || TR_MODE == 0 || TR_MODE == 3
     acc_init(deviceType);
 #endif
 }
 
-void accComplexToMagPhase_kernel(int noutput_items, const FComplex *in, float *out0, float *out1) {
+void accComplexToMagPhase_kernel(int noutput_items, const FComplex *in, float *out0, float *out1, int threadID) {
 	int i;
 #ifdef GEN_ASPEN
 #pragma aspen  declare param(noutput_items:__INPUTSIZE1__)

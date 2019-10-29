@@ -822,6 +822,7 @@
 showInternalAnnotations=0
 #skipKernelLoopBoundChecking
 SetAccEntryFunction=accComplexToArg_kernel
+SetLogicalThreadID=threadID
 #SetOutputKernelFileNameBase=openarc_kernel_accComplexToArg
 #addIncludePath=__openarcrt__
 #macro=_N_=__inputSize__

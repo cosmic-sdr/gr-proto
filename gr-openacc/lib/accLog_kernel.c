@@ -3,7 +3,7 @@
 #include "stdio.h"
 #endif
 
-void accLog_init(acc_device_t deviceType, int devId) {
+void accLog_init(acc_device_t deviceType, int devId, int threadID) {
 #ifdef DEBUG_ON
     switch(deviceType) {
     case acc_device_gpu:
@@ -29,7 +29,7 @@ void accLog_init(acc_device_t deviceType, int devId) {
 }
 
 
-void accLog_kernel( int noutput_items, float n_val, float k_val, const float * in1, float * out ) {
+void accLog_kernel( int noutput_items, float n_val, float k_val, const float * in1, float * out , int threadID) {
 	int i;
 #ifdef GEN_ASPEN
 #pragma aspen  declare param(noutput_items:__INPUTSIZE1__)

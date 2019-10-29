@@ -5,13 +5,13 @@
 #include "fast_atan2f.c"
 #endif
 
-void accComplexToArg_init(acc_device_t deviceType, int devId) {
+void accComplexToArg_init(acc_device_t deviceType, int devId, int threadID) {
 #if !defined(TR_MODE) || TR_MODE == 0 || TR_MODE == 3
     acc_init(deviceType);
 #endif
 }
 
-void accComplexToArg_kernel(int noutput_items, const FComplex *in, float *out) {
+void accComplexToArg_kernel(int noutput_items, const FComplex *in, float *out, int threadID) {
 	int i;
 #ifdef GEN_ASPEN
 #pragma aspen  declare param(noutput_items:__INPUTSIZE1__)

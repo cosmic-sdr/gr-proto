@@ -822,6 +822,7 @@
 showInternalAnnotations=0
 #skipKernelLoopBoundChecking
 SetAccEntryFunction=accComplexToMagSquared_kernel
+SetLogicalThreadID=threadID
 #SetOutputKernelFileNameBase=openarc_kernel_accComplexToMagSquared
 #addIncludePath=__openarcrt__
 #macro=_N_=__inputSize__
