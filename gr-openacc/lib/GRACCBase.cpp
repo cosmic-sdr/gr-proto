@@ -19,8 +19,8 @@ int gracc_counter = 0;
 
 void GRACCBase::InitOpenACC(int devType, int devId) {
 	threadID = gracc_counter++;
-	std::cout << "gracc_counter = " << gracc_counter << std::endl;
-	std::cout << "local thead ID = " << threadID << std::endl;
+	//std::cout << "gracc_counter = " << gracc_counter << std::endl;
+	std::cout << "local thread ID = " << threadID << std::endl;
 	acc_init_done = 0;
 	deviceId = devId;
 	switch(devType) {
