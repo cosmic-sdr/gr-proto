@@ -821,7 +821,8 @@
 #SkipGPUTranslation=N
 showInternalAnnotations=0
 #skipKernelLoopBoundChecking
-SetAccEntryFunction=accComplexToMag_kernel
+#SetAccEntryFunction=accComplexToMag_kernel
+SetAccEntryFunction=accComplexToMag_deviceData_alloc
 SetLogicalThreadID=threadID
 #SetOutputKernelFileNameBase=openarc_kernel_accComplexToMag
 #addIncludePath=__openarcrt__

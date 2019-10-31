@@ -5,6 +5,10 @@
 
 void accComplexToMag_init(acc_device_t deviceType, int devId, int threadID);
 
+void accComplexToMag_deviceData_alloc(int noutput_items, const FComplex *in, float *out, int threadID);
+
+void accComplexToMag_deviceData_free(int noutput_items, const FComplex *in, float *out, int threadID);
+
 void accComplexToMag_kernel(int noutput_items, const FComplex *in, float *out, int threadID);
 
 #endif

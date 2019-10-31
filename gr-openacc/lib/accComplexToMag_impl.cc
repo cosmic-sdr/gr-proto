@@ -51,7 +51,7 @@ namespace gr {
 		//if( gracc_counter <= 1 ) {
         	accComplexToMag_init(deviceType, deviceId, threadID);
 		//}
-		acc_init_done = 1;
+		//acc_init_done = 1;
     }
 
     /*
@@ -94,7 +94,8 @@ namespace gr {
         // Protect context from switching
         gr::thread::scoped_lock guard(d_mutex);
 		if( acc_init_done == 0 ) {
-        	accComplexToMag_init(deviceType, deviceId, threadID);
+        	//accComplexToMag_init(deviceType, deviceId, threadID);
+        	accComplexToMag_deviceData_alloc(noutput_items*d_vlen, (const FComplex *)input_items[0], (float *)output_items[0], threadID);
 			acc_init_done = 1;
 		}
 
