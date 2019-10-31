@@ -11,6 +11,16 @@ void accComplexToArg_init(acc_device_t deviceType, int devId, int threadID) {
 #endif
 }
 
+void accComplexToArg_deviceData_alloc(int noutput_items, const FComplex *in, float *out, int threadID) {
+	acc_create(in, noutput_items*sizeof(const FComplex));
+	acc_create(out, noutput_items*sizeof(float));
+}
+
+void accComplexToArg_deviceData_free(int noutput_items, const FComplex *in, float *out, int threadID) {
+	acc_delete(in, noutput_items*sizeof(const FComplex));
+	acc_delete(out, noutput_items*sizeof(float));
+}
+
 void accComplexToArg_kernel(int noutput_items, const FComplex *in, float *out, int threadID) {
 	int i;
 #ifdef GEN_ASPEN
@@ -18,7 +28,9 @@ void accComplexToArg_kernel(int noutput_items, const FComplex *in, float *out, i
 #pragma aspen  declare param(aspen_param_sizeof_FComplex:8)
 #endif
 
-	#pragma acc kernels loop gang worker copyin(in[0:noutput_items]) copyout(out[0:noutput_items]) 
+	acc_update_device(in, noutput_items*sizeof(const FComplex));
+
+	#pragma acc kernels loop gang worker present(in[0:noutput_items]) present(out[0:noutput_items]) 
 	for(i = 0; i < noutput_items; i++) {
 #ifdef USE_FAST_ATAN2
 		out[i] = fast_atan2f(in[i].imag,in[i].real);
@@ -26,4 +38,6 @@ void accComplexToArg_kernel(int noutput_items, const FComplex *in, float *out, i
 		out[i] = atan2(in[i].imag,in[i].real);
 #endif
 	}   
+
+	acc_update_self(out, noutput_items*sizeof(float));
 }
