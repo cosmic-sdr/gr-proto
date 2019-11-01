@@ -47,7 +47,7 @@ namespace gr {
 		//if( gracc_counter <= 1 ) {
         	accComplexToArg_init(deviceType, deviceId, threadID);
 		//}
-		//acc_init_done = 1;
+		acc_init_done = 1;
     }
 
     /*
@@ -77,7 +77,7 @@ namespace gr {
             gr_vector_int &ninput_items,
             gr_vector_const_void_star &input_items,
             gr_vector_void_star &output_items) {
-        return processOpenACC(noutput_items*d_vlen,ninput_items,input_items, output_items);
+        return processOpenACC(noutput_items,ninput_items,input_items, output_items);
     }   
 
     int accComplexToArg_impl::processOpenACC(int noutput_items,
@@ -88,13 +88,14 @@ namespace gr {
         // Protect context from switching
         gr::thread::scoped_lock guard(d_mutex);
 		if( acc_init_done == 0 ) {
-        	//accComplexToArg_init(deviceType, deviceId, threadID);
-        	accComplexToArg_deviceData_alloc(noutput_items, (const FComplex *)input_items[0], (float *)output_items[0], threadID);
+        	accComplexToArg_init(deviceType, deviceId, threadID);
+			//[DEBUG] We cannot use preallocated device memory since the size and start address of the input buffer can change per invocation.
+        	//accComplexToArg_deviceData_alloc(noutput_items*d_vlen, (const FComplex *)input_items[0], (float *)output_items[0], threadID);
 			acc_init_done = 1;
 		}
 
         // Do the work
-        accComplexToArg_kernel(noutput_items, (const FComplex *)input_items[0], (float *)output_items[0], threadID);
+        accComplexToArg_kernel(noutput_items*d_vlen, (const FComplex *)input_items[0], (float *)output_items[0], threadID);
 
       // Tell runtime system how many output items we produced.
       return noutput_items;

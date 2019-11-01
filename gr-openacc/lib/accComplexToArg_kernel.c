@@ -28,10 +28,12 @@ void accComplexToArg_kernel(int noutput_items, const FComplex *in, float *out, i
 #pragma aspen  declare param(aspen_param_sizeof_FComplex:8)
 #endif
 
-	HI_set_context();
-	acc_update_device((h_void *)in, noutput_items*sizeof(const FComplex));
+	//HI_set_context();
+	//acc_pcreate((h_void *)in, noutput_items*sizeof(const FComplex));
+	//acc_pcreate((h_void *)out, noutput_items*sizeof(float));
+	//acc_update_device((h_void *)in, noutput_items*sizeof(const FComplex));
 
-	#pragma acc kernels loop gang worker present(in[0:noutput_items]) present(out[0:noutput_items]) 
+	#pragma acc kernels loop gang worker copyin(in[0:noutput_items]) copyout(out[0:noutput_items]) 
 	for(i = 0; i < noutput_items; i++) {
 #ifdef USE_FAST_ATAN2
 		out[i] = fast_atan2f(in[i].imag,in[i].real);
@@ -40,5 +42,5 @@ void accComplexToArg_kernel(int noutput_items, const FComplex *in, float *out, i
 #endif
 	}   
 
-	acc_update_self((h_void *)out, noutput_items*sizeof(float));
+	//acc_update_self((h_void *)out, noutput_items*sizeof(float));
 }
