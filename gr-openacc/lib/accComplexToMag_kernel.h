@@ -9,9 +9,9 @@ void accComplexToMag_deviceData_malloc(size_t in_device_buffer_size, d_void **in
 
 void accComplexToMag_deviceData_free(d_void *in_device_buffer, d_void *out_device_buffer, int threadID);
 
-void accComplexToMag_deviceData_map(int noutput_items, const FComplex *in, d_void *in_device_buffer, float *out, d_void *out_device_buffer, int threadID);
+void accComplexToMag_map(int noutput_items, const FComplex *in, d_void *in_device_buffer, float *out, d_void *out_device_buffer, int threadID);
 
-void accComplexToMag_deviceData_unmap(const FComplex *in, float *out, int threadID);
+void accComplexToMag_unmap(const FComplex *in, float *out, int threadID);
 
 void accComplexToMag_kernel(int noutput_items, const FComplex *in, float *out, int threadID);
 

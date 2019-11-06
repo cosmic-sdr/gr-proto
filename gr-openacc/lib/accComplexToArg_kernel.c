@@ -22,13 +22,13 @@ void accComplexToArg_deviceData_free(d_void *in_device_buffer, d_void *out_devic
 	acc_free(out_device_buffer);
 }
 
-void accComplexToArg_deviceData_map(int noutput_items, const FComplex *in, d_void *in_device_buffer, float *out, d_void *out_device_buffer, int threadID) {
+void accComplexToArg_map(int noutput_items, const FComplex *in, d_void *in_device_buffer, float *out, d_void *out_device_buffer, int threadID) {
 	HI_set_context();
 	acc_map_data((h_void *)in, in_device_buffer, noutput_items*sizeof(const FComplex));
 	acc_map_data((h_void *)out, out_device_buffer, noutput_items*sizeof(float));
 }
 
-void accComplexToArg_deviceData_unmap(const FComplex *in, float *out, int threadID) {
+void accComplexToArg_unmap(const FComplex *in, float *out, int threadID) {
 	acc_unmap_data((h_void *)in);
 	acc_unmap_data((h_void *)out);
 }

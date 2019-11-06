@@ -94,6 +94,7 @@ namespace gr {
 			in_device_buffer_size = noutput_items*d_vlen*sizeof(const FComplex)*3;
 			out_device_buffer_size = noutput_items*d_vlen*sizeof(float)*3;
         	accComplexToArg_deviceData_malloc(in_device_buffer_size, (d_void **)&in_device_buffer, out_device_buffer_size, (d_void **)&out_device_buffer, threadID);
+        	accComplexToArg_map(noutput_items*d_vlen, (const FComplex *)input_items[0], in_device_buffer, (float *)output_items[0], out_device_buffer, threadID);
 			acc_init_done = 1;
 		} else {
             if( noutput_items*d_vlen*sizeof(const FComplex) <= in_device_buffer_size ) {
