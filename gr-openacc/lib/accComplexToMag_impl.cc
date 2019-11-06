@@ -51,7 +51,9 @@ namespace gr {
 		//if( gracc_counter <= 1 ) {
         	accComplexToMag_init(deviceType, deviceId, threadID);
 		//}
-		acc_init_done = 1;
+		//acc_init_done = 1;
+        in_device_buffer_size = 0;
+        out_device_buffer_size = 0;
     }
 
     /*
@@ -94,14 +96,25 @@ namespace gr {
         // Protect context from switching
         gr::thread::scoped_lock guard(d_mutex);
 		if( acc_init_done == 0 ) {
-        	accComplexToMag_init(deviceType, deviceId, threadID);
+        	//accComplexToMag_init(deviceType, deviceId, threadID);
 			//[DEBUG] We cannot use preallocated device memory since the size and start address of the input buffer can change per invocation.
         	//accComplexToMag_deviceData_alloc(noutput_items*d_vlen, (const FComplex *)input_items[0], (float *)output_items[0], threadID);
+			in_device_buffer_size = noutput_items*d_vlen*sizeof(const FComplex)*3;
+			out_device_buffer_size = noutput_items*d_vlen*sizeof(float)*3;
+			accComplexToMag_deviceData_malloc(in_device_buffer_size, (d_void **)&in_device_buffer, out_device_buffer_size, (d_void **)&out_device_buffer, threadID);
 			acc_init_done = 1;
+		} else {
+            if( noutput_items*d_vlen*sizeof(const FComplex) <= in_device_buffer_size ) {
+                accComplexToMag_map(noutput_items*d_vlen, (const FComplex *)input_items[0], in_device_buffer, (float *)output_items[0], out_device_buffer, threadID);
+            }
 		}
 
         // Do the work
         accComplexToMag_kernel(noutput_items*d_vlen, (const FComplex *)input_items[0], (float *)output_items[0], threadID);
+
+        if( noutput_items*d_vlen*sizeof(const FComplex) <= in_device_buffer_size ) {
+            accComplexToMag_unmap((const FComplex *)input_items[0], (float *)output_items[0], threadID);
+        }
 
       // Tell runtime system how many output items we produced.
       return noutput_items;
