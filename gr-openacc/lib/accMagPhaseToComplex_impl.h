@@ -32,8 +32,13 @@ namespace gr {
     {
      private:
       // Nothing to declare in this block.
-     gr_vector_int d_ninput_items;
-     size_t d_vlen;
+      gr_vector_int d_ninput_items;
+      size_t d_vlen;
+      d_void * in_device_buffer1;
+      d_void * in_device_buffer2;
+      d_void * out_device_buffer;
+      size_t in_device_buffer_size;
+      size_t out_device_buffer_size;
 
      public:
       accMagPhaseToComplex_impl(int contextType, int deviceId, size_t vlen);

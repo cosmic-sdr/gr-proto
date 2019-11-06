@@ -36,6 +36,10 @@ namespace gr {
       float k_val;
       gr_vector_int d_ninput_items;
       size_t d_vlen;
+      d_void * in_device_buffer;
+      d_void * out_device_buffer;
+      size_t in_device_buffer_size;
+      size_t out_device_buffer_size;
 
      public:
       accLog_impl(int contextType, int deviceId, float nValue, float kValue, size_t vlen);

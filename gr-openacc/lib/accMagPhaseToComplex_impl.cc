@@ -47,7 +47,9 @@ namespace gr {
 		//if( gracc_counter <= 1 ) {
         	accMagPhaseToComplex_init(deviceType, deviceId, threadID);
 		//}
-		acc_init_done = 1;
+		//acc_init_done = 1;
+		in_device_buffer_size = 0;
+        out_device_buffer_size = 0;
     }
 
     /*
@@ -88,12 +90,24 @@ namespace gr {
         // Protect context from switching
         gr::thread::scoped_lock guard(d_mutex);
 		if( acc_init_done == 0 ) {
-        	accMagPhaseToComplex_init(deviceType, deviceId, threadID);
+        	//accMagPhaseToComplex_init(deviceType, deviceId, threadID);
+            in_device_buffer_size = noutput_items*d_vlen*sizeof(const float)*3;
+			out_device_buffer_size = noutput_items*d_vlen*sizeof(FComplex)*3;
+            accMagPhaseToComplex_deviceData_malloc(in_device_buffer_size, (d_void **)&in_device_buffer1, (d_void **)&in_device_buffer2, out_device_buffer_size, (d_void **)&out_device_buffer, threadID);
+            accMagPhaseToComplex_map(noutput_items*d_vlen, (const float *)input_items[0], in_device_buffer1, (const float *)input_items[1], in_device_buffer2, (FComplex *)output_items[0], out_device_buffer, threadID);
+
 			acc_init_done = 1;
+        } else {
+            if( noutput_items*d_vlen*sizeof(const float) <= in_device_buffer_size ) {
+            	accMagPhaseToComplex_map(noutput_items*d_vlen, (const float *)input_items[0], in_device_buffer1, (const float *)input_items[1], in_device_buffer2, (FComplex *)output_items[0], out_device_buffer, threadID);
+            }
 		}
 
-        accMagPhaseToComplex_kernel(noutput_items*d_vlen, (const float *)input_items[0], (const float *)input_items[1], (FComplex *)output_items[0], threadID);
         // Do the work
+        accMagPhaseToComplex_kernel(noutput_items*d_vlen, (const float *)input_items[0], (const float *)input_items[1], (FComplex *)output_items[0], threadID);
+        if( noutput_items*d_vlen*sizeof(const float) <= in_device_buffer_size ) {
+            accMagPhaseToComplex_unmap((const float *)input_items[0], (const float *)input_items[1], (FComplex *)output_items[0], threadID);
+        }
 
       // Tell runtime system how many output items we produced.
       return noutput_items;

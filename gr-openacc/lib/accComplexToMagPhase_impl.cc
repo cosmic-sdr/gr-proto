@@ -49,7 +49,9 @@ namespace gr {
 		//if( gracc_counter <= 1 ) {
         	accComplexToMagPhase_init(deviceType, deviceId, threadID);
 		//}
-		acc_init_done = 1;
+		//acc_init_done = 1;
+		in_device_buffer_size = 0;
+        out_device_buffer_size = 0;
     }
 
     /*
@@ -95,12 +97,25 @@ namespace gr {
         // Protect context from switching
         gr::thread::scoped_lock guard(d_mutex);
 		if( acc_init_done == 0 ) {
-        	accComplexToMagPhase_init(deviceType, deviceId, threadID);
+        	//accComplexToMagPhase_init(deviceType, deviceId, threadID);
+            in_device_buffer_size = noutput_items*d_vlen*sizeof(const FComplex)*3;
+            out_device_buffer_size = noutput_items*d_vlen*sizeof(float)*3;
+            accComplexToMagPhase_deviceData_malloc(in_device_buffer_size, (d_void **)&in_device_buffer, out_device_buffer_size, (d_void **)&out_device_buffer1, (d_void **)&out_device_buffer2, threadID);
+            accComplexToMagPhase_map(noutput_items*d_vlen, (const FComplex *)input_items[0], in_device_buffer, (float *)output_items[0], out_device_buffer1, (float *)output_items[1], out_device_buffer2, threadID);
+
 			acc_init_done = 1;
+        } else {
+            if( noutput_items*d_vlen*sizeof(const FComplex) <= in_device_buffer_size ) {
+            	accComplexToMagPhase_map(noutput_items*d_vlen, (const FComplex *)input_items[0], in_device_buffer, (float *)output_items[0], out_device_buffer1, (float *)output_items[1], out_device_buffer2, threadID);
+            }
 		}
 
         // Do the work
         accComplexToMagPhase_kernel(noutput_items*d_vlen, (const FComplex *)input_items[0], (float *)output_items[0], (float *)output_items[1], threadID);
+
+        if( noutput_items*d_vlen*sizeof(const FComplex) <= in_device_buffer_size ) {
+            accComplexToMagPhase_unmap((const FComplex *)input_items[0], (float *)output_items[0], (float *)output_items[1], threadID);
+        }
 
       // Tell runtime system how many output items we produced.
       return noutput_items;
