@@ -50,7 +50,7 @@ void accLog_unmap(const float *in, float *out, int threadID) {
     acc_unmap_data((h_void *)out);
 }
 
-void accLog_kernel( int noutput_items, float n_val, float k_val, const float * in1, float * out , int threadID) {
+void accLog_kernel( int noutput_items, float n_val, float k_val, const float * in, float * out , int threadID) {
 	int i;
 #ifdef GEN_ASPEN
 #pragma aspen  declare param(noutput_items:__INPUTSIZE1__)
@@ -60,9 +60,9 @@ void accLog_kernel( int noutput_items, float n_val, float k_val, const float * i
         acc_update_device((h_void *)in, noutput_items*sizeof(const float));
     }
 
-	#pragma acc kernels loop gang worker pcopyin(in1[0:noutput_items]) pcopyout(out[0:noutput_items]) 
+	#pragma acc kernels loop gang worker pcopyin(in[0:noutput_items]) pcopyout(out[0:noutput_items]) 
 	for( i=0; i<noutput_items; i++ ) {
-		out[i] = n_val * log10(in1[i]) + k_val;
+		out[i] = n_val * log10(in[i]) + k_val;
 	}
 
     if( acc_is_present((h_void *)out, noutput_items*sizeof(float)) ) {
