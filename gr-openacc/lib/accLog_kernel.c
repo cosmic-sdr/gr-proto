@@ -29,7 +29,9 @@ void accLog_init(acc_device_t deviceType, int devId, int threadID) {
 }
 
 void accLog_deviceData_malloc(size_t in_device_buffer_size, d_void **in_device_buffer, size_t out_device_buffer_size, d_void **out_device_buffer, int threadID) {
+#if !defined(TR_MODE) || TR_MODE == 0 || TR_MODE == 2
     HI_set_context();
+#endif
     *in_device_buffer = (d_void *)acc_malloc(in_device_buffer_size);
     *out_device_buffer = (d_void *)acc_malloc(out_device_buffer_size);
 }
@@ -40,7 +42,9 @@ void accLog_deviceData_free(d_void *in_device_buffer, d_void *out_device_buffer,
 }
 
 void accLog_map(int noutput_items, const float *in, d_void *in_device_buffer, float *out, d_void *out_device_buffer, int threadID) {
+#if !defined(TR_MODE) || TR_MODE == 0 || TR_MODE == 2
     HI_set_context();
+#endif
     acc_map_data((h_void *)in, in_device_buffer, noutput_items*sizeof(const float));
     acc_map_data((h_void *)out, out_device_buffer, noutput_items*sizeof(float));
 }
