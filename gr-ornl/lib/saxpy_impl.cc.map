@@ -1,0 +1,112 @@
+/* -*- c++ -*- */
+/* 
+ * Copyright 2019 ornl.
+ * 
+ * This is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3, or (at your option)
+ * any later version.
+ * 
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this software; see the file COPYING.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street,
+ * Boston, MA 02110-1301, USA.
+ */
+
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
+#include <gnuradio/io_signature.h>
+#include <stdio.h>
+#include "saxpy_impl.h"
+
+namespace gr {
+  namespace ornl {
+
+    saxpy::sptr
+    saxpy::make(int device, int connected)
+    {
+      return gnuradio::get_initial_sptr
+        (new saxpy_impl(device, connected));
+    }
+
+    /*
+     * The private constructor
+     */
+    saxpy_impl::saxpy_impl(int device, int connected)
+      : gr::sync_block("saxpy",
+              gr::io_signature::make(3, 3, sizeof(int)),
+              gr::io_signature::make(1, 1, sizeof(int)))
+    {
+      printf("[%s:%d] Cons\n", __FILE__, __LINE__);
+      device_ = device;
+      connected_ = connected;
+      mapped_ = false;
+      brisbane_init(NULL, NULL, true);
+      brisbane_kernel_create("saxpy", &kernel_saxpy);
+
+      int max_ni = max_noutput_items();
+      long max_ob = max_output_buffer(0);
+      printf("[%s:%d] device[%d] connected[%d] max_ni[%d], max_ob[%ld]\n", __FILE__, __LINE__, device_, connected_, max_ni, max_ob);
+    }
+
+    /*
+     * Our virtual destructor.
+     */
+    saxpy_impl::~saxpy_impl()
+    {
+      printf("[%s:%d] ~Dest\n", __FILE__, __LINE__);
+      brisbane_finalize();
+    }
+
+    int
+    saxpy_impl::work(int noutput_items,
+        gr_vector_const_void_star &input_items,
+        gr_vector_void_star &output_items)
+    {
+      const int *in0 = (const int *) input_items[0];
+      const int *in1 = (const int *) input_items[1];
+      const int *in2 = (const int *) input_items[2];
+      int *out = (int *) output_items[0];
+
+      // Do <+signal processing+>
+      int max_noutputs = max_noutput_items();
+      std::string sname = symbol_name();
+      printf("[%s:%d] noutput_items[%d] max_noutput_items[%d] name[%s]\n", __FILE__, __LINE__, noutput_items, max_noutputs, sname.c_str());
+
+      if (!mapped_) {
+        printf("[%s:%d]\n", __FILE__, __LINE__);
+        brisbane_mem_map((void*) out, max_noutputs * sizeof(int));
+        mapped_ = true;
+      }
+
+      brisbane_kernel_setmap(kernel_saxpy, 0, (void*) out, brisbane_w);
+      brisbane_kernel_setarg(kernel_saxpy, 1, sizeof(int), (void*) in0);
+      brisbane_kernel_setmap(kernel_saxpy, 2, (void*) in1, brisbane_r);
+      brisbane_kernel_setmap(kernel_saxpy, 3, (void*) in2, brisbane_r);
+
+      brisbane_task task0;
+      brisbane_task_create(&task0);
+      if (!(connected_ & 4)) brisbane_task_mapto(task0, (void*) in1, noutput_items * sizeof(int));
+      if (!(connected_ & 2)) brisbane_task_mapto(task0, (void*) in2, noutput_items * sizeof(int));
+      size_t kernel_saxpy_off[1] = { 0 };
+      size_t kernel_saxpy_idx[1] = { (size_t) noutput_items };
+      brisbane_task_kernel(task0, kernel_saxpy, 1, kernel_saxpy_off, kernel_saxpy_idx);
+      if (!(connected_ & 1)) brisbane_task_mapfrom(task0, (void*) out, noutput_items * sizeof(int));
+      brisbane_task_submit(task0, device_, NULL, true);
+
+      brisbane_task_release(task0);
+
+      // Tell runtime system how many output items we produced.
+      return noutput_items;
+    }
+
+  } /* namespace ornl */
+} /* namespace gr */
+

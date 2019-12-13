@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<block>
+  <name>SAXPY</name>
+  <key>ornl_saxpy</key>
+  <category>[ORNL]</category>
+  <import>import ornl</import>
+  <make>ornl.saxpy($device, $connected)</make>
+  <param>
+    <name>Device</name>
+    <key>device</key>
+    <value>Any</value>
+    <type>int</type>
+    <option>
+      <name>OMP CPU</name>
+      <key>64</key>
+    </option>
+    <option>
+      <name>NVIDIA GPU</name>
+      <key>128</key>
+    </option>
+    <option>
+      <name>Any</name>
+      <key>16384</key>
+    </option>
+    <option>
+      <name>Random</name>
+      <key>8192</key>
+    </option>
+  </param>
+  <param>
+    <name>Device inouts</name>
+    <key>connected</key>
+    <value>0</value>
+    <type>int</type>
+  </param>
+
+  <!-- Make one 'sink' node per input. Sub-nodes:
+       * name (an identifier for the GUI)
+       * type
+       * vlen
+       * optional (set to 1 for optional inputs) -->
+  <sink>
+    <name>in0</name>
+    <type>int</type>
+  </sink>
+  <sink>
+    <name>in1</name>
+    <type>int</type>
+  </sink>
+  <sink>
+    <name>in2</name>
+    <type>int</type>
+  </sink>
+
+  <!-- Make one 'source' node per output. Sub-nodes:
+       * name (an identifier for the GUI)
+       * type
+       * vlen
+       * optional (set to 1 for optional inputs) -->
+  <source>
+    <name>out</name>
+    <type>int</type>
+  </source>
+</block>
