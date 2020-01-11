@@ -29,11 +29,11 @@ ELSE(CMAKE_BUILD_TYPE MATCHES DEBUG)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2")
 ENDIF(CMAKE_BUILD_TYPE MATCHES DEBUG)
 
-IF(NOT $ENV{OPENARC_ARCH} OR $ENV{OPENARC_ARCH} MATCHES 0)
+IF(NOT $ENV{OPENARC_ARCH} OR $ENV{OPENARC_ARCH} MATCHES 0 OR $ENV{OPENARC_ARCH} MATCHES 6)
     set(OUTPUTSUFFIX "cu")
-ELSE(NOT $ENV{OPENARC_ARCH} OR $ENV{OPENARC_ARCH} MATCHES 0)
+ELSE(NOT $ENV{OPENARC_ARCH} OR $ENV{OPENARC_ARCH} MATCHES 0 OR $ENV{OPENARC_ARCH} MATCHES 6)
     set(OUTPUTSUFFIX "cl")
-ENDIF(NOT $ENV{OPENARC_ARCH} OR $ENV{OPENARC_ARCH} MATCHES 0)
+ENDIF(NOT $ENV{OPENARC_ARCH} OR $ENV{OPENARC_ARCH} MATCHES 0 OR $ENV{OPENARC_ARCH} MATCHES 6)
 
 ########################################################################
 # Setup library
@@ -56,60 +56,43 @@ link_directories(${FFTW3F_LIBRARY_DIRS})
 ############################################
 # Generate OpenACC output files by OpenARC #
 ############################################
+#set(KERNEL_FILENAME_BASE "openarc_kernel")
+set(KERNEL_FILENAME_BASE "kernel")
+IF(NOT ${TR_MODE} OR ${TR_MODE} MATCHES 0 OR ${TR_MODE} MATCHES 3 OR ${TR_MODE} MATCHES 4)
+
 IF(NOT ${TR_MODE} OR ${TR_MODE} MATCHES 0)
+    set(OPENARC_COMMANDS "-macro=TR_MODE=0 -targetArch=0")
+ELSEIF( ${TR_MODE} MATCHES 4)
+    set(OPENARC_COMMANDS "-macro=TR_MODE=4 -targetArch=6")
+ELSEIF( ${TR_MODE} MATCHES 3)
+    set(OPENARC_COMMANDS "-macro=TR_MODE=3 -targetArch=4")
+ENDIF(NOT ${TR_MODE} OR ${TR_MODE} MATCHES 0)
 
 add_custom_command(OUTPUT accLog_kernel.cpp openarc_kernel_accLog.${OUTPUTSUFFIX}
-    COMMAND ${OpenARC_BIN_DIR}/openarc -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_accLog.txt ${CMAKE_CURRENT_SOURCE_DIR}/accLog_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accLog/accLog_kernel.cpp ${CMAKE_CURRENT_BINARY_DIR}/ && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accLog/openarc_kernel.${OUTPUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/openarc_kernel_accLog.${OUTPUTSUFFIX} && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accLog
+    COMMAND ${OpenARC_BIN_DIR}/openarc ${OPENARC_COMMANDS} -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_accLog.txt ${CMAKE_CURRENT_SOURCE_DIR}/accLog_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accLog/accLog_kernel.cpp ${CMAKE_CURRENT_BINARY_DIR}/ && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accLog/${KERNEL_FILENAME_BASE}.${OUTPUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/openarc_kernel_accLog.${OUTPUTSUFFIX} && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accLog
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/accLog_kernel.c)
 
 add_custom_command(OUTPUT accComplexToArg_kernel.cpp openarc_kernel_accComplexToArg.${OUTPUTSUFFIX}
-    COMMAND ${OpenARC_BIN_DIR}/openarc -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_accComplexToArg.txt ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToArg_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToArg/accComplexToArg_kernel.cpp ${CMAKE_CURRENT_BINARY_DIR}/ && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToArg/openarc_kernel.${OUTPUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/openarc_kernel_accComplexToArg.${OUTPUTSUFFIX} && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToArg
+    COMMAND ${OpenARC_BIN_DIR}/openarc ${OPENARC_COMMANDS}  -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_accComplexToArg.txt ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToArg_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToArg/accComplexToArg_kernel.cpp ${CMAKE_CURRENT_BINARY_DIR}/ && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToArg/${KERNEL_FILENAME_BASE}.${OUTPUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/openarc_kernel_accComplexToArg.${OUTPUTSUFFIX} && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToArg
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToArg_kernel.c ${CMAKE_CURRENT_SOURCE_DIR}/fast_atan2f.c)
 
 add_custom_command(OUTPUT accComplexToMag_kernel.cpp openarc_kernel_accComplexToMag.${OUTPUTSUFFIX}
-    COMMAND ${OpenARC_BIN_DIR}/openarc -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_accComplexToMag.txt ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToMag_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMag/accComplexToMag_kernel.cpp ${CMAKE_CURRENT_BINARY_DIR}/ && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMag/openarc_kernel.${OUTPUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/openarc_kernel_accComplexToMag.${OUTPUTSUFFIX} && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMag
+    COMMAND ${OpenARC_BIN_DIR}/openarc ${OPENARC_COMMANDS} -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_accComplexToMag.txt ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToMag_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMag/accComplexToMag_kernel.cpp ${CMAKE_CURRENT_BINARY_DIR}/ && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMag/${KERNEL_FILENAME_BASE}.${OUTPUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/openarc_kernel_accComplexToMag.${OUTPUTSUFFIX} && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMag
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToMag_kernel.c)
 
 add_custom_command(OUTPUT accComplexToMagPhase_kernel.cpp openarc_kernel_accComplexToMagPhase.${OUTPUTSUFFIX}
-    COMMAND ${OpenARC_BIN_DIR}/openarc -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_accComplexToMagPhase.txt ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToMagPhase_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMagPhase/accComplexToMagPhase_kernel.cpp ${CMAKE_CURRENT_BINARY_DIR}/ && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMagPhase/openarc_kernel.${OUTPUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/openarc_kernel_accComplexToMagPhase.${OUTPUTSUFFIX} && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMagPhase
+    COMMAND ${OpenARC_BIN_DIR}/openarc ${OPENARC_COMMANDS} -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_accComplexToMagPhase.txt ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToMagPhase_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMagPhase/accComplexToMagPhase_kernel.cpp ${CMAKE_CURRENT_BINARY_DIR}/ && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMagPhase/${KERNEL_FILENAME_BASE}.${OUTPUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/openarc_kernel_accComplexToMagPhase.${OUTPUTSUFFIX} && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMagPhase
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToMagPhase_kernel.c ${CMAKE_CURRENT_SOURCE_DIR}/fast_atan2f.c)
 
 add_custom_command(OUTPUT accMagPhaseToComplex_kernel.cpp openarc_kernel_accMagPhaseToComplex.${OUTPUTSUFFIX}
-    COMMAND ${OpenARC_BIN_DIR}/openarc -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_accMagPhaseToComplex.txt ${CMAKE_CURRENT_SOURCE_DIR}/accMagPhaseToComplex_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accMagPhaseToComplex/accMagPhaseToComplex_kernel.cpp ${CMAKE_CURRENT_BINARY_DIR}/ && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accMagPhaseToComplex/openarc_kernel.${OUTPUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/openarc_kernel_accMagPhaseToComplex.${OUTPUTSUFFIX} && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accMagPhaseToComplex
+    COMMAND ${OpenARC_BIN_DIR}/openarc ${OPENARC_COMMANDS} -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_accMagPhaseToComplex.txt ${CMAKE_CURRENT_SOURCE_DIR}/accMagPhaseToComplex_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accMagPhaseToComplex/accMagPhaseToComplex_kernel.cpp ${CMAKE_CURRENT_BINARY_DIR}/ && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accMagPhaseToComplex/${KERNEL_FILENAME_BASE}.${OUTPUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/openarc_kernel_accMagPhaseToComplex.${OUTPUTSUFFIX} && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accMagPhaseToComplex
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/accMagPhaseToComplex_kernel.c)
 
 add_custom_command(OUTPUT accComplexToMagSquared_kernel.cpp openarc_kernel_accComplexToMagSquared.${OUTPUTSUFFIX}
-    COMMAND ${OpenARC_BIN_DIR}/openarc -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_accComplexToMagSquared.txt ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToMagSquared_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMagSquared/accComplexToMagSquared_kernel.cpp ${CMAKE_CURRENT_BINARY_DIR}/ && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMagSquared/openarc_kernel.${OUTPUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/openarc_kernel_accComplexToMagSquared.${OUTPUTSUFFIX} && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMagSquared
+    COMMAND ${OpenARC_BIN_DIR}/openarc ${OPENARC_COMMANDS} -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_accComplexToMagSquared.txt ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToMagSquared_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMagSquared/accComplexToMagSquared_kernel.cpp ${CMAKE_CURRENT_BINARY_DIR}/ && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMagSquared/${KERNEL_FILENAME_BASE}.${OUTPUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/openarc_kernel_accComplexToMagSquared.${OUTPUTSUFFIX} && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMagSquared
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToMagSquared_kernel.c)
 
-ELSEIF(${TR_MODE} MATCHES 3)
-    set(OPENARC_COMMANDS "-macro=TR_MODE=3 -targetArch=4")
-    set(TROUTSUFFIX "cpp")
-add_custom_command(OUTPUT accLog_kernel.cpp
-    COMMAND ${OpenARC_BIN_DIR}/openarc ${OPENARC_COMMANDS} -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_accLog.txt ${CMAKE_CURRENT_SOURCE_DIR}/accLog_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accLog/accLog_kernel.${TROUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/accLog_kernel.cpp && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accLog/openarc_kernel.${OUTPUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/openarc_kernel_accLog.${OUTPUTSUFFIX} && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accLog
-    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/accLog_kernel.c)
-
-add_custom_command(OUTPUT accComplexToArg_kernel.cpp 
-    COMMAND ${OpenARC_BIN_DIR}/openarc ${OPENARC_COMMANDS} -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_accComplexToArg.txt ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToArg_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToArg/accComplexToArg_kernel.${TROUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/accComplexToArg_kernel.cpp && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToArg/openarc_kernel.${OUTPUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/openarc_kernel_accComplexToArg.${OUTPUTSUFFIX} && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToArg
-    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToArg_kernel.c ${CMAKE_CURRENT_SOURCE_DIR}/fast_atan2f.c)
-
-add_custom_command(OUTPUT accComplexToMag_kernel.cpp 
-    COMMAND ${OpenARC_BIN_DIR}/openarc ${OPENARC_COMMANDS} -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_accComplexToMag.txt ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToMag_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMag/accComplexToMag_kernel.${TROUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/accComplexToMag_kernel.cpp && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMag/openarc_kernel.${OUTPUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/openarc_kernel_accComplexToMag.${OUTPUTSUFFIX} && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMag
-    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToMag_kernel.c)
-
-add_custom_command(OUTPUT accComplexToMagPhase_kernel.cpp 
-    COMMAND ${OpenARC_BIN_DIR}/openarc ${OPENARC_COMMANDS} -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_accComplexToMagPhase.txt ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToMagPhase_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMagPhase/accComplexToMagPhase_kernel.${TROUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/accComplexToMagPhase_kernel.cpp && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMagPhase/openarc_kernel.${OUTPUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/openarc_kernel_accComplexToMagPhase.${OUTPUTSUFFIX} && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMagPhase
-    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToMagPhase_kernel.c ${CMAKE_CURRENT_SOURCE_DIR}/fast_atan2f.c)
-
-add_custom_command(OUTPUT accMagPhaseToComplex_kernel.cpp 
-    COMMAND ${OpenARC_BIN_DIR}/openarc ${OPENARC_COMMANDS} -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_accMagPhaseToComplex.txt ${CMAKE_CURRENT_SOURCE_DIR}/accMagPhaseToComplex_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accMagPhaseToComplex/accMagPhaseToComplex_kernel.${TROUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/accMagPhaseToComplex_kernel.cpp && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accMagPhaseToComplex/openarc_kernel.${OUTPUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/openarc_kernel_accMagPhaseToComplex.${OUTPUTSUFFIX} && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accMagPhaseToComplex
-    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/accMagPhaseToComplex_kernel.c)
-
-add_custom_command(OUTPUT accComplexToMagSquared_kernel.cpp 
-    COMMAND ${OpenARC_BIN_DIR}/openarc ${OPENARC_COMMANDS} -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_accComplexToMagSquared.txt ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToMagSquared_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMagSquared/accComplexToMagSquared_kernel.${TROUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/accComplexToMagSquared_kernel.cpp && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMagSquared/openarc_kernel.${OUTPUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/openarc_kernel_accComplexToMagSquared.${OUTPUTSUFFIX} && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMagSquared
-    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToMagSquared_kernel.c)
-
-ELSE(NOT ${TR_MODE} OR ${TR_MODE} MATCHES 0)
+ELSE(NOT ${TR_MODE} OR ${TR_MODE} MATCHES 0 OR ${TR_MODE} MATCHES 3 OR ${TR_MODE} MATCHES 4)
 
 IF(${TR_MODE} MATCHES 1)
     set(OPENARC_COMMANDS "-macro=TR_MODE=1 -ompaccInter=3")
@@ -143,7 +126,7 @@ add_custom_command(OUTPUT accComplexToMagSquared_kernel.cpp
     COMMAND ${OpenARC_BIN_DIR}/openarc ${OPENARC_COMMANDS} -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_accComplexToMagSquared.txt ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToMagSquared_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMagSquared/accComplexToMagSquared_kernel.${TROUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/accComplexToMagSquared_kernel.cpp && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accComplexToMagSquared
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToMagSquared_kernel.c)
 
-ENDIF(NOT ${TR_MODE} OR ${TR_MODE} MATCHES 0)
+ENDIF(NOT ${TR_MODE} OR ${TR_MODE} MATCHES 0 OR ${TR_MODE} MATCHES 3 OR ${TR_MODE} MATCHES 4)
 
 
 list(APPEND openacc_sources
@@ -190,6 +173,11 @@ target_link_libraries(gnuradio-openacc ${CUDA_LIBRARIES})
 ELSEIF($ENV{OPENARC_ARCH} MATCHES 1)
 target_link_libraries(gnuradio-openacc ${OpenCL_LIBRARY})
 ENDIF($ENV{OPENARC_ARCH} MATCHES 0)
+
+ELSEIF(${TR_MODE} MATCHES 4)
+
+target_link_libraries(gnuradio-openacc ${OpenARC_LIBRARIES})
+target_link_libraries(gnuradio-openacc ${BRISBANE_LIBRARIES} ${BRISBANE_MISC_LIBRARIES})
 
 ELSEIF(${TR_MODE} MATCHES 3)
 
@@ -268,12 +256,15 @@ target_link_libraries(
 
 IF(NOT ${TR_MODE} OR ${TR_MODE} MATCHES 0)
 
-#target_link_libraries(test-openacc ${OpenARC_LIBRARIES})
 IF($ENV{OPENARC_ARCH} MATCHES 0)
 target_link_libraries(test-openacc ${CUDA_LIBRARIES})
 ELSEIF($ENV{OPENARC_ARCH} MATCHES 1)
 target_link_libraries(test-openacc ${OpenCL_LIBRARY})
 ENDIF($ENV{OPENARC_ARCH} MATCHES 0)
+
+ELSEIF(${TR_MODE} MATCHES 4)
+
+target_link_libraries(test-openacc ${BRISBANE_LIBRARIES} ${BRISBANE_MISC_LIBRARIES})
 
 ELSEIF(${TR_MODE} MATCHES 3)
 
@@ -332,6 +323,10 @@ ELSEIF($ENV{OPENARC_ARCH} MATCHES 1)
 target_link_libraries(test-acclog ${OpenCL_LIBRARY})
 ENDIF($ENV{OPENARC_ARCH} MATCHES 0)
 
+ELSEIF(${TR_MODE} MATCHES 4)
+
+target_link_libraries(test-acclog ${BRISBANE_LIBRARIES} ${BRISBANE_MISC_LIBRARIES})
+
 ELSEIF(${TR_MODE} MATCHES 3)
 
 target_compile_options(
@@ -354,9 +349,9 @@ target_link_libraries(
 ENDIF(NOT ${TR_MODE} OR ${TR_MODE} MATCHES 0)
 
 install(TARGETS test-acclog DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" RUNTIME)
-IF(NOT ${TR_MODE} OR ${TR_MODE} MATCHES 0 OR ${TR_MODE} MATCHES 3)
+IF(NOT ${TR_MODE} OR ${TR_MODE} MATCHES 0 OR ${TR_MODE} MATCHES 3 OR ${TR_MODE} MATCHES 4)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/openarc_kernel_accLog.${OUTPUTSUFFIX} DESTINATION "${CMAKE_INSTALL_PREFIX}/bin")
-ENDIF(NOT ${TR_MODE} OR ${TR_MODE} MATCHES 0 OR ${TR_MODE} MATCHES 3)
+ENDIF(NOT ${TR_MODE} OR ${TR_MODE} MATCHES 0 OR ${TR_MODE} MATCHES 3 OR ${TR_MODE} MATCHES 4)
 
 ########################################################
 # Generate ASPEN model for acclog module using OpenARC #
@@ -401,6 +396,10 @@ ELSEIF($ENV{OPENARC_ARCH} MATCHES 1)
 target_link_libraries(test-acccomplextoarg ${OpenCL_LIBRARY})
 ENDIF($ENV{OPENARC_ARCH} MATCHES 0)
 
+ELSEIF(${TR_MODE} MATCHES 4)
+
+target_link_libraries(test-acccomplextoarg ${BRISBANE_LIBRARIES} ${BRISBANE_MISC_LIBRARIES})
+
 ELSEIF(${TR_MODE} MATCHES 3)
 
 target_compile_options(
@@ -423,9 +422,9 @@ target_link_libraries(
 ENDIF(NOT ${TR_MODE} OR ${TR_MODE} MATCHES 0)
 
 install(TARGETS test-acccomplextoarg DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" RUNTIME)
-IF(NOT ${TR_MODE} OR ${TR_MODE} MATCHES 0 OR ${TR_MODE} MATCHES 3)
+IF(NOT ${TR_MODE} OR ${TR_MODE} MATCHES 0 OR ${TR_MODE} MATCHES 3 OR ${TR_MODE} MATCHES 4)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/openarc_kernel_accComplexToArg.${OUTPUTSUFFIX} DESTINATION "${CMAKE_INSTALL_PREFIX}/bin")
-ENDIF(NOT ${TR_MODE} OR ${TR_MODE} MATCHES 0 OR ${TR_MODE} MATCHES 3)
+ENDIF(NOT ${TR_MODE} OR ${TR_MODE} MATCHES 0 OR ${TR_MODE} MATCHES 3 OR ${TR_MODE} MATCHES 4)
 
 
 #################################################################
@@ -473,6 +472,10 @@ ELSEIF($ENV{OPENARC_ARCH} MATCHES 1)
 target_link_libraries(test-acccomplextomag ${OpenCL_LIBRARY})
 ENDIF($ENV{OPENARC_ARCH} MATCHES 0)
 
+ELSEIF(${TR_MODE} MATCHES 4)
+
+target_link_libraries(test-acccomplextomag ${BRISBANE_LIBRARIES} ${BRISBANE_MISC_LIBRARIES})
+
 ELSEIF(${TR_MODE} MATCHES 3)
 
 target_compile_options(
@@ -495,9 +498,9 @@ target_link_libraries(
 ENDIF(NOT ${TR_MODE} OR ${TR_MODE} MATCHES 0)
 
 install(TARGETS test-acccomplextomag DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" RUNTIME)
-IF(NOT ${TR_MODE} OR ${TR_MODE} MATCHES 0 OR ${TR_MODE} MATCHES 3)
+IF(NOT ${TR_MODE} OR ${TR_MODE} MATCHES 0 OR ${TR_MODE} MATCHES 3 OR ${TR_MODE} MATCHES 4)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/openarc_kernel_accComplexToMag.${OUTPUTSUFFIX} DESTINATION "${CMAKE_INSTALL_PREFIX}/bin")
-ENDIF(NOT ${TR_MODE} OR ${TR_MODE} MATCHES 0 OR ${TR_MODE} MATCHES 3)
+ENDIF(NOT ${TR_MODE} OR ${TR_MODE} MATCHES 0 OR ${TR_MODE} MATCHES 3 OR ${TR_MODE} MATCHES 4)
 
 
 #################################################################
@@ -545,6 +548,10 @@ ELSEIF($ENV{OPENARC_ARCH} MATCHES 1)
 target_link_libraries(test-acccomplextomagphase ${OpenCL_LIBRARY})
 ENDIF($ENV{OPENARC_ARCH} MATCHES 0)
 
+ELSEIF(${TR_MODE} MATCHES 4)
+
+target_link_libraries(test-acccomplextomagphase ${BRISBANE_LIBRARIES} ${BRISBANE_MISC_LIBRARIES})
+
 ELSEIF(${TR_MODE} MATCHES 3)
 
 target_compile_options(
@@ -567,9 +574,9 @@ target_link_libraries(
 ENDIF(NOT ${TR_MODE} OR ${TR_MODE} MATCHES 0)
 
 install(TARGETS test-acccomplextomagphase DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" RUNTIME)
-IF(NOT ${TR_MODE} OR ${TR_MODE} MATCHES 0 OR ${TR_MODE} MATCHES 3)
+IF(NOT ${TR_MODE} OR ${TR_MODE} MATCHES 0 OR ${TR_MODE} MATCHES 3 OR ${TR_MODE} MATCHES 4)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/openarc_kernel_accComplexToMagPhase.${OUTPUTSUFFIX} DESTINATION "${CMAKE_INSTALL_PREFIX}/bin")
-ENDIF(NOT ${TR_MODE} OR ${TR_MODE} MATCHES 0 OR ${TR_MODE} MATCHES 3)
+ENDIF(NOT ${TR_MODE} OR ${TR_MODE} MATCHES 0 OR ${TR_MODE} MATCHES 3 OR ${TR_MODE} MATCHES 4)
 
 
 ######################################################################
@@ -616,6 +623,10 @@ ELSEIF($ENV{OPENARC_ARCH} MATCHES 1)
 target_link_libraries(test-accmagphasetocomplex ${OpenCL_LIBRARY})
 ENDIF($ENV{OPENARC_ARCH} MATCHES 0)
 
+ELSEIF(${TR_MODE} MATCHES 4)
+
+target_link_libraries(test-accmagphasetocomplex ${BRISBANE_LIBRARIES} ${BRISBANE_MISC_LIBRARIES})
+
 ELSEIF(${TR_MODE} MATCHES 3)
 
 target_compile_options(
@@ -638,9 +649,9 @@ target_link_libraries(
 ENDIF(NOT ${TR_MODE} OR ${TR_MODE} MATCHES 0)
 
 install(TARGETS test-accmagphasetocomplex DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" RUNTIME)
-IF(NOT ${TR_MODE} OR ${TR_MODE} MATCHES 0 OR ${TR_MODE} MATCHES 3)
+IF(NOT ${TR_MODE} OR ${TR_MODE} MATCHES 0 OR ${TR_MODE} MATCHES 3 OR ${TR_MODE} MATCHES 4)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/openarc_kernel_accMagPhaseToComplex.${OUTPUTSUFFIX} DESTINATION "${CMAKE_INSTALL_PREFIX}/bin")
-ENDIF(NOT ${TR_MODE} OR ${TR_MODE} MATCHES 0 OR ${TR_MODE} MATCHES 3)
+ENDIF(NOT ${TR_MODE} OR ${TR_MODE} MATCHES 0 OR ${TR_MODE} MATCHES 3 OR ${TR_MODE} MATCHES 4)
 
 
 ######################################################################
@@ -687,6 +698,10 @@ ELSEIF($ENV{OPENARC_ARCH} MATCHES 1)
 target_link_libraries(test-acccomplextomagsquared ${OpenCL_LIBRARY})
 ENDIF($ENV{OPENARC_ARCH} MATCHES 0)
 
+ELSEIF(${TR_MODE} MATCHES 4)
+
+target_link_libraries(test-acccomplextomagsquared ${BRISBANE_LIBRARIES} ${BRISBANE_MISC_LIBRARIES})
+
 ELSEIF(${TR_MODE} MATCHES 3)
 
 target_compile_options(
@@ -709,9 +724,9 @@ target_link_libraries(
 ENDIF(NOT ${TR_MODE} OR ${TR_MODE} MATCHES 0)
 
 install(TARGETS test-acccomplextomagsquared DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" RUNTIME)
-IF(NOT ${TR_MODE} OR ${TR_MODE} MATCHES 0 OR ${TR_MODE} MATCHES 3)
+IF(NOT ${TR_MODE} OR ${TR_MODE} MATCHES 0 OR ${TR_MODE} MATCHES 3 OR ${TR_MODE} MATCHES 4)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/openarc_kernel_accComplexToMagSquared.${OUTPUTSUFFIX} DESTINATION "${CMAKE_INSTALL_PREFIX}/bin")
-ENDIF(NOT ${TR_MODE} OR ${TR_MODE} MATCHES 0 OR ${TR_MODE} MATCHES 3)
+ENDIF(NOT ${TR_MODE} OR ${TR_MODE} MATCHES 0 OR ${TR_MODE} MATCHES 3 OR ${TR_MODE} MATCHES 4)
 
 
 ########################################################################

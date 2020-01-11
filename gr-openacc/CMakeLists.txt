@@ -148,7 +148,16 @@ if(NOT CUDA_FOUND)
 endif()
 ENDIF($ENV{OPENARC_ARCH} MATCHES 0)
 
-IF(${TR_MODE} MATCHES 3)
+IF(${TR_MODE} MATCHES 4)
+########################################################################
+# Find Brisbane build dependencies
+########################################################################
+find_package(Brisbane)
+if(NOT BRISBANE_FOUND)
+    message(FATAL_ERROR "Brisbane is required to compile gr-openacc")
+endif()
+
+ELSEIF(${TR_MODE} MATCHES 3)
 ########################################################################
 # Find OpenCL build dependencies
 ########################################################################
@@ -156,6 +165,7 @@ find_package(OpenCL)
 if(NOT OpenCL_FOUND)
     message(FATAL_ERROR "OpenCL is required to compile gr-openacc")
 endif()
+
 ########################################################################
 # Find MCL build dependencies
 ########################################################################
@@ -176,7 +186,7 @@ if(NOT OpenCL_FOUND)
 endif()
 ENDIF($ENV{OPENARC_ARCH} MATCHES 1)
 
-ENDIF(${TR_MODE} MATCHES 3)
+ENDIF(${TR_MODE} MATCHES 4)
 
 ########################################################################
 # Find gnuradio build dependencies

@@ -105,7 +105,10 @@ make -j install
 # To install gr-openacc, OpenARC should be installed first.
 #    - Refer to install instructions in README.md file of the OpenARC repository.
 #        - In the make.header file, set TARGET_SYSTEM to XAVIER (TARGET_SYSTEM = XAVIER)
-#        - Set an environment variable, OPENARC_ARCH to 4 (export OPENARC_ARCH=4)
+#        - Set an environment variable, OPENARC_ARCH according to the target backend runtime (Brisbane, MCL, or CUDA).
+#        - 								OPENARC_ARCH to 6 (export OPENARC_ARCH=6) for Brisbane
+#        - 								OPENARC_ARCH to 4 (export OPENARC_ARCH=4) for MCL
+#        - 								OPENARC_ARCH to 0 (export OPENARC_ARCH=0) for CUDA
 
 cd $PROJECT_DIR/gr-openacc
 mkdir build
@@ -114,12 +117,15 @@ cd build
 # TR_MODE = 1 for OpenMP3
 # TR_MODE = 2 for OpenMP4
 # TR_MODE = 3 for MCL 
+# TR_MODE = 4 for Brisbane 
 //On Oswald1 for CUDA backend
 cmake3 -DTR_MODE=0 -DCUDA_ROOT=/usr/local/cuda -DOpenCL_INCLUDE_DIR=/usr/local/cuda/targets/x86_64-linux/include/CL -DOpenCL_LIBRARY=/usr/local/cuda/lib64/libOpenCL.so -DBoost_USE_STATIC_LIBS=OFF -DBoost_USE_MULTITHREADED=ON  -DCMAKE_INSTALL_PREFIX=~/usr/local -DCMAKE_PREFIX_PATH=~/usr/local -DGnuradio_DIR=$PROJECT_DIR/gnuradio-3.7.13.4/cmake/Modules -Wno-dev ..
 //On Xavier2 for CUDA backend 
 cmake -DTR_MODE=0 -DCUDA_ROOT=/usr/local/cuda -DOpenCL_INCLUDE_DIR=/usr/local/include -DOpenCL_LIBRARY=/usr/lib/aarch64-linux-gnu/libOpenCL.so -DBoost_USE_STATIC_LIBS=OFF -DBoost_USE_MULTITHREADED=ON  -DCMAKE_INSTALL_PREFIX=~/usr/local -DCMAKE_PREFIX_PATH=~/usr/local -DGnuradio_DIR=$PROJECT_DIR/gnuradio-3.7.13.4/cmake/Modules -Wno-dev .. 
 //On Xavier2 for MCL backend
 cmake -DTR_MODE=3 -DCUDA_ROOT=/usr/local/cuda -DOpenCL_INCLUDE_DIR=/usr/local/include -DOpenCL_LIBRARY=/usr/lib/aarch64-linux-gnu/libOpenCL.so -DBoost_USE_STATIC_LIBS=OFF -DBoost_USE_MULTITHREADED=ON  -DCMAKE_INSTALL_PREFIX=~/usr/local -DCMAKE_PREFIX_PATH=~/usr/local -DGnuradio_DIR=$PROJECT_DIR/gnuradio-3.7.13.4/cmake/Modules -Wno-dev .. 
+//On Xavier2 for Brisbane backend
+cmake -DTR_MODE=4 -DCUDA_ROOT=/usr/local/cuda -DOpenCL_INCLUDE_DIR=/usr/local/include -DOpenCL_LIBRARY=/usr/lib/aarch64-linux-gnu/libOpenCL.so -DBoost_USE_STATIC_LIBS=OFF -DBoost_USE_MULTITHREADED=ON  -DCMAKE_INSTALL_PREFIX=~/usr/local -DCMAKE_PREFIX_PATH=~/usr/local -DGnuradio_DIR=$PROJECT_DIR/gnuradio-3.7.13.4/cmake/Modules -Wno-dev .. 
 ////////////////////////////////////////////////
 //To generate OpenMP3 code, use the following.//
 ////////////////////////////////////////////////
