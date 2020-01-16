@@ -68,6 +68,10 @@ ELSEIF( ${TR_MODE} MATCHES 3)
     set(OPENARC_COMMANDS "-macro=TR_MODE=3 -targetArch=4")
 ENDIF(NOT ${TR_MODE} OR ${TR_MODE} MATCHES 0)
 
+add_custom_command(OUTPUT acc_helper.cpp 
+    COMMAND ${OpenARC_BIN_DIR}/openarc ${OPENARC_COMMANDS} -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_acc_helper.txt ${CMAKE_CURRENT_SOURCE_DIR}/acc_helper.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_acc_helper/acc_helper.cpp ${CMAKE_CURRENT_BINARY_DIR}/ && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_acc_helper
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/acc_helper.c)
+
 add_custom_command(OUTPUT accLog_kernel.cpp openarc_kernel_accLog.${OUTPUTSUFFIX}
     COMMAND ${OpenARC_BIN_DIR}/openarc ${OPENARC_COMMANDS} -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_accLog.txt ${CMAKE_CURRENT_SOURCE_DIR}/accLog_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accLog/accLog_kernel.cpp ${CMAKE_CURRENT_BINARY_DIR}/ && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accLog/${KERNEL_FILENAME_BASE}.${OUTPUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/openarc_kernel_accLog.${OUTPUTSUFFIX} && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accLog
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/accLog_kernel.c)
@@ -101,6 +105,10 @@ ELSEIF(${TR_MODE} MATCHES 2)
     set(OPENARC_COMMANDS "-macro=TR_MODE=2 -ompaccInter=4")
     set(TROUTSUFFIX "c")
 ENDIF(${TR_MODE} MATCHES 1)
+
+add_custom_command(OUTPUT acc_helper.cpp 
+    COMMAND ${OpenARC_BIN_DIR}/openarc ${OPENARC_COMMANDS} -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_acc_helper.txt ${CMAKE_CURRENT_SOURCE_DIR}/acc_helper.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_acc_helper/acc_helper.cpp ${CMAKE_CURRENT_BINARY_DIR}/ && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_acc_helper
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/acc_helper.c)
 
 add_custom_command(OUTPUT accLog_kernel.cpp
     COMMAND ${OpenARC_BIN_DIR}/openarc ${OPENARC_COMMANDS} -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_accLog.txt ${CMAKE_CURRENT_SOURCE_DIR}/accLog_kernel.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accLog/accLog_kernel.${TROUTSUFFIX} ${CMAKE_CURRENT_BINARY_DIR}/accLog_kernel.cpp && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_accLog
@@ -140,6 +148,7 @@ list(APPEND openacc_sources
     accComplexToMagSquared_impl.cc )
 
 list(APPEND openacc_sources
+	acc_helper.cpp
     accLog_kernel.cpp
     accComplexToArg_kernel.cpp
     accComplexToMag_kernel.cpp
@@ -224,6 +233,7 @@ list(APPEND test_openacc_sources
     )
 
 list(APPEND test_openacc_sources
+    ${CMAKE_CURRENT_BINARY_DIR}/acc_helper.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/accLog_kernel.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/accComplexToArg_kernel.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/accComplexToMag_kernel.cpp
@@ -297,6 +307,7 @@ list(APPEND test_acclog_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/accLog_impl.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/GRACCBase.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/accLog_kernel.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/acc_helper.cpp
 )
 
 add_executable(test-acclog ${test_acclog_sources})

@@ -23,7 +23,7 @@ void accLog_init(acc_device_t deviceType, int devId, int threadID) {
     }
 #endif
 
-#if !defined(TR_MODE) || TR_MODE == 0 || TR_MODE == 3
+#if !defined(TR_MODE) || TR_MODE == 0 || TR_MODE == 3 || TR_MODE == 4
     acc_init(deviceType);
 #endif
 }

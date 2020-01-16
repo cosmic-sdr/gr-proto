@@ -29,19 +29,19 @@ namespace gr {
   namespace openacc {
 
     accLog::sptr
-    accLog::make(int contextType, int deviceId, float nValue, float kValue, size_t vlen, int copy_out)
+    accLog::make(int contextType, int deviceId, float nValue, float kValue, size_t vlen, int copy_in, int copy_out)
     {
       return gnuradio::get_initial_sptr
-        (new accLog_impl(contextType, deviceId, nValue, kValue, vlen, copy_out));
+        (new accLog_impl(contextType, deviceId, nValue, kValue, vlen, copy_in, copy_out));
     }
 
     /*
      * The private constructor
      */
-    accLog_impl::accLog_impl(int contextType, int deviceId, float nValue, float kValue, size_t vlen, int copy_out)
+    accLog_impl::accLog_impl(int contextType, int deviceId, float nValue, float kValue, size_t vlen, int copy_in, int copy_out)
       : gr::sync_block("accLog",
               gr::io_signature::make(1, 1, sizeof(float)*vlen),
-              gr::io_signature::make(1, 1, sizeof(float)*vlen)), d_vlen(vlen), gracc_copy_out(copy_out),
+              gr::io_signature::make(1, 1, sizeof(float)*vlen)), d_vlen(vlen), gracc_copy_in(copy_in), gracc_copy_out(copy_out),
         GRACCBase(contextType, deviceId)
     {
 		//if( gracc_counter <= 1 ) {
@@ -96,12 +96,14 @@ namespace gr {
 			gracc_pcopyin((h_void*)input_items[0], max_noutputs*sizeof(const float*), threadID);
 			gracc_pcreate((h_void*)output_items[0], max_noutputs*sizeof(float*),  threadID);
             acc_init_done = 1;
-		}
+		} else if( gracc_copy_in == 1 ) {
+			gracc_update_device((h_void*)input_items[0], noutput_items*sizeof(const float*),  threadID);
+        }
 
         // Do the work
         accLog_kernel(noutput_items*d_vlen, n_val, k_val, (const float *)input_items[0], (float *)output_items[0], threadID);
 
-        if( gracc_copyout == 1 ) {
+        if( gracc_copy_out == 1 ) {
 			gracc_update_self((h_void*)output_items[0], noutput_items*sizeof(float*),  threadID);
         }
 

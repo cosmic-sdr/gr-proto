@@ -36,10 +36,11 @@ namespace gr {
       float k_val;
       gr_vector_int d_ninput_items;
       size_t d_vlen;
+      int gracc_copy_in;
       int gracc_copy_out;
 
      public:
-      accLog_impl(int contextType, int deviceId, float nValue, float kValue, size_t vlen, int copy_out);
+      accLog_impl(int contextType, int deviceId, float nValue, float kValue, size_t vlen, int copy_in, int copy_out);
       ~accLog_impl();
 
       int testCPU(int noutput_items,

@@ -8,6 +8,12 @@
 #define ACCDEVICESELECTOR_FIRST 1
 #define ACCDEVICESELECTOR_SPECIFIC 2
 
+void gracc_init(acc_device_t deviceType, int devId, int threadID) {
+#if !defined(TR_MODE) || TR_MODE == 0 || TR_MODE == 3 || TR_MODE == 4
+    acc_init(deviceType);
+#endif
+}
+
 void gracc_pcopyin(h_void* hostPtr, size_t size, int threadID) {
 	acc_pcopyin(hostPtr, size);
 }
