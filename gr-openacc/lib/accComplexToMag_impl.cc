@@ -30,19 +30,19 @@ namespace gr {
   namespace openacc {
 
     accComplexToMag::sptr
-    accComplexToMag::make(int contextType, int deviceId, size_t vlen)
+    accComplexToMag::make(int contextType, int deviceId, size_t vlen, int copy_in, int copy_out)
     {
       return gnuradio::get_initial_sptr
-        (new accComplexToMag_impl(contextType, deviceId, vlen));
+        (new accComplexToMag_impl(contextType, deviceId, vlen, copy_in, copy_out));
     }
 
     /*
      * The private constructor
      */
-    accComplexToMag_impl::accComplexToMag_impl(int contextType, int deviceId, size_t vlen)
+    accComplexToMag_impl::accComplexToMag_impl(int contextType, int deviceId, size_t vlen, int copy_in, int copy_out)
       : gr::sync_block("accComplexToMag",
               gr::io_signature::make(1, 1, sizeof(gr_complex)*vlen),
-              gr::io_signature::make(1, 1, sizeof(float)*vlen)), d_vlen(vlen),
+              gr::io_signature::make(1, 1, sizeof(float)*vlen)), d_vlen(vlen), gracc_copy_in(copy_in), gracc_copy_out(copy_out),
         GRACCBase(contextType, deviceId)
     {
         const int alignment_multiple =
@@ -52,8 +52,6 @@ namespace gr {
         	accComplexToMag_init(deviceType, deviceId, threadID);
 		//}
 		//acc_init_done = 1;
-        in_device_buffer_size = 0;
-        out_device_buffer_size = 0;
     }
 
     /*

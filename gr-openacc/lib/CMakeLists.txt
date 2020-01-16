@@ -381,6 +381,7 @@ list(APPEND test_acccomplextoarg_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/GRACCBase.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/fast_atan2f.cc
     ${CMAKE_CURRENT_BINARY_DIR}/accComplexToArg_kernel.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/acc_helper.cpp
 )
 
 add_executable(test-acccomplextoarg ${test_acccomplextoarg_sources})
@@ -457,6 +458,7 @@ list(APPEND test_acccomplextomag_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/GRACCBase.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/fast_atan2f.cc
     ${CMAKE_CURRENT_BINARY_DIR}/accComplexToMag_kernel.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/acc_helper.cpp
 )
 
 add_executable(test-acccomplextomag ${test_acccomplextomag_sources})
@@ -533,6 +535,7 @@ list(APPEND test_acccomplextomagphase_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/GRACCBase.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/fast_atan2f.cc
     ${CMAKE_CURRENT_BINARY_DIR}/accComplexToMagPhase_kernel.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/acc_helper.cpp
 )
 
 add_executable(test-acccomplextomagphase ${test_acccomplextomagphase_sources})
@@ -608,6 +611,7 @@ list(APPEND test_accmagphasetocomplex_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/accMagPhaseToComplex_impl.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/GRACCBase.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/accMagPhaseToComplex_kernel.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/acc_helper.cpp
 )
 
 add_executable(test-accmagphasetocomplex ${test_accmagphasetocomplex_sources})
@@ -683,6 +687,7 @@ list(APPEND test_acccomplextomagsquared_sources
     ${CMAKE_CURRENT_SOURCE_DIR}/accComplexToMagSquared_impl.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/GRACCBase.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/accComplexToMagSquared_kernel.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/acc_helper.cpp
 )
 
 add_executable(test-acccomplextomagsquared ${test_acccomplextomagsquared_sources})

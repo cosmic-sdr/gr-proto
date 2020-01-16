@@ -3,7 +3,7 @@
   <key>openacc_accComplexToArg</key>
   <category>[OPENACC]</category>
   <import>import openacc</import>
-  <make>openacc.accComplexToArg($contextType, $deviceId, $vlen)</make>
+  <make>openacc.accComplexToArg($contextType, $deviceId, $vlen, $copy_in, $copy_out)</make>
   <param>
     <name>Contexttype</name>
     <key>contextType</key>
@@ -23,6 +23,18 @@
     <type>int</type>
   </param>
   <check>$vlen &gt; 0</check>
+  <param>
+    <name>Copy in</name>
+    <key>copy_in</key>
+    <value>0</value>
+    <type>int</type>
+  </param>
+  <param>
+    <name>Copy out</name>
+    <key>copy_out</key>
+    <value>0</value>
+    <type>int</type>
+  </param>
   <sink>
     <name>in</name>
     <type>complex</type>

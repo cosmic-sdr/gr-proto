@@ -35,13 +35,11 @@ namespace gr {
       // Nothing to declare in this block.
       gr_vector_int d_ninput_items;
       size_t d_vlen;
-      d_void * in_device_buffer;
-      d_void * out_device_buffer;
-      size_t in_device_buffer_size;
-      size_t out_device_buffer_size;
+      int gracc_copy_in;
+      int gracc_copy_out;
 
      public:
-      accComplexToArg_impl(int contextType, int deviceId, size_t vlen);
+      accComplexToArg_impl(int contextType, int deviceId, size_t vlen, int copy_in, int copy_out);
       ~accComplexToArg_impl();
 
       int testCPU(int noutput_items,

@@ -46,7 +46,7 @@ namespace gr {
        * class. openacc::accComplexToMagSquared::make is the public interface for
        * creating new instances.
        */
-      static sptr make(int contextType, int deviceId, size_t vlen);
+      static sptr make(int contextType, int deviceId, size_t vlen, int copy_in, int copy_out);
     };
 
   } // namespace openacc
