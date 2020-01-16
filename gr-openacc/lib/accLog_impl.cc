@@ -29,19 +29,19 @@ namespace gr {
   namespace openacc {
 
     accLog::sptr
-    accLog::make(int contextType, int deviceId, float nValue, float kValue, size_t vlen)
+    accLog::make(int contextType, int deviceId, float nValue, float kValue, size_t vlen, int copy_out)
     {
       return gnuradio::get_initial_sptr
-        (new accLog_impl(contextType, deviceId, nValue, kValue, vlen));
+        (new accLog_impl(contextType, deviceId, nValue, kValue, vlen, copy_out));
     }
 
     /*
      * The private constructor
      */
-    accLog_impl::accLog_impl(int contextType, int deviceId, float nValue, float kValue, size_t vlen)
+    accLog_impl::accLog_impl(int contextType, int deviceId, float nValue, float kValue, size_t vlen, int copy_out)
       : gr::sync_block("accLog",
               gr::io_signature::make(1, 1, sizeof(float)*vlen),
-              gr::io_signature::make(1, 1, sizeof(float)*vlen)), d_vlen(vlen),
+              gr::io_signature::make(1, 1, sizeof(float)*vlen)), d_vlen(vlen), gracc_copy_out(copy_out),
         GRACCBase(contextType, deviceId)
     {
 		//if( gracc_counter <= 1 ) {
@@ -50,8 +50,6 @@ namespace gr {
 		//acc_init_done = 1;
         n_val = nValue;
         k_val = kValue;
-        in_device_buffer_size = 0;
-        out_device_buffer_size = 0;
     }
 
     /*
@@ -92,24 +90,19 @@ namespace gr {
     {
         // Protect context from switching
         gr::thread::scoped_lock guard(d_mutex);
+		int max_noutputs = max_noutput_items();
 		if( acc_init_done == 0 ) {
         	//accLog_init(deviceType, deviceId, threadID);
-            in_device_buffer_size = noutput_items*d_vlen*sizeof(const float)*3;
-            out_device_buffer_size = noutput_items*d_vlen*sizeof(float)*3;
-            accLog_deviceData_malloc(in_device_buffer_size, (d_void **)&in_device_buffer, out_device_buffer_size, (d_void **)&out_device_buffer, threadID);
-            accLog_map(noutput_items*d_vlen, (const float *)input_items[0], in_device_buffer, (float *)output_items[0], out_device_buffer, threadID);
+			gracc_pcopyin((h_void*)input_items[0], max_noutputs*sizeof(const float*), threadID);
+			gracc_pcreate((h_void*)output_items[0], max_noutputs*sizeof(float*),  threadID);
             acc_init_done = 1;
-        } else {
-            if( noutput_items*d_vlen*sizeof(const float) <= in_device_buffer_size ) {
-                accLog_map(noutput_items*d_vlen, (const float *)input_items[0], in_device_buffer, (float *)output_items[0], out_device_buffer, threadID);
-            }
 		}
 
         // Do the work
         accLog_kernel(noutput_items*d_vlen, n_val, k_val, (const float *)input_items[0], (float *)output_items[0], threadID);
 
-        if( noutput_items*d_vlen*sizeof(const float) <= in_device_buffer_size ) {
-            accLog_unmap((const float *)input_items[0], (float *)output_items[0], threadID);
+        if( gracc_copyout == 1 ) {
+			gracc_update_self((h_void*)output_items[0], noutput_items*sizeof(float*),  threadID);
         }
 
       // Tell runtime system how many output items we produced.
@@ -122,7 +115,12 @@ namespace gr {
         gr_vector_void_star &output_items)
     {
       // Do <+signal processing+>
-      int retVal = processOpenACC(noutput_items,d_ninput_items,input_items,output_items);
+      int retVal; 
+      if( contextType == ACCTYPE_CPU ) {
+      	retVal = testCPU(noutput_items,d_ninput_items,input_items,output_items);
+      } else {
+      	retVal = processOpenACC(noutput_items,d_ninput_items,input_items,output_items);
+      }
 
       // Tell runtime system how many output items we produced.
       return retVal;

@@ -20,6 +20,16 @@ struct FComplexStruct {
 
 typedef struct FComplexStruct FComplex;
 
-//void acc_initializer(acc_device_t deviceType, int devSelector, int devId);
+void gracc_pcopyin(h_void* hostPtr, size_t size, int threadID);
+
+void gracc_pcreate(h_void* hostPtr, size_t size, int threadID);
+
+void gracc_update_device(h_void* hostPtr, size_t size, int threadID);
+
+void gracc_update_self(h_void* hostPtr, size_t size, int threadID);
+
+void gracc_map_data(h_void* hostPtr, d_void* devPtr, size_t size, int threadID);
+
+void gracc_unmap_data(h_void* hostPtr, int threadID);
 
 #endif
