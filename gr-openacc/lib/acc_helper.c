@@ -15,10 +15,16 @@ void gracc_init(acc_device_t deviceType, int devId, int threadID) {
 }
 
 void gracc_pcopyin(h_void* hostPtr, size_t size, int threadID) {
+#if !defined(TR_MODE) || TR_MODE == 0 || TR_MODE == 2 || TR_MODE == 4
+    HI_set_context();
+#endif
 	acc_pcopyin(hostPtr, size);
 }
 
 void gracc_pcreate(h_void* hostPtr, size_t size, int threadID) {
+#if !defined(TR_MODE) || TR_MODE == 0 || TR_MODE == 2 || TR_MODE == 4
+    HI_set_context();
+#endif
 	acc_pcreate(hostPtr, size);
 }
 
@@ -31,9 +37,15 @@ void gracc_update_self(h_void* hostPtr, size_t size, int threadID) {
 }
 
 void gracc_map_data(h_void* hostPtr, d_void* devPtr, size_t size, int threadID) {
+#if !defined(TR_MODE) || TR_MODE == 0 || TR_MODE == 2 || TR_MODE == 4
+    HI_set_context();
+#endif
 	acc_map_data(hostPtr, devPtr, size);
 }
 
 void gracc_unmap_data(h_void* hostPtr, int threadID) {
+#if !defined(TR_MODE) || TR_MODE == 0 || TR_MODE == 2 || TR_MODE == 4
+    HI_set_context();
+#endif
 	acc_unmap_data(hostPtr);
 }
