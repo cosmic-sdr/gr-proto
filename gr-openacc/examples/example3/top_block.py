@@ -3,7 +3,7 @@
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Top Block
-# Generated: Wed Nov  6 12:17:46 2019
+# Generated: Sat Jan 18 14:34:49 2020
 ##################################################
 
 if __name__ == '__main__':
@@ -63,10 +63,10 @@ class top_block(gr.top_block, Qt.QWidget):
         ##################################################
         # Blocks
         ##################################################
-        self.openacc_accComplexToMag_0 = openacc.accComplexToMag(1, 0, 1)
-        self.openacc_accComplexToMagSquared_0 = openacc.accComplexToMagSquared(1, 0, 1)
-        self.openacc_accComplexToMagPhase_0 = openacc.accComplexToMagPhase(1, 0, 1)
-        self.openacc_accComplexToArg_0 = openacc.accComplexToArg(1, 0, 1)
+        self.openacc_accComplexToMag_0 = openacc.accComplexToMag(1, 0, 1, 1, 1)
+        self.openacc_accComplexToMagSquared_0 = openacc.accComplexToMagSquared(1, 0, 1, 1, 1)
+        self.openacc_accComplexToMagPhase_0 = openacc.accComplexToMagPhase(1, 0, 1, 1, 1)
+        self.openacc_accComplexToArg_0 = openacc.accComplexToArg(1, 0, 1, 1, 1)
         self.blocks_null_source_0 = blocks.null_source(gr.sizeof_gr_complex*1)
         self.blocks_null_sink_0_3 = blocks.null_sink(gr.sizeof_float*1)
         self.blocks_null_sink_0_2 = blocks.null_sink(gr.sizeof_float*1)

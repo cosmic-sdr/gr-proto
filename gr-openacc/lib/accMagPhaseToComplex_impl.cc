@@ -29,27 +29,25 @@ namespace gr {
   namespace openacc {
 
     accMagPhaseToComplex::sptr
-    accMagPhaseToComplex::make(int contextType, int deviceId, size_t vlen)
+    accMagPhaseToComplex::make(int contextType, int deviceId, size_t vlen, int copy_in, int copy_out)
     {
       return gnuradio::get_initial_sptr
-        (new accMagPhaseToComplex_impl(contextType, deviceId, vlen));
+        (new accMagPhaseToComplex_impl(contextType, deviceId, vlen, copy_in, copy_out));
     }
 
     /*
      * The private constructor
      */
-    accMagPhaseToComplex_impl::accMagPhaseToComplex_impl(int contextType, int deviceId, size_t vlen)
+    accMagPhaseToComplex_impl::accMagPhaseToComplex_impl(int contextType, int deviceId, size_t vlen, int copy_in, int copy_out)
       : gr::sync_block("accMagPhaseToComplex",
               gr::io_signature::make(2, 2, sizeof(float)*vlen),
-              gr::io_signature::make(1, 1, sizeof(gr_complex)*vlen)), d_vlen(vlen),
+              gr::io_signature::make(1, 1, sizeof(gr_complex)*vlen)), d_vlen(vlen), gracc_copy_in(copy_in), gracc_copy_out(copy_out),
         GRACCBase(contextType, deviceId)
     {
 		//if( gracc_counter <= 1 ) {
         	accMagPhaseToComplex_init(deviceType, deviceId, threadID);
 		//}
 		//acc_init_done = 1;
-		in_device_buffer_size = 0;
-        out_device_buffer_size = 0;
     }
 
     /*
@@ -89,24 +87,27 @@ namespace gr {
     {
         // Protect context from switching
         gr::thread::scoped_lock guard(d_mutex);
-		if( acc_init_done == 0 ) {
+        int max_noutputs = max_noutput_items();
+        if( acc_init_done == 0 ) {
         	//accMagPhaseToComplex_init(deviceType, deviceId, threadID);
-            in_device_buffer_size = noutput_items*d_vlen*sizeof(const float)*3;
-			out_device_buffer_size = noutput_items*d_vlen*sizeof(FComplex)*3;
-            accMagPhaseToComplex_deviceData_malloc(in_device_buffer_size, (d_void **)&in_device_buffer1, (d_void **)&in_device_buffer2, out_device_buffer_size, (d_void **)&out_device_buffer, threadID);
-            accMagPhaseToComplex_map(noutput_items*d_vlen, (const float *)input_items[0], in_device_buffer1, (const float *)input_items[1], in_device_buffer2, (FComplex *)output_items[0], out_device_buffer, threadID);
-
-			acc_init_done = 1;
-        } else {
-            if( noutput_items*d_vlen*sizeof(const float) <= in_device_buffer_size ) {
-            	accMagPhaseToComplex_map(noutput_items*d_vlen, (const float *)input_items[0], in_device_buffer1, (const float *)input_items[1], in_device_buffer2, (FComplex *)output_items[0], out_device_buffer, threadID);
+            if( max_noutputs == 0 ) {
+                printf("[ERROR in accMagPhaseToComplex] max_noutput_items() is NOT set properly; exit!\n");
+                exit(EXIT_FAILURE);
             }
-		}
+            gracc_pcopyin((h_void*)input_items[0], max_noutputs*sizeof(const float), threadID);
+            gracc_pcopyin((h_void*)input_items[1], max_noutputs*sizeof(const float), threadID);
+            gracc_pcreate((h_void*)output_items[0], max_noutputs*sizeof(FComplex),  threadID);
+            acc_init_done = 1;
+        } else if( gracc_copy_in == 1 ) {
+            gracc_update_device((h_void*)input_items[0], noutput_items*sizeof(const float),  threadID);
+            gracc_update_device((h_void*)input_items[1], noutput_items*sizeof(const float),  threadID);
+        }
 
         // Do the work
         accMagPhaseToComplex_kernel(noutput_items*d_vlen, (const float *)input_items[0], (const float *)input_items[1], (FComplex *)output_items[0], threadID);
-        if( noutput_items*d_vlen*sizeof(const float) <= in_device_buffer_size ) {
-            accMagPhaseToComplex_unmap((const float *)input_items[0], (const float *)input_items[1], (FComplex *)output_items[0], threadID);
+
+        if( gracc_copy_out == 1 ) {
+            gracc_update_self((h_void*)output_items[0], noutput_items*sizeof(FComplex),  threadID);
         }
 
       // Tell runtime system how many output items we produced.
@@ -118,7 +119,12 @@ namespace gr {
                        gr_vector_const_void_star &input_items,
                        gr_vector_void_star &output_items)
     {
-        int retVal = processOpenACC(noutput_items,d_ninput_items,input_items,output_items);
+      int retVal;
+      if( contextType == ACCTYPE_CPU ) {
+        retVal = testCPU(noutput_items,d_ninput_items,input_items,output_items);
+      } else {
+        retVal = processOpenACC(noutput_items,d_ninput_items,input_items,output_items);
+      }
 
       // Tell runtime system how many output items we produced.
       return retVal;

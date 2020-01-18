@@ -3,7 +3,7 @@
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Top Block
-# Generated: Tue Aug 27 22:30:55 2019
+# Generated: Sat Jan 18 14:41:53 2020
 ##################################################
 
 if __name__ == '__main__':
@@ -63,8 +63,8 @@ class top_block(gr.top_block, Qt.QWidget):
         ##################################################
         # Blocks
         ##################################################
-        self.openacc_accComplexToMagSquared_0 = openacc.accComplexToMagSquared(1, 0, 1)
-        self.blocks_null_source_0 = blocks.null_source(gr.sizeof_gr_complex*1)
+        self.openacc_accLog_0 = openacc.accLog(1, 0, 20, 1, 1, 1, 1)
+        self.blocks_null_source_0 = blocks.null_source(gr.sizeof_float*1)
         self.blocks_null_sink_0 = blocks.null_sink(gr.sizeof_float*1)
 
 
@@ -72,8 +72,8 @@ class top_block(gr.top_block, Qt.QWidget):
         ##################################################
         # Connections
         ##################################################
-        self.connect((self.blocks_null_source_0, 0), (self.openacc_accComplexToMagSquared_0, 0))
-        self.connect((self.openacc_accComplexToMagSquared_0, 0), (self.blocks_null_sink_0, 0))
+        self.connect((self.blocks_null_source_0, 0), (self.openacc_accLog_0, 0))
+        self.connect((self.openacc_accLog_0, 0), (self.blocks_null_sink_0, 0))
 
     def closeEvent(self, event):
         self.settings = Qt.QSettings("GNU Radio", "top_block")

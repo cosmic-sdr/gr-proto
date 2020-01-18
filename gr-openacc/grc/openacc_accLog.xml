@@ -32,7 +32,6 @@
     <value>1</value>
     <type>int</type>
   </param>
-  <check>$vlen &gt; 0</check>
   <param>
     <name>Copy in</name>
     <key>copy_in</key>
@@ -45,6 +44,7 @@
     <value>0</value>
     <type>int</type>
   </param>
+  <check>$vlen &gt; 0</check>
   <sink>
     <name>in</name>
     <type>float</type>

@@ -140,7 +140,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(816, 128)</value>
+      <value>(816, 144)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -187,7 +187,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(816, 272)</value>
+      <value>(816, 288)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -234,7 +234,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(816, 440)</value>
+      <value>(816, 456)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -281,7 +281,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(816, 408)</value>
+      <value>(816, 416)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -328,7 +328,7 @@
     </param>
     <param>
       <key>_coordinate</key>
-      <value>(816, 584)</value>
+      <value>(816, 600)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -421,6 +421,14 @@
       <value>1</value>
     </param>
     <param>
+      <key>copy_in</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>copy_out</key>
+      <value>1</value>
+    </param>
+    <param>
       <key>affinity</key>
       <value></value>
     </param>
@@ -469,6 +477,14 @@
     </param>
     <param>
       <key>contextType</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>copy_in</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>copy_out</key>
       <value>1</value>
     </param>
     <param>
@@ -523,6 +539,14 @@
       <value>1</value>
     </param>
     <param>
+      <key>copy_in</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>copy_out</key>
+      <value>1</value>
+    </param>
+    <param>
       <key>affinity</key>
       <value></value>
     </param>
@@ -571,6 +595,14 @@
     </param>
     <param>
       <key>contextType</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>copy_in</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>copy_out</key>
       <value>1</value>
     </param>
     <param>

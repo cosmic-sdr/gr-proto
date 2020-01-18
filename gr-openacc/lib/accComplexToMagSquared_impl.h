@@ -37,7 +37,7 @@ namespace gr {
       int gracc_copy_out;
 
      public:
-      accComplexToMagSquared_impl(int contextType, int deviceId, size_t vlen, int copy_in, int_copy_out);
+      accComplexToMagSquared_impl(int contextType, int deviceId, size_t vlen, int copy_in, int copy_out);
       ~accComplexToMagSquared_impl();
 
       int testCPU(int noutput_items,
