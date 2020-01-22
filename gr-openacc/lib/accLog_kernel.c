@@ -4,6 +4,9 @@
 #endif
 
 void accLog_init(acc_device_t deviceType, int devId, int threadID) {
+#ifdef DEBUG_PRINT
+	fprintf(stderr, "Thread %d initializes the accLog block!\n", threadID);
+#endif
 #ifdef DEBUG_ON
     switch(deviceType) {
     case acc_device_gpu:

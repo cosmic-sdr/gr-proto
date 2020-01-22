@@ -2,6 +2,9 @@
 #define INCLUDED_OPENACC_ACC_HELPER_H
 
 #include "openacc.h"
+#include <stdio.h>
+
+#define DEBUG_PRINT
 
 #define ACCTYPE_DEFAULT (1 << 0)
 #define ACCTYPE_CPU (1 << 1)

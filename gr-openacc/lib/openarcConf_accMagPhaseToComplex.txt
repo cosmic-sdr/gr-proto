@@ -887,7 +887,7 @@ shrdSclrCachingOnSM
 #disableWorkShareLoopCollapsing
 #addErrorCheckingCode
 #addSafetyCheckingCode
-#forceSyncKernelCall
+forceSyncKernelCall
 #CloneKernelCallingProcedures=N
 #debug_parser_input
 #debug_parser_output

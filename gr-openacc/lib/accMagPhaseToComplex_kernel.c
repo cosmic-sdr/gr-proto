@@ -3,6 +3,7 @@
 #include "math.h"
 
 void accMagPhaseToComplex_init(acc_device_t deviceType, int devId, int threadID) {
+	fprintf(stderr, "Thread %d initializes the accMagPhaseToComplex block!\n", threadID);
 #if !defined(TR_MODE) || TR_MODE == 0 || TR_MODE == 3 || TR_MODE == 4
     acc_init(deviceType);
 #endif

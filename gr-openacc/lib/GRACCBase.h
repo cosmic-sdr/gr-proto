@@ -15,7 +15,7 @@
 
 #include <boost/thread/mutex.hpp>
 
-#define GRBUFFER_FACTOR 2
+#define GRBUFFER_FACTOR 4
 
 #define DTYPE_COMPLEX 1
 #define DTYPE_FLOAT 2

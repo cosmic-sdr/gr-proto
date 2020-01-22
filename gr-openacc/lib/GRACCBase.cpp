@@ -19,8 +19,10 @@ int gracc_counter = 0;
 
 void GRACCBase::InitOpenACC(int devType, int devId) {
 	threadID = gracc_counter++;
+#ifdef DEBUG_PRINT
 	//std::cout << "gracc_counter = " << gracc_counter << std::endl;
-	std::cout << "local thread ID = " << threadID << std::endl;
+	std::cout << "Local thread ID = " << threadID << std::endl;
+#endif
 	acc_init_done = 0;
 	deviceId = devId;
 	switch(devType) {
@@ -49,6 +51,9 @@ void GRACCBase::InitOpenACC(int devType, int devId) {
 		deviceType = acc_device_default;
 		platformName = "DEFAULT DEVICE";
 	}
+#ifdef DEBUG_PRINT
+	std::cout << "Target platform = " << platformName << std::endl;
+#endif
 }
 
 GRACCBase::GRACCBase(int idataType, size_t dsize, int devType, int devId) {
