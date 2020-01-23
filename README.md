@@ -41,6 +41,9 @@ mkdir build
 cd build
 cmake -DBoost_USE_STATIC_LIBS=OFF -DBoost_USE_MULTITHREADED=ON -DCMAKE_INSTALL_PREFIX=~/usr/local -DCMAKE_PREFIX_PATH=~/usr/local ..
 make -j 8 install
+//To build with profiling capability, use the following:
+//In a GR workflow, add the block CtrlPort Performance Monitor and run the workflow to see the Performance counters window open.
+cmake -DBoost_USE_STATIC_LIBS=OFF -DENABLE_PERFORMANCE_COUNTERS=ON -DBoost_USE_MULTITHREADED=ON -DCMAKE_INSTALL_PREFIX=~/usr/local -DCMAKE_PREFIX_PATH=~/usr/local ..
 ```
 
 **Step 3 -- USRP-antenna and IEEE-WIFI modules**

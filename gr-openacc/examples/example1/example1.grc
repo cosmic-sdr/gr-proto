@@ -348,7 +348,7 @@
     </param>
     <param>
       <key>copy_out</key>
-      <value>1</value>
+      <value>0</value>
     </param>
     <param>
       <key>affinity</key>
@@ -403,7 +403,7 @@
     </param>
     <param>
       <key>copy_in</key>
-      <value>1</value>
+      <value>0</value>
     </param>
     <param>
       <key>copy_out</key>
