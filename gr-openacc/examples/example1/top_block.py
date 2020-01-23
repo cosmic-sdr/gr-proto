@@ -168,8 +168,8 @@ class top_block(gr.top_block, Qt.QWidget):
 
         self._qtgui_time_sink_x_0_win = sip.wrapinstance(self.qtgui_time_sink_x_0.pyqwidget(), Qt.QWidget)
         self.top_grid_layout.addWidget(self._qtgui_time_sink_x_0_win)
-        self.openacc_accMagPhaseToComplex_0 = openacc.accMagPhaseToComplex(1, 0, 1, 1, 1)
-        self.openacc_accComplexToMagPhase_1 = openacc.accComplexToMagPhase(1, 0, 1, 1, 1)
+        self.openacc_accMagPhaseToComplex_0 = openacc.accMagPhaseToComplex(1, 0, 1, 0, 1)
+        self.openacc_accComplexToMagPhase_1 = openacc.accComplexToMagPhase(1, 0, 1, 1, 0)
         self.blocks_magphase_to_complex_0 = blocks.magphase_to_complex(1)
         self.blocks_complex_to_magphase_0 = blocks.complex_to_magphase(1)
         self.analog_sig_source_x_2 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, 1000, 1, 0)
