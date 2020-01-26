@@ -44,6 +44,20 @@ make -j 8 install
 //To build with profiling capability, use the following:
 //In a GR workflow, add the block CtrlPort Performance Monitor and run the workflow to see the Performance counters window open.
 cmake -DBoost_USE_STATIC_LIBS=OFF -DENABLE_PERFORMANCE_COUNTERS=ON -DBoost_USE_MULTITHREADED=ON -DCMAKE_INSTALL_PREFIX=~/usr/local -DCMAKE_PREFIX_PATH=~/usr/local ..
+//For profiling, add the following configuration in ~/.gnuradio/grc.conf file (create it if not existing):
+//	[ControlPort]
+//	on = True
+//	edges_list = True
+//	
+//	[PerfCounters]
+//	on = True
+//	export = True
+//	
+//	[thrift]
+//	port = 9090
+//	nthreads = 2
+//	buffersize = 1434
+//	init_attempts = 100
 ```
 
 **Step 3 -- USRP-antenna and IEEE-WIFI modules**
