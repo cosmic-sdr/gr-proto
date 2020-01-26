@@ -827,7 +827,7 @@ SetLogicalThreadID=threadID
 #SetOutputKernelFileNameBase=openarc_kernel_accComplexToArg
 SetOutputKernelFileNameBase=kernel
 #addIncludePath=__openarcrt__
-#macro=_N_=__inputSize__
+#macro=USE_FAST_ATAN2
 defaultNumWorkers=64
 #maxNumGangs=N
 #maxNumWorkers=N
