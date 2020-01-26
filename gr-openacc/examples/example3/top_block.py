@@ -3,7 +3,7 @@
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Top Block
-# Generated: Thu Jan 23 16:16:55 2020
+# Generated: Sun Jan 26 15:35:23 2020
 ##################################################
 
 if __name__ == '__main__':
@@ -22,6 +22,7 @@ from gnuradio import blocks
 from gnuradio import eng_notation
 from gnuradio import gr
 from gnuradio import qtgui
+from gnuradio.ctrlport.monitor import *
 from gnuradio.eng_option import eng_option
 from gnuradio.filter import firdes
 from optparse import OptionParser
@@ -175,6 +176,7 @@ class top_block(gr.top_block, Qt.QWidget):
         self.openacc_accComplexToArg_0 = openacc.accComplexToArg(1, 0, 1, 0, 0)
         self.blocks_magphase_to_complex_1 = blocks.magphase_to_complex(1)
         self.blocks_magphase_to_complex_0 = blocks.magphase_to_complex(1)
+        self.blocks_ctrlport_monitor_performance_0 = not False or monitor("gr-perf-monitorx")
         self.blocks_complex_to_magphase_0 = blocks.complex_to_magphase(1)
         self.blocks_complex_to_mag_0 = blocks.complex_to_mag(1)
         self.blocks_complex_to_arg_0 = blocks.complex_to_arg(1)
@@ -235,6 +237,11 @@ def main(top_block_cls=top_block, options=None):
         tb.stop()
         tb.wait()
     qapp.connect(qapp, Qt.SIGNAL("aboutToQuit()"), quitting)
+    if True:
+        if False:
+            (tb.blocks_ctrlport_monitor_performance_0).start()
+    else:
+        sys.stderr.write("Monitor '{0}' does not have an enable ('en') parameter.".format("tb.blocks_ctrlport_monitor_performance_0"))
     qapp.exec_()
 
 
