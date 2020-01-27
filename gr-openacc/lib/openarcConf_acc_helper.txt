@@ -815,7 +815,7 @@
 # Translation configuration #
 #############################
 #acc2gpu=1
-#ompaccInter=N
+ompaccInter=3
 #targetArch=1
 #AccAnalysisOnly=1
 #SkipGPUTranslation=N

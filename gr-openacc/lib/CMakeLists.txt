@@ -107,7 +107,7 @@ ELSEIF(${TR_MODE} MATCHES 2)
 ENDIF(${TR_MODE} MATCHES 1)
 
 add_custom_command(OUTPUT acc_helper.cpp 
-    COMMAND ${OpenARC_BIN_DIR}/openarc ${OPENARC_COMMANDS} -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_acc_helper.txt ${CMAKE_CURRENT_SOURCE_DIR}/acc_helper.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_acc_helper/acc_helper.cpp ${CMAKE_CURRENT_BINARY_DIR}/ && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_acc_helper
+    COMMAND ${OpenARC_BIN_DIR}/openarc ${OPENARC_COMMANDS} -addIncludePath=${OpenARC_INCLUDE_DIR} -gpuConfFile=${CMAKE_CURRENT_SOURCE_DIR}/openarcConf_acc_helper.txt ${CMAKE_CURRENT_SOURCE_DIR}/acc_helper.c && cp ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_acc_helper/acc_helper.* ${CMAKE_CURRENT_BINARY_DIR}/acc_helper.cpp && rm -rf ${CMAKE_CURRENT_BINARY_DIR}/cetus_output_acc_helper
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/acc_helper.c)
 
 add_custom_command(OUTPUT accLog_kernel.cpp
