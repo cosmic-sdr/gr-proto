@@ -94,9 +94,11 @@ namespace gr {
                 printf("[ERROR in accMagPhaseToComplex] max_noutput_items() is NOT set properly; exit!\n");
                 exit(EXIT_FAILURE);
             }
-            gracc_pcopyin((h_void*)input_items[0], GRBUFFER_FACTOR*max_noutputs*sizeof(const float), threadID);
-            gracc_pcopyin((h_void*)input_items[1], GRBUFFER_FACTOR*max_noutputs*sizeof(const float), threadID);
-            gracc_pcreate((h_void*)output_items[0], GRBUFFER_FACTOR*max_noutputs*sizeof(FComplex),  threadID);
+			if( gracc_copy_in == 1 ) {
+            	gracc_copyin((h_void*)input_items[0], GRBUFFER_FACTOR*max_noutputs*sizeof(const float), threadID);
+            	gracc_copyin((h_void*)input_items[1], GRBUFFER_FACTOR*max_noutputs*sizeof(const float), threadID);
+			}
+            gracc_create((h_void*)output_items[0], GRBUFFER_FACTOR*max_noutputs*sizeof(FComplex),  threadID);
             acc_init_done = 1;
         } else if( gracc_copy_in == 1 ) {
             gracc_update_device((h_void*)input_items[0], noutput_items*sizeof(const float),  threadID);

@@ -23,6 +23,10 @@ struct FComplexStruct {
 
 typedef struct FComplexStruct FComplex;
 
+void gracc_copyin(h_void* hostPtr, size_t size, int threadID);
+
+void gracc_create(h_void* hostPtr, size_t size, int threadID);
+
 void gracc_pcopyin(h_void* hostPtr, size_t size, int threadID);
 
 void gracc_pcreate(h_void* hostPtr, size_t size, int threadID);
