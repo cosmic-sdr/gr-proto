@@ -99,8 +99,6 @@ cd build
 cmake -DOpenCL_INCLUDE_DIR=/usr/local/cuda/targets/x86_64-linux/include/CL/ -DOpenCL_LIBRARY=/usr/local/cuda/lib64/libOpenCL.so -DUSE_GPU=1 -DBoost_USE_STATIC_LIBS=OFF -DBoost_USE_MULTITHREADED=ON  -DCMAKE_INSTALL_PREFIX=~/usr/local -DCMAKE_PREFIX_PATH=~/usr/local -Wno-dev ../src/
 make -j install
 
-
-```
 # Build & (local) Install gr-openacc
 
 # To install gr-openacc, OpenARC should be installed first.
