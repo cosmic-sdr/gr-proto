@@ -1,7 +1,0 @@
-/*!
- * \defgroup block GNU Radio COSMIC C++ Signal Processing Blocks
- * \brief All C++ blocks that can be used from the COSMIC GNU Radio
- *        module are listed here or in the subcategories below.
- *
- */
-
