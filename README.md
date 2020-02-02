@@ -84,7 +84,7 @@ udevadm trigger
 exit
 ```
 
-**Step 5 -- PoCL and clFFT**
+**Step 5 -- PoCL, clFFT, and gr-openacc**
 ```
 # Build & (local) Install PoCL
 ```
